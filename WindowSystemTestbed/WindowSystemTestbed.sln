@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C# Express 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowSystemTestbed", "WindowSystemTestbed\WindowSystemTestbed.csproj", "{7B4F5F48-6974-4769-AC72-F2D3A71A736C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputEventSystem", "..\InputEventSystem\InputEventSystem.csproj", "{48D220CD-272A-451E-A65B-8FBAC5C7894E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowSystem", "..\WindowSystem\WindowSystem.csproj", "{943CDD8C-C06E-4BFA-BD24-9B8493A442F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B4F5F48-6974-4769-AC72-F2D3A71A736C}.Debug|x86.ActiveCfg = Debug|x86
+		{7B4F5F48-6974-4769-AC72-F2D3A71A736C}.Debug|x86.Build.0 = Debug|x86
+		{7B4F5F48-6974-4769-AC72-F2D3A71A736C}.Release|x86.ActiveCfg = Release|x86
+		{7B4F5F48-6974-4769-AC72-F2D3A71A736C}.Release|x86.Build.0 = Release|x86
+		{48D220CD-272A-451E-A65B-8FBAC5C7894E}.Debug|x86.ActiveCfg = Debug|x86
+		{48D220CD-272A-451E-A65B-8FBAC5C7894E}.Debug|x86.Build.0 = Debug|x86
+		{48D220CD-272A-451E-A65B-8FBAC5C7894E}.Release|x86.ActiveCfg = Release|x86
+		{48D220CD-272A-451E-A65B-8FBAC5C7894E}.Release|x86.Build.0 = Release|x86
+		{943CDD8C-C06E-4BFA-BD24-9B8493A442F3}.Debug|x86.ActiveCfg = Debug|x86
+		{943CDD8C-C06E-4BFA-BD24-9B8493A442F3}.Debug|x86.Build.0 = Debug|x86
+		{943CDD8C-C06E-4BFA-BD24-9B8493A442F3}.Release|x86.ActiveCfg = Release|x86
+		{943CDD8C-C06E-4BFA-BD24-9B8493A442F3}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

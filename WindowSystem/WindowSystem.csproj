@@ -1,0 +1,210 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{943CDD8C-C06E-4BFA-BD24-9B8493A442F3}</ProjectGuid>
+    <ProjectTypeGuids>{9F340DF3-2AED-4330-AC16-78AC2D9B4738};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WindowSystem</RootNamespace>
+    <AssemblyName>WindowSystem</AssemblyName>
+    <XnaFrameworkVersion>v1.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XNAGlobalContentPipelineAssemblies>Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll;Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</XNAGlobalContentPipelineAssemblies>
+    <XNAProjectContentPipelineAssemblies>..\3rdParty\XNAImport.dll</XNAProjectContentPipelineAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="XNABase, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rdParty\XNABase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bar.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Bar</Name>
+    </Compile>
+    <Compile Include="ComboBox.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>ComboBox</Name>
+    </Compile>
+    <Compile Include="Dialog.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Dialog</Name>
+    </Compile>
+    <Compile Include="DisplaySettingsDialog.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>DisplaySettingsDialog</Name>
+    </Compile>
+    <Compile Include="DrawableUIComponent.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>DrawableUIComponent</Name>
+    </Compile>
+    <Compile Include="GUIManager.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>GUIManager</Name>
+    </Compile>
+    <Compile Include="Icon.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Icon</Name>
+    </Compile>
+    <Compile Include="Image.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Image</Name>
+    </Compile>
+    <Compile Include="ImageButton.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>ImageButton</Name>
+    </Compile>
+    <Compile Include="Label.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Label</Name>
+    </Compile>
+    <Compile Include="ListBox.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>ListBox</Name>
+    </Compile>
+    <Compile Include="MenuBar.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>MenuBar</Name>
+    </Compile>
+    <Compile Include="MenuItem.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>MenuItem</Name>
+    </Compile>
+    <Compile Include="MessageBox.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>MessageBox</Name>
+    </Compile>
+    <Compile Include="MouseCursor.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>MouseCursor</Name>
+    </Compile>
+    <Compile Include="MovableArea.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>MovableArea</Name>
+    </Compile>
+    <Compile Include="CheckBox.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>CheckBox</Name>
+    </Compile>
+    <Compile Include="PopUpMenu.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>PopUpMenu</Name>
+    </Compile>
+    <Compile Include="RadioButton.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>RadioButton</Name>
+    </Compile>
+    <Compile Include="RadioGroup.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>RadioGroup</Name>
+    </Compile>
+    <Compile Include="ResizableArea.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>ResizableArea</Name>
+    </Compile>
+    <Compile Include="ScrollBar.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>ScrollBar</Name>
+    </Compile>
+    <Compile Include="SkinnedComponent.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>SkinnedComponent</Name>
+    </Compile>
+    <Compile Include="TextBox.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>TextBox</Name>
+    </Compile>
+    <Compile Include="TextButton.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>TextButton</Name>
+    </Compile>
+    <Compile Include="UIComponent.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>UIComponent</Name>
+    </Compile>
+    <Compile Include="Box.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Box</Name>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>AssemblyInfo</Name>
+    </Compile>
+    <Compile Include="Window.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Window</Name>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Fonts\DefaultFont.xml">
+      <XNAUseContentPipeline>true</XNAUseContentPipeline>
+      <Importer>BitmapFontImporter</Importer>
+      <Processor>BitmapFontProcessor</Processor>
+      <Name>DefaultFont</Name>
+    </Content>
+    <Content Include="Content\Textures\DefaultStyle.PNG">
+      <XNAUseContentPipeline>true</XNAUseContentPipeline>
+      <Importer>TextureImporter</Importer>
+      <Processor>SpriteTextureProcessor</Processor>
+      <Name>DefaultStyle</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InputEventSystem\InputEventSystem.csproj">
+      <Project>{48D220CD-272A-451E-A65B-8FBAC5C7894E}</Project>
+      <Name>InputEventSystem</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA\Game Studio Express\v1.0\Microsoft.Xna.ContentPipeline.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA\Game Studio Express\v1.0\Microsoft.Xna.Common.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
