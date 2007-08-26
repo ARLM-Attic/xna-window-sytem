@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Input Event System for XNA")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright © 2007 Aaron MacDougakk")]
+[assembly: AssemblyCopyright("Copyright © 2007 Aaron MacDougall")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
