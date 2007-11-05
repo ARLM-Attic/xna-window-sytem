@@ -59,7 +59,7 @@ namespace WindowSystem
     /// without any mouse event handling, it's easier to predict state changes
     /// for when list box is open (has focus).
     /// </remarks>
-    public class ComboBox : DrawableUIComponent
+    public class ComboBox : UIComponent
     {
         #region Default Properties
         private static int defaultWidth = 200;

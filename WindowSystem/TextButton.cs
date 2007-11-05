@@ -45,7 +45,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using XNAExtras;
+using Microsoft.Xna.Framework.Graphics;
 using InputEventSystem;
 #endregion
 
@@ -55,7 +55,7 @@ namespace WindowSystem
     /// A push button comprised of a graphical Bar component, with a text label
     /// on top.
     /// </summary>
-    public class TextButton : DrawableUIComponent
+    public class TextButton : UIComponent
     {
         #region Default Properties
         private static int defaultWidth = 65;
@@ -172,7 +172,7 @@ namespace WindowSystem
         /// The font used to draw button text.
         /// </summary>
         /// <value>Must not be null.</value>
-        public BitmapFont Font
+        public SpriteFont Font
         {
             set
             {
@@ -223,7 +223,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<BitmapFont>(defaultFont);
+                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
 
             base.LoadGraphicsContent(loadAllContent);
         }

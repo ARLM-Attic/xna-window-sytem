@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using XNAExtras;
 using InputEventSystem;
 #endregion
 
@@ -66,7 +65,7 @@ namespace WindowSystem
     /// DrawableUIComponent, which acts as a viewport, only allowing some to
     /// be seen at one time. Scrollbar is only shown if required.
     /// </summary>
-    public class ListBox : DrawableUIComponent
+    public class ListBox : UIComponent
     {
         #region Default Properties
         private static int defaultWidth = 200;
@@ -155,11 +154,11 @@ namespace WindowSystem
 
         #region Fields
         private Box box;
-        private DrawableUIComponent surface;
-        private DrawableUIComponent viewPort;
+        private UIComponent surface;
+        private UIComponent viewPort;
         private ScrollBar scrollBar;
         private List<Label> entries;
-        private BitmapFont font;
+        private SpriteFont font;
         private Label selectedLabel;
         private int selectedIndex;
         private int hMargin;
@@ -205,13 +204,13 @@ namespace WindowSystem
         /// Sets the font to use for listbox entries.
         /// </summary>
         /// <value>Must not be null.</value>
-        public BitmapFont Font
+        public SpriteFont Font
         {
             set
             {
                 Debug.Assert(value != null);
                 this.font = value;
-                this.scrollBar.ScrollStep = font.LineHeight;
+                this.scrollBar.ScrollStep = font.LineSpacing;
                 RefreshEntries();
             }
         }
@@ -274,8 +273,8 @@ namespace WindowSystem
 
             #region Create Child Controls
             this.box = new Box(game, guiManager);
-            this.surface = new DrawableUIComponent(game, guiManager);
-            this.viewPort = new DrawableUIComponent(game, guiManager);
+            this.surface = new UIComponent(game, guiManager);
+            this.viewPort = new UIComponent(game, guiManager);
             this.scrollBar = new ScrollBar(game, guiManager);
             #endregion
 
@@ -323,7 +322,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<BitmapFont>(defaultFont);
+                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
 
             base.LoadGraphicsContent(loadAllContent);
         }
@@ -353,7 +352,7 @@ namespace WindowSystem
                 if (this.font != null)
                 {
                     label.Font = this.font;
-                    label.Height = this.font.LineHeight;
+                    label.Height = this.font.LineSpacing;
                 }
                 else
                     label.Height = 15;

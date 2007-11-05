@@ -44,7 +44,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using XNAExtras;
+using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace WindowSystem
@@ -52,7 +52,7 @@ namespace WindowSystem
     /// <summary>
     /// A graphical checkbox button, with a description label.
     /// </summary>
-    public class CheckBox : DrawableUIComponent
+    public class CheckBox : UIComponent
     {
         #region Default Properties
         private static int defaultHeight = 15;
@@ -143,7 +143,7 @@ namespace WindowSystem
         /// Sets the label font.
         /// </summary>
         /// <value>Must not be null.</value>
-        public BitmapFont Font
+        public SpriteFont Font
         {
             set { label.Font = value; }
         }
@@ -240,7 +240,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<BitmapFont>(defaultFont);
+                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
 
             base.LoadGraphicsContent(loadAllContent);
         }

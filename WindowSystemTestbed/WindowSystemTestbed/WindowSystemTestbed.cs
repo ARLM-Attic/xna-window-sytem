@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using XNAExtras;
 using WindowSystem;
 using InputEventSystem;
 
@@ -17,9 +16,11 @@ namespace WindowSystemTestbed
         GraphicsDeviceManager graphics;
         ContentManager content;
 
+        SpriteBatch spriteBatch;
+
         InputEvents input;
         GUIManager gui;
-        BitmapFont myFont;
+        SpriteFont myFont;
         int windowNumber = 0;
 
         public WindowSystemTestbed()
@@ -186,6 +187,8 @@ namespace WindowSystemTestbed
             //this.IsMouseVisible = true;
             this.Window.Title = "Window System Testbed";
 
+            this.spriteBatch = new SpriteBatch(this.graphics.GraphicsDevice);
+
             base.Initialize();
         }
 
@@ -202,7 +205,7 @@ namespace WindowSystemTestbed
             {
                 //skinTexture = content.Load<Texture2D>("Content/Textures/DefaultStyle");
                 //gui.SkinTexture = skinTexture;
-                myFont = content.Load<BitmapFont>("Content/Fonts/Verdana");
+                myFont = content.Load<SpriteFont>("Content/Fonts/Verdana");
 
                 // Set up default gui fonts
                 //WindowSystem.Window.DefaultTitleFont = myFont;
@@ -268,7 +271,12 @@ namespace WindowSystemTestbed
 
             // Display frames per second
             string text = "FPS: " + intFPS.ToString();
-            myFont.DrawString(50, 50, Color.Black, text);
+
+            this.spriteBatch.Begin();
+
+            this.spriteBatch.DrawString(myFont, text, new Vector2(50, 50), Color.Black);
+
+            this.spriteBatch.End();
 
             //text = "UIComponent Count: " + UIComponent.InstanceCount.ToString();
             //myFont.DrawString(50, 50 + myFont.LineHeight, Color.Black, text);

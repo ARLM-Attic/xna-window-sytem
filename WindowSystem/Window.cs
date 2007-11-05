@@ -46,7 +46,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using XNAExtras;
 using InputEventSystem;
 #endregion
 
@@ -57,7 +56,7 @@ namespace WindowSystem
     /// movable and resizable areas. Most aspects can be removed, and the
     /// movable area can cover the whole window, like WinAmp or iTunes.
     /// </summary>
-    public class Window : DrawableUIComponent
+    public class Window : UIComponent
     {
         #region Default Properties
         private static bool defaultHasCloseButton = true;
@@ -66,7 +65,7 @@ namespace WindowSystem
         private static int defaultButtonSize = 20;
         private static int defaultMargin = 5;
         private static float defaultAnimationTransparency = 0.75f;
-        private static string defaultTitleFont = "Content/Fonts/DefaultFont";
+        private static string defaultTitleFont = "Content/Fonts/DefaultHeading";
         private static DefaultSingleSkin defaultSkin = new DefaultSingleSkin(
             new Rectangle(15, 1, 15, 15)
             );
@@ -189,7 +188,7 @@ namespace WindowSystem
 
         #region Fields
         private Box box;
-        private DrawableUIComponent viewPort;
+        private UIComponent viewPort;
         private Bar titleBar;
         private MovableArea movableArea;
         private MovableArea backgroundMovableArea;
@@ -376,7 +375,7 @@ namespace WindowSystem
         /// Sets the font of the title text.
         /// </summary>
         /// <value>Must not be null.</value>
-        public BitmapFont TitleFont
+        public SpriteFont TitleFont
         {
             set
             {
@@ -430,7 +429,7 @@ namespace WindowSystem
 
             #region Create Child Controls
             this.box = new Box(game, guiManager);
-            this.viewPort = new DrawableUIComponent(game, guiManager);
+            this.viewPort = new UIComponent(game, guiManager);
             this.titleBar = new Bar(game, guiManager);
             this.movableArea = new MovableArea(game, guiManager);
             this.backgroundMovableArea = new MovableArea(game, guiManager);
@@ -524,7 +523,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                TitleFont = GUIManager.ContentManager.Load<BitmapFont>(defaultTitleFont);
+                TitleFont = GUIManager.ContentManager.Load<SpriteFont>(defaultTitleFont);
 
             base.LoadGraphicsContent(loadAllContent);
         }
@@ -656,8 +655,8 @@ namespace WindowSystem
             // If moving, change transparency
             if (IsAnimating && this.transparency == -1)
             {
-                this.transparency = Transparency;
-                Transparency *= defaultAnimationTransparency;
+                //this.transparency = Transparency;
+                //Transparency *= defaultAnimationTransparency;
             }
         }
 
@@ -671,8 +670,8 @@ namespace WindowSystem
             // Reset transparency
             if (this.transparency != -1)
             {
-                Transparency = this.transparency;
-                this.transparency = -1;
+                //Transparency = this.transparency;
+                //this.transparency = -1;
             }
         }
 
@@ -714,8 +713,8 @@ namespace WindowSystem
             // If resizing, change transparency
             if (IsAnimating && this.transparency == -1)
             {
-                this.transparency = Transparency;
-                Transparency *= defaultAnimationTransparency;
+                //this.transparency = Transparency;
+                //Transparency *= defaultAnimationTransparency;
             }
         }
 

@@ -52,7 +52,7 @@ namespace WindowSystem
     /// checked behavior. A radio button on it's own is simply a checkbox with
     /// a different default appearence.
     /// </summary>
-    public class RadioGroup : DrawableUIComponent
+    public class RadioGroup : UIComponent
     {
         #region Fields
         private bool firstButtonClicked;

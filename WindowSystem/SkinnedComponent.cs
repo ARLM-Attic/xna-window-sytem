@@ -342,7 +342,7 @@ namespace WindowSystem
     /// representing different states. An example would be a button with
     /// regular, hover, and pressed states.
     /// </remarks>
-    public class SkinnedComponent : DrawableUIComponent, ISixSkins
+    public class SkinnedComponent : UIComponent, ISixSkins
     {
         #region Fields
         private Dictionary<int, Rectangle> locations;
@@ -536,10 +536,12 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Draws the current skin.
+        /// Draws all skins associated with control, after clipping them to the
+        /// parent control area.
         /// </summary>
-        /// <param name="spriteBatch">SpriteBatch to draw control with.</param>
-        protected override void DrawControl(SpriteBatch spriteBatch)
+        /// <param name="spriteBatch">SpriteBatch to draw with.</param>
+        /// <param name="parentScissor">The scissor region of the parent control.</param>
+        protected override void DrawControl(SpriteBatch spriteBatch, Rectangle parentScissor)
         {
             ComponentSkin skin = GetSkin(this.currentSkin);
 
@@ -547,53 +549,112 @@ namespace WindowSystem
             {
                 Texture2D texture;
 
+                // Should the default GUI skin be used?
                 if (skin.UseCustomSkin)
                     texture = skin.Skin;
                 else
                     texture = GUIManager.SkinTexture;
 
+                bool draw;
+                Rectangle source;
+                Rectangle destination;
+                int dif;
+
                 foreach (GUIRect rect in skin.Rects)
                 {
-                    spriteBatch.Draw(
-                        texture,
-                        rect.Destination,
-                        rect.Source,
-                        Color.White
-                        );
+                    draw = true;
+
+                    source = rect.Source;
+
+                    // Convert to absolute position
+                    destination = rect.Destination;
+                    destination.X += AbsolutePosition.X;
+                    destination.Y += AbsolutePosition.Y;
+
+                    if (!parentScissor.Contains(destination))
+                    {
+                        // Perform culling
+                        if (parentScissor.Intersects(destination))
+                        {
+                            // Perform clipping
+
+                            if (destination.X < parentScissor.X)
+                            {
+                                dif = parentScissor.X - destination.X;
+
+                                if (destination.Width == source.Width)
+                                {
+                                    source.Width -= dif;
+                                    source.X += dif;
+                                    destination.Width -= dif;
+                                    destination.X += dif;
+                                }
+                                else
+                                {
+                                    destination.Width -= dif;
+                                    destination.X += dif;
+                                }
+                            }
+                            else if (destination.Right > parentScissor.Right)
+                            {
+                                dif = destination.Right - parentScissor.Right;
+
+                                if (destination.Width == source.Width)
+                                {
+                                    source.Width -= dif;
+                                    destination.Width -= dif;
+                                }
+                                else
+                                    destination.Width -= dif;
+                            }
+
+                            if (destination.Y < parentScissor.Y)
+                            {
+                                dif = parentScissor.Y - destination.Y;
+
+                                if (destination.Height == source.Height)
+                                {
+                                    source.Height -= dif;
+                                    source.Y += dif;
+                                    destination.Height -= dif;
+                                    destination.Y += dif;
+                                }
+                                else
+                                {
+                                    destination.Height -= dif;
+                                    destination.Y += dif;
+                                }
+                            }
+                            else if (destination.Bottom > parentScissor.Bottom)
+                            {
+                                dif = destination.Bottom - parentScissor.Bottom;
+
+                                if (destination.Height == source.Height)
+                                {
+                                    source.Height -= dif;
+                                    destination.Height -= dif;
+                                }
+                                else
+                                    destination.Height -= dif;
+                            }
+                        }
+                        else
+                            draw = false;
+                    }
+
+                    if (draw)
+                    {
+                        // Actually draw finally!
+                        spriteBatch.Draw(
+                            texture,
+                            destination,
+                            source,
+                            Color.White
+                            );
+                    }
                 }
             }
         }
-
-        //protected override void DrawControl(GameTime gameTime, SpriteBatch spriteBatch, float transparency)
-        //{
-        //    ComponentSkin skin = GetSkin(this.currentSkin);
-
-        //    if (skin != null)
-        //    {
-        //        Texture2D texture;
-
-        //        if (skin.UseCustomSkin)
-        //            texture = skin.Skin;
-        //        else
-        //            texture = GUIManager.SkinTexture;
-
-        //        Rectangle destination;
-
-        //        foreach (GUIRect rect in skin.Rects)
-        //        {
-        //            destination = rect.Destination;
-        //            destination.X += AbsolutePosition.X;
-        //            destination.Y += AbsolutePosition.Y;
-
-        //            spriteBatch.Draw(
-        //                texture,
-        //                destination,
-        //                rect.Source,
-        //                new Color(new Vector4(1.0f, 1.0f, 1.0f, transparency))
-        //                );
-        //        }
-        //    }
-        //}
 
         #region Event Handlers
         /// <summary>

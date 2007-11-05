@@ -44,7 +44,6 @@ using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using XNAExtras;
 using InputEventSystem;
 #endregion
 
@@ -71,7 +70,7 @@ namespace WindowSystem
     /// A graphical menu item, that can be clicked, or contain child menu
     /// items that are shown as a popup menu.
     /// </summary>
-    public class MenuItem : DrawableUIComponent
+    public class MenuItem : UIComponent
     {
         #region Default Properties
         private static int defaultHMargin = 5;
@@ -189,7 +188,7 @@ namespace WindowSystem
         /// Sets the font used for menu text.
         /// </summary>
         /// <value>Must not be null.</value>
-        public BitmapFont Font
+        public SpriteFont Font
         {
             set
             {

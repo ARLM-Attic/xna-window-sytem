@@ -369,36 +369,27 @@ namespace WindowSystem
         #endregion
 
         /// <summary>
-        /// This is called when the game should draw itself. Tells all controls
-        /// to draw their textures, then to draw those textures onto the
-        /// screen.
+        /// This is called when the GUI should draw itself. Tells all controls
+        /// to draw themselves, and then their children. Also draws the mouse
+        /// cursor.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Draw(GameTime gameTime)
         {
             if (this.skinTexture != null)
             {
-                try
-                {
-                    foreach (UIComponent control in this.controls)
-                        control.DrawTexture(gameTime);
-                }
-                catch // Catch OutOfVideoMemoryExcpetion
-                {
-                    // Do a garbage collection if video memory is scarse
-                    System.GC.Collect();
-                }
+                // At this stage the scissor rectangle is the whole screen
+                Rectangle parentScissor = new Rectangle(
+                    0,
+                    0,
+                    GraphicsDevice.Viewport.Width,
+                    GraphicsDevice.Viewport.Height
+                    );
 
-                // Draw to screen
                 this.spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-                this.spriteBatch.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = true;
-                this.spriteBatch.GraphicsDevice.RenderState.AlphaDestinationBlend = Blend.One;
 
                 foreach (UIComponent control in this.controls)
-                    control.DrawControl(gameTime, this.spriteBatch);
-
-                //foreach (UIComponent control in this.controls)
-                //    control.Draw(gameTime, this.spriteBatch, 1.0f);
+                    control.Draw(this.spriteBatch, parentScissor);
 
                 // Draw mouse cursor last
                 this.mouseCursor.DrawCursor(gameTime, this.spriteBatch);

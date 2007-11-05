@@ -44,7 +44,6 @@ using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using XNAExtras;
 #endregion
 
 namespace WindowSystem
@@ -52,7 +51,7 @@ namespace WindowSystem
     /// <summary>
     /// A graphical text label.
     /// </summary>
-    public class Label : DrawableUIComponent
+    public class Label : UIComponent
     {
         #region Default Properties
         private static string defaultFont = "Content/Fonts/DefaultFont";
@@ -85,8 +84,11 @@ namespace WindowSystem
         private string text;
         private char cursor;
         private bool isCursorShown;
-        private BitmapFont font;
+        private SpriteFont font;
         private Color color;
+        private RenderTarget2D renderTarget;
+        private Texture2D renderedTexture;
+        private bool isRedrawRequired;
         #endregion
 
         #region Properties
@@ -103,6 +105,7 @@ namespace WindowSystem
 
                 this.text = value;
                 Redraw();
+                this.isRedrawRequired = true;
             }
         }
 
@@ -118,6 +121,7 @@ namespace WindowSystem
                 {
                     this.isCursorShown = value;
                     Redraw();
+                    this.isRedrawRequired = true;
                 }
             }
         }
@@ -126,13 +130,14 @@ namespace WindowSystem
         /// Sets the text font.
         /// </summary>
         /// <value>Must not be null.</value>
-        public BitmapFont Font
+        public SpriteFont Font
         {
             set
             {
                 Debug.Assert(value != null);
                 this.font = value;
                 Redraw();
+                this.isRedrawRequired = true;
             }
         }
 
@@ -146,6 +151,7 @@ namespace WindowSystem
             {
                 this.color = value;
                 Redraw();
+                this.isRedrawRequired = true;
             }
         }
 
@@ -158,7 +164,7 @@ namespace WindowSystem
             {
                 int result = 0;
                 if (this.font != null)
-                    result = this.font.LineHeight;
+                    result = this.font.LineSpacing;
                 return result;
             }
         }
@@ -172,7 +178,7 @@ namespace WindowSystem
             {
                 int result = 0;
                 if (this.font != null)
-                    result = this.font.MeasureString(Text);
+                    result = (int)(this.font.MeasureString(Text).X + 1.0f);
                 return result;
             }
         }
@@ -208,61 +214,222 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<BitmapFont>(defaultFont);
+                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
 
             base.LoadGraphicsContent(loadAllContent);
         }
 
         /// <summary>
-        /// Draws text.
+        /// Invalidate the control so that the texture is drawn on the first
+        /// frame.
         /// </summary>
-        /// <param name="spriteBatch">SpriteBatch to draw control with.</param>
-        protected override void DrawControl(SpriteBatch spriteBatch)
+        public override void Initialize()
         {
-            // Draw text
+            this.isRedrawRequired = true;
+
+            base.Initialize();
+        }
+
+        public override void CleanUp()
+        {
+            if (IsInitialized)
+            {
+                // Tidy render target
+                if (this.renderTarget != null)
+                {
+                    this.renderTarget.Dispose();
+                    this.renderTarget = null;
+                }
+
+                this.renderedTexture = null;
+            }
+
+            base.CleanUp();
+        }
+
+        /// <summary>
+        /// This method is called when the graphics device has been reset, so a
+        /// redraw is required.
+        /// </summary>
+        /// <param name="unloadAllContent">Which type of content to unload.</param>
+        protected override void UnloadGraphicsContent(bool unloadAllContent)
+        {
+            // Make changes to handle the new device
+            if (this.renderTarget != null)
+            {
+                this.renderTarget.Dispose();
+                this.renderTarget = null;
+            }
+
+            // Control must be redrawn after device changes
+            this.isRedrawRequired = true;
+
+            base.UnloadGraphicsContent(unloadAllContent);
+        }
+
+        /// <summary>
+        /// Draws the text and performs clipping. Clipping is implemented by
+        /// rendering to a texture, which can be kept to draw each frame, until
+        /// the control is invalidated, such as a text change, a resize, colour
+        /// change, or if the graphics device becomes invalidated.
+        /// </summary>
+        /// <param name="spriteBatch">SpriteBatch to draw with.</param>
+        /// <param name="parentScissor">The scissor region of the parent control.</param>
+        protected override void DrawControl(SpriteBatch spriteBatch, Rectangle parentScissor)
+        {
             if (this.font != null)
             {
-                string text = "";
-
-                if (this.text != null)
-                    text += this.text;
-
-                if (this.isCursorShown)
-                    text += this.cursor;
-
-                if (text.Length > 0)
+                // Has the control become invalid?
+                if (this.isRedrawRequired)
                 {
-                    this.font.SpriteBatchOverride(spriteBatch);
-                    this.font.DrawString(0, 0, this.color, text);
+                    string text = "";
+
+                    if (this.text != null)
+                        text += this.text;
+
+                    if (this.isCursorShown)
+                        text += this.cursor;
+
+                    // End the current sprite drawing, so that immediate mode
+                    // isn't affected.
+                    spriteBatch.End();
+
+                    // Create a new render target
+                    this.renderTarget = new RenderTarget2D(
+                        GraphicsDevice,
+                        Width,
+                        Height,
+                        1,
+                        SurfaceFormat.Color
+                        );
+
+                    GraphicsDevice.SetRenderTarget(0, this.renderTarget);
+
+                    // Clear to transparent (same colour as text to fix alpha
+                    // blending)
+                    Color clearColor = new Color(new Vector4(this.color.R, this.color.G, this.color.B, 0.0f));
+                    GraphicsDevice.Clear(clearColor);
+
+                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+
+                    // Custom alpha blending prevents text getting screwed up
+                    spriteBatch.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = true;
+                    spriteBatch.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
+                    spriteBatch.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+                    spriteBatch.GraphicsDevice.RenderState.AlphaSourceBlend = Blend.One;
+                    spriteBatch.GraphicsDevice.RenderState.AlphaDestinationBlend = Blend.InverseSourceAlpha;
+
+                    spriteBatch.DrawString(this.font, text, new Vector2(0, 0), color);
+
+                    spriteBatch.End();
+
+                    // Save rendered texture
+                    GraphicsDevice.ResolveRenderTarget(0);
+                    this.renderedTexture = this.renderTarget.GetTexture();
+
+                    // Set the render target back to the screen
+                    GraphicsDevice.SetRenderTarget(0, null);
+
+                    this.isRedrawRequired = false;
+
+                    // Start the original drawing mode again, so that other
+                    // controls are not affected.
+                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                }
+
+                if (this.renderedTexture != null)
+                {
+                    bool draw = true;
+                    Rectangle source;
+                    Rectangle destination;
+                    int dif;
+
+                    source = new Rectangle(0, 0, Width, Height);
+                    destination = new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
+
+                    if (!parentScissor.Contains(destination))
+                    {
+                        // Perform culling
+                        if (parentScissor.Intersects(destination))
+                        {
+                            // Perform clipping
+
+                            if (destination.X < parentScissor.X)
+                            {
+                                dif = parentScissor.X - destination.X;
+
+                                if (destination.Width == source.Width)
+                                {
+                                    source.Width -= dif;
+                                    source.X += dif;
+                                    destination.Width -= dif;
+                                    destination.X += dif;
+                                }
+                                else
+                                {
+                                    destination.Width -= dif;
+                                    destination.X += dif;
+                                }
+                            }
+                            else if (destination.Right > parentScissor.Right)
+                            {
+                                dif = destination.Right - parentScissor.Right;
+
+                                if (destination.Width == source.Width)
+                                {
+                                    source.Width -= dif;
+                                    destination.Width -= dif;
+                                }
+                                else
+                                    destination.Width -= dif;
+                            }
+
+                            if (destination.Y < parentScissor.Y)
+                            {
+                                dif = parentScissor.Y - destination.Y;
+
+                                if (destination.Height == source.Height)
+                                {
+                                    source.Height -= dif;
+                                    source.Y += dif;
+                                    destination.Height -= dif;
+                                    destination.Y += dif;
+                                }
+                                else
+                                {
+                                    destination.Height -= dif;
+                                    destination.Y += dif;
+                                }
+                            }
+                            else if (destination.Bottom > parentScissor.Bottom)
+                            {
+                                dif = destination.Bottom - parentScissor.Bottom;
+
+                                if (destination.Height == source.Height)
+                                {
+                                    source.Height -= dif;
+                                    destination.Height -= dif;
+                                }
+                                else
+                                    destination.Height -= dif;
+                            }
+                        }
+                        else
+                            draw = false;
+                    }
+
+                    if (draw)
+                    {
+                        // Actually draw finally!
+                        spriteBatch.Draw(
+                            this.renderedTexture,
+                            destination,
+                            source,
+                            Color.White
+                            );
+                    }
                 }
             }
         }
-
-        //protected override void DrawControl(GameTime gameTime, SpriteBatch spriteBatch, float transparency)
-        //{
-        //    // Draw text
-        //    if (this.font != null)
-        //    {
-        //        string text = "";
-
-        //        if (this.text != null)
-        //            text += this.text;
-
-        //        if (this.isCursorShown)
-        //            text += this.cursor;
-
-        //        if (text.Length > 0)
-        //        {
-        //            this.font.SpriteBatchOverride(spriteBatch);
-                    
-        //            // Fix up alpha
-        //            Vector4 vector = this.color.ToVector4();
-        //            vector.W = transparency;
-        //            Color color = new Color(vector);
-
-        //            this.font.DrawString(AbsolutePosition.X, AbsolutePosition.Y, color, text);
-        //        }
-        //    }
-        //}
     }
 }

@@ -669,6 +669,61 @@ namespace WindowSystem
                 control.DrawControl(gameTime, spriteBatch);
         }
 
+        /// <summary>
+        /// Performs culling and clipping to inside the parent control, before
+        /// calling DrawControl() which should be overridden to actually draw
+        /// the control, and then it draws its children.
+        /// </summary>
+        /// <param name="spriteBatch">SpriteBatch to draw with.</param>
+        /// <param name="parentScissor">The scissor region of the parent control.</param>
+        internal void Draw(SpriteBatch spriteBatch, Rectangle parentScissor)
+        {
+            // Create rectangle with the absolute dimensions of this control
+            Rectangle thisScissor = location;
+            thisScissor.X = absolutePosition.X;
+            thisScissor.Y = absolutePosition.Y;
+
+            // Cull this control if it isn't inside the parent
+            bool result;
+            parentScissor.Intersects(ref thisScissor, out result);
+
+            if (result)
+            {
+                // Clip this control so it is inside the parent
+                if (thisScissor.X < parentScissor.X)
+                {
+                    thisScissor.Width -= parentScissor.X - thisScissor.X;
+                    thisScissor.X = parentScissor.X;
+                }
+                if (thisScissor.Right > parentScissor.Right)
+                    thisScissor.Width -= thisScissor.Right - parentScissor.Right;
+
+                if (thisScissor.Y < parentScissor.Y)
+                {
+                    thisScissor.Height -= parentScissor.Y - thisScissor.Y;
+                    thisScissor.Y = parentScissor.Y;
+                }
+                if (thisScissor.Bottom > parentScissor.Bottom)
+                    thisScissor.Height -= thisScissor.Bottom - parentScissor.Bottom;
+
+                // Actually draw the control
+                DrawControl(spriteBatch, thisScissor);
+
+                // Draw children
+                foreach (UIComponent control in this.controls)
+                    control.Draw(spriteBatch, thisScissor);
+            }
+        }
+
+        /// <summary>
+        /// Override to create a graphical control that draws itself.
+        /// </summary>
+        /// <param name="spriteBatch">SpriteBatch to draw with.</param>
+        /// <param name="parentScissor">The scissor region of the parent control.</param>
+        protected virtual void DrawControl(SpriteBatch spriteBatch, Rectangle parentScissor)
+        {
+        }
+
         #region Focusing
         /// <summary>
         /// Checks children if they can have focus, then checks itself. Uses

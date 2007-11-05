@@ -44,7 +44,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using XNAExtras;
+using Microsoft.Xna.Framework.Graphics;
 using InputEventSystem;
 #endregion
 
@@ -54,7 +54,7 @@ namespace WindowSystem
     /// Graphical textbox control. Very simple, only writes characters and
     /// deletes with the backspace. May be updated in the future.
     /// </summary>
-    public class TextBox : DrawableUIComponent
+    public class TextBox : UIComponent
     {
         #region Default Properties
         private static int defaultWidth = 260;
@@ -205,7 +205,7 @@ namespace WindowSystem
         /// Sets the text font.
         /// </summary>
         /// <value>Must not be null.</value>
-        public BitmapFont Font
+        public SpriteFont Font
         {
             set
             {
@@ -264,7 +264,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<BitmapFont>(defaultFont);
+                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
 
             base.LoadGraphicsContent(loadAllContent);
         }
