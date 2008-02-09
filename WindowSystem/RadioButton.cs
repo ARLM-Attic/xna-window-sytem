@@ -53,14 +53,60 @@ namespace WindowSystem
     public class RadioButton : CheckBox
     {
         #region Default Properties
-        private static DefaultSixSkins defaultButtonSkin = new DefaultSixSkins(
-            new Rectangle(1, 59, 15, 15),
-            new Rectangle(17, 59, 15, 15),
-            new Rectangle(33, 59, 15, 15),
-            new Rectangle(1, 75, 15, 15),
-            new Rectangle(17, 75, 15, 15),
-            new Rectangle(33, 75, 15, 15)
-            );
+        private static Rectangle defaultSkin = new Rectangle(1, 59, 15, 15);
+        private static Rectangle defaultHoverSkin = new Rectangle(17, 59, 15, 15);
+        private static Rectangle defaultPressedSkin = new Rectangle(33, 59, 15, 15);
+        private static Rectangle defaultCheckedSkin = new Rectangle(1, 75, 15, 15);
+        private static Rectangle defaultCheckedHoverSkin = new Rectangle(17, 75, 15, 15);
+        private static Rectangle defaultCheckedPressedSkin = new Rectangle(33, 75, 15, 15);
+
+        /// <summary>
+        /// Sets the default skin.
+        /// </summary>
+        new public static Rectangle DefaultSkin
+        {
+            set { defaultSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default hover skin.
+        /// </summary>
+        new public static Rectangle DefaultHoverSkin
+        {
+            set { defaultHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default pressed skin.
+        /// </summary>
+        new public static Rectangle DefaultPressedSkin
+        {
+            set { defaultPressedSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default checked skin.
+        /// </summary>
+        new public static Rectangle DefaultCheckedSkin
+        {
+            set { defaultCheckedSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default checked hover skin.
+        /// </summary>
+        new public static Rectangle DefaultCheckedHoverSkin
+        {
+            set { defaultCheckedHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default checked pressed skin.
+        /// </summary>
+        new public static Rectangle DefaultCheckedPressedSkin
+        {
+            set { defaultCheckedPressedSkin = value; }
+        }
         #endregion
 
         #region Constructors
@@ -73,7 +119,12 @@ namespace WindowSystem
             : base(game, guiManager)
         {
             #region Set Default Properties
-            Button.SetSkinsFromDefaults(defaultButtonSkin);
+            Skin = defaultSkin;
+            HoverSkin = defaultHoverSkin;
+            PressedSkin = defaultPressedSkin;
+            CheckedSkin = defaultCheckedSkin;
+            CheckedHoverSkin = defaultCheckedHoverSkin;
+            CheckedPressedSkin = defaultCheckedPressedSkin;
             #endregion
         }
         #endregion

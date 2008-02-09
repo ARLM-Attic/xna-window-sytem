@@ -69,7 +69,7 @@ namespace WindowSystem
                 // Assumes that only one skin will be applied.
                 ComponentSkin skin = GetSkin(0);
                 if (skin == null)
-                    SkinLocation = new Rectangle(0, 0, value.Width, value.Height);
+                    SetSkinLocation(0, new Rectangle(0, 0, value.Width, value.Height));
 
                 skin = GetSkin(0);
                 Debug.Assert(skin != null);

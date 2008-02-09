@@ -593,12 +593,11 @@ namespace WindowSystem
         /// </summary>
         /// <param name="location">Skin rectangle to check.</param>
         /// <returns>true if rectangle is valid, otherwise false</returns>
-        internal protected static bool CheckSkinLocation(Rectangle location)
+        internal static bool CheckSkinLocation(Rectangle location)
         {
             bool result = false;
 
             if (
-                location != Rectangle.Empty &&
                 location.X >= 0 &&
                 location.Y >= 0 &&
                 location.Width > 0 &&
@@ -639,24 +638,12 @@ namespace WindowSystem
                 control.Refresh();
         }
 
-        /// <summary>
-        /// Tells all children to draw their textures.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        internal virtual void DrawTexture(GameTime gameTime)
+        public void ApplySkin(Skin skin)
         {
-            foreach (UIComponent control in this.controls)
-                control.DrawTexture(gameTime);
-        }
+            skin.Apply(this);
 
-        /// <summary>
-        /// Tells all children to draw their children.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        internal virtual void DrawChildren(GameTime gameTime, SpriteBatch spriteBatch)
-        {
             foreach (UIComponent control in this.controls)
-                control.DrawChildren(gameTime, spriteBatch);
+                control.ApplySkin(skin);
         }
 
         /// <summary>

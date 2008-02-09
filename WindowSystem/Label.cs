@@ -129,13 +129,12 @@ namespace WindowSystem
         /// <summary>
         /// Sets the text font.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public SpriteFont Font
+        /// <value>Must not be a valid path.</value>
+        public string Font
         {
             set
             {
-                Debug.Assert(value != null);
-                this.font = value;
+                this.font = GUIManager.ContentManager.Load<SpriteFont>(value);
                 Redraw();
                 this.isRedrawRequired = true;
             }
@@ -214,7 +213,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
+                Font = defaultFont;
 
             base.LoadGraphicsContent(loadAllContent);
         }

@@ -62,11 +62,9 @@ namespace WindowSystem
         private static int defaultHeight = 25;
         private static int defaultEdgeSize = 12;
         private static string defaultFont = "Content/Fonts/DefaultFont";
-        private static DefaultThreeSkins defaultSkin = new DefaultThreeSkins(
-            new Rectangle(1, 142, 25, 25),
-            new Rectangle(27, 142, 25, 25),
-            new Rectangle(52, 142, 25, 25)
-            );
+        private static Rectangle defaultSkin = new Rectangle(1, 142, 25, 25);
+        private static Rectangle defaultHoverSkin = new Rectangle(27, 142, 25, 25);
+        private static Rectangle defaultPressedSkin = new Rectangle(52, 142, 25, 25);
 
         /// <summary>
         /// Sets the default button width.
@@ -77,7 +75,7 @@ namespace WindowSystem
             set
             {
                 Debug.Assert(value > 0);
-                DefaultWidth = value;
+                defaultWidth = value;
             }
         }
 
@@ -121,11 +119,27 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default skin locations.
+        /// Sets the default control skin.
         /// </summary>
-        public static IThreeSkins DefaultSkin
+        public static Rectangle DefaultSkin
         {
-            get { return defaultSkin; }
+            set { defaultSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default control hover skin.
+        /// </summary>
+        public static Rectangle DefaultHoverSkin
+        {
+            set { defaultHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default control pressed skin.
+        /// </summary>
+        public static Rectangle DefaultPressedSkin
+        {
+            set { defaultPressedSkin = value; }
         }
         #endregion
 
@@ -136,12 +150,27 @@ namespace WindowSystem
 
         #region Properties
         /// <summary>
-        /// Gets the button skin interface, allowing skin locations to be
-        /// modified.
+        /// Sets the control skin.
         /// </summary>
-        public IThreeSkins Skin
+        public Rectangle Skin
         {
-            get { return this.buttonBar; }
+            set { this.buttonBar.SetSkinLocation(0, value); }
+        }
+
+        /// <summary>
+        /// Sets the control hover skin.
+        /// </summary>
+        public Rectangle HoverSkin
+        {
+            set { this.buttonBar.SetSkinLocation(1, value); }
+        }
+
+        /// <summary>
+        /// Sets the control pressed skin.
+        /// </summary>
+        public Rectangle PressedSkin
+        {
+            set { this.buttonBar.SetSkinLocation(2, value); }
         }
 
         /// <summary>
@@ -171,8 +200,8 @@ namespace WindowSystem
         /// <summary>
         /// The font used to draw button text.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public SpriteFont Font
+        /// <value>Must not be a valid path.</value>
+        public string Font
         {
             set
             {
@@ -211,7 +240,9 @@ namespace WindowSystem
             Width = defaultWidth;
             Height = defaultHeight;
             EdgeSize = defaultEdgeSize;
-            this.buttonBar.SetSkinsFromDefaults(defaultSkin);
+            Skin = defaultSkin;
+            HoverSkin = defaultHoverSkin;
+            PressedSkin = defaultPressedSkin;
             #endregion
         }
         #endregion
@@ -223,7 +254,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
+                Font = defaultFont;
 
             base.LoadGraphicsContent(loadAllContent);
         }

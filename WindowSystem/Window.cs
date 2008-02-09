@@ -66,21 +66,16 @@ namespace WindowSystem
         private static int defaultMargin = 5;
         private static float defaultAnimationTransparency = 0.75f;
         private static string defaultTitleFont = "Content/Fonts/DefaultHeading";
-        private static DefaultSingleSkin defaultSkin = new DefaultSingleSkin(
-            new Rectangle(15, 1, 15, 15)
-            );
-        private static DefaultSingleSkin defaultTitleBarSkin = new DefaultSingleSkin(
-            new Rectangle(1, 1, 13, 25)
-            );
-        private static DefaultThreeSkins defaultCloseButtonSkin = new DefaultThreeSkins(
-            new Rectangle(1, 168, 20, 20),
-            new Rectangle(22, 168, 20, 20),
-            new Rectangle(43, 168, 20, 20)
-            );
+        private static Rectangle defaultSkin = new Rectangle(15, 1, 15, 15);
+        private static Rectangle defaultTitleBarSkin = new Rectangle(1, 1, 13, 25);
+        private static Rectangle defaultCloseButtonSkin = new Rectangle(1, 168, 20, 20);
+        private static Rectangle defaultCloseButtonHoverSkin = new Rectangle(22, 168, 20, 20);
+        private static Rectangle defaultCloseButtonPressedSkin = new Rectangle(43, 168, 20, 20);
 
         /// <summary>
         /// Sets whether windows have close buttons by default.
         /// </summary>
+        [SkinAttribute]
         public static bool DefaultHasCloseButton
         {
             set { defaultHasCloseButton = value; }
@@ -89,7 +84,8 @@ namespace WindowSystem
         /// <summary>
         /// Sets whether the movable area covers the whole window by default.
         /// </summary>
-        public static bool DefaultFullWindowMovableArea
+        [SkinAttribute]
+        public static bool DefaultHasFullWindowMovableArea
         {
             set { defaultFullWindowMovableArea = value; }
         }
@@ -98,6 +94,7 @@ namespace WindowSystem
         /// Sets the default title bar height.
         /// </summary>
         /// <value>Must be greater than 0.</value>
+        [SkinAttribute]
         public static int DefaultTitleBarHeight
         {
             set
@@ -111,6 +108,7 @@ namespace WindowSystem
         /// Sets the default close button width and height.
         /// </summary>
         /// <value>Must be greater than 0.</value>
+        [SkinAttribute]
         public static int DefaultButtonSize
         {
             set
@@ -124,6 +122,7 @@ namespace WindowSystem
         /// Sets the default distance from the edge to display child controls.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public static int DefaultMargin
         {
             set
@@ -134,23 +133,10 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Sets the default window transparency during animation (moving or
-        /// resizing).
-        /// </summary>
-        /// <value>Must be between and including 0.0f and 1.0f.</value>
-        public static float DefaultAnimationTransparency
-        {
-            set
-            {
-                Debug.Assert(value >= 0.0f && value <= 1.0f);
-                defaultAnimationTransparency = value;
-            }
-        }
-
-        /// <summary>
         /// Sets the default title textfont.
         /// </summary>
         /// <value>Must be a non-empty string.</value>
+        [SkinAttribute]
         public static string DefaultTitleFont
         {
             set
@@ -162,27 +148,48 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default window background skin interface.
+        /// Sets the default window background skin.
         /// </summary>
-        public static ISingleSkin DefaultSkin
+        [SkinAttribute]
+        public static Rectangle DefaultSkin
         {
-            get { return defaultSkin; }
+            set { defaultSkin = value; }
         }
 
         /// <summary>
-        /// Gets the default title bar skin interface.
+        /// Sets the default title bar skin.
         /// </summary>
-        public static ISingleSkin DefaultTitleBarSkin
+        [SkinAttribute]
+        public static Rectangle DefaultTitleBarSkin
         {
-            get { return defaultTitleBarSkin; }
+            set { defaultTitleBarSkin = value; }
         }
 
         /// <summary>
-        /// Gets the default close button skin interface.
+        /// Sets the default close button skin.
         /// </summary>
-        public static IThreeSkins DefaultCloseButtonSkin
+        [SkinAttribute]
+        public static Rectangle DefaultCloseButtonSkin
         {
-            get { return defaultCloseButtonSkin; }
+            set { defaultCloseButtonSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default hover close button skin.
+        /// </summary>
+        [SkinAttribute]
+        public static Rectangle DefaultCloseButtonHoverSkin
+        {
+            set { defaultCloseButtonHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default pressed close button skin.
+        /// </summary>
+        [SkinAttribute]
+        public static Rectangle DefaultCloseButtonPressedSkin
+        {
+            set { defaultCloseButtonPressedSkin = value; }
         }
         #endregion
 
@@ -206,6 +213,7 @@ namespace WindowSystem
         /// <summary>
         /// Get/Set whether window can be resized by the user.
         /// </summary>
+        [SkinAttribute]
         public bool Resizable
         {
             get { return this.isResizable; }
@@ -249,6 +257,7 @@ namespace WindowSystem
         /// <summary>
         /// Get/Set whether the window has a close button.
         /// </summary>
+        [SkinAttribute]
         public bool HasCloseButton
         {
             get { return this.hasCloseButton; }
@@ -266,6 +275,7 @@ namespace WindowSystem
         /// <summary>
         /// Get/Set whether the movable area covers the whole window.
         /// </summary>
+        [SkinAttribute]
         public bool HasFullWindowMovableArea
         {
             get { return this.fullWindowMovableArea; }
@@ -289,6 +299,7 @@ namespace WindowSystem
         /// Get/Set the title bar height.
         /// </summary>
         /// <value>Must be greater than 0.</value>
+        [SkinAttribute]
         public int TitleBarHeight
         {
             get { return this.titleBar.Height; }
@@ -313,6 +324,7 @@ namespace WindowSystem
         /// Get/Set the close button width and height.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int ButtonSize
         {
             get { return this.closeButton.Width; }
@@ -331,6 +343,7 @@ namespace WindowSystem
         /// Get/Set the padding between the window edge and controls.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int Margin
         {
             get { return margin; }
@@ -374,8 +387,9 @@ namespace WindowSystem
         /// <summary>
         /// Sets the font of the title text.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public SpriteFont TitleFont
+        /// <value>Must be a valid path.</value>
+        [SkinAttribute]
+        public string TitleFont
         {
             set
             {
@@ -387,27 +401,48 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the background skin interface.
+        /// Gets the background skin.
         /// </summary>
-        public ISingleSkin Skin
+        [SkinAttribute]
+        public Rectangle Skin
         {
-            get { return this.box; }
+            set { this.box.SetSkinLocation(0, value); }
         }
 
         /// <summary>
-        /// Gets the title bar skin interface.
+        /// Gets the title bar skin.
         /// </summary>
-        public ISingleSkin TitleBarSkin
+        [SkinAttribute]
+        public Rectangle TitleBarSkin
         {
-            get { return titleBar; }
+            set { this.titleBar.SetSkinLocation(0, value); }
         }
 
         /// <summary>
-        /// Gets the close button skin interface.
+        /// Sets the close button skin.
         /// </summary>
-        public IThreeSkins CloseButtonSkin
+        [SkinAttribute]
+        public Rectangle CloseButtonSkin
         {
-            get { return closeButton; }
+            set { this.closeButton.SetSkinLocation(0, value); }
+        }
+
+        /// <summary>
+        /// Sets the hover close button skin.
+        /// </summary>
+        [SkinAttribute]
+        public Rectangle CloseButtonHoverSkin
+        {
+            set { this.closeButton.SetSkinLocation(1, value); }
+        }
+
+        /// <summary>
+        /// Sets the pressed close button skin.
+        /// </summary>
+        [SkinAttribute]
+        public Rectangle CloseButtonPressedSkin
+        {
+            set { this.closeButton.SetSkinLocation(2, value); }
         }
         #endregion
 
@@ -483,9 +518,11 @@ namespace WindowSystem
             Width = MinWidth;
             Height = MinHeight;
             ButtonSize = defaultButtonSize;
-            this.box.SetSkinsFromDefaults(defaultSkin);
-            this.titleBar.SetSkinsFromDefaults(defaultTitleBarSkin);
-            this.closeButton.SetSkinsFromDefaults(defaultCloseButtonSkin);
+            Skin = defaultSkin;
+            TitleBarSkin = defaultTitleBarSkin;
+            CloseButtonSkin = defaultCloseButtonSkin;
+            CloseButtonHoverSkin = defaultCloseButtonHoverSkin;
+            CloseButtonPressedSkin = defaultCloseButtonPressedSkin;
             #endregion
 
             #region Event Handlers
@@ -523,7 +560,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                TitleFont = GUIManager.ContentManager.Load<SpriteFont>(defaultTitleFont);
+                TitleFont = defaultTitleFont;
 
             base.LoadGraphicsContent(loadAllContent);
         }

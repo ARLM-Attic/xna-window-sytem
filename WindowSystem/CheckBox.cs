@@ -58,14 +58,12 @@ namespace WindowSystem
         private static int defaultHeight = 15;
         private static int defaultHMargin = 5;
         private static string defaultFont = "Content/Fonts/DefaultFont";
-        private static DefaultSixSkins defaultButtonSkin = new DefaultSixSkins(
-            new Rectangle(1, 27, 15, 15),
-            new Rectangle(17, 27, 15, 15),
-            new Rectangle(33, 27, 15, 15),
-            new Rectangle(1, 43, 15, 15),
-            new Rectangle(17, 43, 15, 15),
-            new Rectangle(33, 43, 15, 15)
-            );
+        private static Rectangle defaultSkin = new Rectangle(1, 27, 15, 15);
+        private static Rectangle defaultHoverSkin = new Rectangle(17, 27, 15, 15);
+        private static Rectangle defaultPressedSkin = new Rectangle(33, 27, 15, 15);
+        private static Rectangle defaultCheckedSkin = new Rectangle(1, 43, 15, 15);
+        private static Rectangle defaultCheckedHoverSkin = new Rectangle(17, 43, 15, 15);
+        private static Rectangle defaultCheckedPressedSkin = new Rectangle(33, 43, 15, 15);
 
         /// <summary>
         /// Sets the default control height, which is also the width and height
@@ -108,11 +106,51 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default skin locations.
+        /// Sets the default skin.
         /// </summary>
-        public static ISixSkins DefaultButtonSkin
+        public static Rectangle DefaultSkin
         {
-            get { return defaultButtonSkin; }
+            set { defaultSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default hover skin.
+        /// </summary>
+        public static Rectangle DefaultHoverSkin
+        {
+            set { defaultHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default pressed skin.
+        /// </summary>
+        public static Rectangle DefaultPressedSkin
+        {
+            set { defaultPressedSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default checked skin.
+        /// </summary>
+        public static Rectangle DefaultCheckedSkin
+        {
+            set { defaultCheckedSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default checked hover skin.
+        /// </summary>
+        public static Rectangle DefaultCheckedHoverSkin
+        {
+            set { defaultCheckedHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default checked pressed skin.
+        /// </summary>
+        public static Rectangle DefaultCheckedPressedSkin
+        {
+            set { defaultCheckedPressedSkin = value; }
         }
         #endregion
 
@@ -142,8 +180,8 @@ namespace WindowSystem
         /// <summary>
         /// Sets the label font.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public SpriteFont Font
+        /// <value>Must not be a valid path.</value>
+        public string Font
         {
             set { label.Font = value; }
         }
@@ -165,12 +203,51 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the button skin interface, allowing skin locations to be
-        /// modified.
+        /// Sets the skin.
         /// </summary>
-        public ISixSkins ButtonSkin
+        public Rectangle Skin
         {
-            get { return button; }
+            set { this.button.SetSkinLocation(0, value); }
+        }
+
+        /// <summary>
+        /// Sets the hover skin.
+        /// </summary>
+        public Rectangle HoverSkin
+        {
+            set { this.button.SetSkinLocation(1, value); }
+        }
+
+        /// <summary>
+        /// Sets the pressed skin.
+        /// </summary>
+        public Rectangle PressedSkin
+        {
+            set { this.button.SetSkinLocation(2, value); }
+        }
+
+        /// <summary>
+        /// Sets the checked skin.
+        /// </summary>
+        public Rectangle CheckedSkin
+        {
+            set { this.button.SetSkinLocation(3, value); }
+        }
+
+        /// <summary>
+        /// Sets the checked hover skin.
+        /// </summary>
+        public Rectangle CheckedHoverSkin
+        {
+            set { this.button.SetSkinLocation(4, value); }
+        }
+
+        /// <summary>
+        /// Sets the checked pressed skin.
+        /// </summary>
+        public Rectangle CheckedPressedSkin
+        {
+            set { this.button.SetSkinLocation(5, value); }
         }
 
         /// <summary>
@@ -224,7 +301,12 @@ namespace WindowSystem
             Width = defaultHeight;
             Height = defaultHeight;
             HMargin = defaultHMargin;
-            this.button.SetSkinsFromDefaults(defaultButtonSkin);
+            Skin = defaultSkin;
+            HoverSkin = defaultHoverSkin;
+            PressedSkin = defaultPressedSkin;
+            CheckedSkin = defaultCheckedSkin;
+            CheckedHoverSkin = defaultCheckedHoverSkin;
+            CheckedPressedSkin = defaultCheckedPressedSkin;
             #endregion
 
             #region Event Handlers
@@ -240,7 +322,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
+                Font = defaultFont;
 
             base.LoadGraphicsContent(loadAllContent);
         }

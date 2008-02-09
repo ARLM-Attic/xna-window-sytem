@@ -64,11 +64,9 @@ namespace WindowSystem
         #region Default Properties
         private static int defaultWidth = 200;
         private static int defaultHeight = 20;
-        private static DefaultThreeSkins defaultButtonSkin = new DefaultThreeSkins(
-            new Rectangle(138, 5, 20, 20),
-            new Rectangle(159, 5, 20, 20),
-            new Rectangle(180, 5, 20, 20)
-            );
+        private static Rectangle defaultButtonSkin = new Rectangle(138, 5, 20, 20);
+        private static Rectangle defaultButtonHoverSkin = new Rectangle(159, 5, 20, 20);
+        private static Rectangle defaultButtonPressedSkin = new Rectangle(180, 5, 20, 20);
 
         /// <summary>
         /// Sets the default control width.
@@ -97,11 +95,27 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default button skin locations.
+        /// Sets the default skin of the ComboBox button.
         /// </summary>
-        public static IThreeSkins DefaultButtonSkin
+        public static Rectangle DefaultButtonSkin
         {
-            get { return defaultButtonSkin; }
+            set { defaultButtonSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default hover skin of the ComboBox button.
+        /// </summary>
+        public static Rectangle DefaultButtonHoverSkin
+        {
+            set { defaultButtonHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default pressed skin of the ComboBox button.
+        /// </summary>
+        public static Rectangle DefaultButtonPressedSkin
+        {
+            set { defaultButtonPressedSkin = value; }
         }
         #endregion
 
@@ -118,7 +132,7 @@ namespace WindowSystem
         /// </summary>
         public string SelectedText
         {
-            get { return textBox.Text; }
+            get { return this.textBox.Text; }
         }
 
         /// <summary>
@@ -129,9 +143,9 @@ namespace WindowSystem
             get { return listBox.SelectedIndex; }
             set
             {
-                listBox.SelectedIndex = value;
-                if (listBox.SelectedIndex == -1)
-                    textBox.Text = "";
+                this.listBox.SelectedIndex = value;
+                if (this.listBox.SelectedIndex == -1)
+                    this.textBox.Text = "";
             }
         }
 
@@ -141,16 +155,31 @@ namespace WindowSystem
         public bool IsEditable
         {
             get { return textBox.IsEditable; }
-            set { textBox.IsEditable = value; }
+            set { this.textBox.IsEditable = value; }
         }
 
         /// <summary>
-        /// Gets the button skin interface, allowing skin locations to be
-        /// modified.
+        /// Sets the skin of the ComboBox skin.
         /// </summary>
-        public IThreeSkins ButtonSkin
+        public Rectangle ButtonSkin
         {
-            get { return button; }
+            set { this.button.SetSkinLocation(0, value); }
+        }
+
+        /// <summary>
+        /// Sets the hover skin of the ComboBox skin.
+        /// </summary>
+        public Rectangle ButtonHoverSkin
+        {
+            set { this.button.SetSkinLocation(1, value); }
+        }
+
+        /// <summary>
+        /// Sets the pressed skin of the ComboBox skin.
+        /// </summary>
+        public Rectangle ButtonPressedSkin
+        {
+            set { this.button.SetSkinLocation(2, value); }
         }
         #endregion
 
@@ -187,7 +216,9 @@ namespace WindowSystem
             #region Set Default Properties
             this.Width = defaultWidth;
             this.Height = defaultHeight;
-            this.button.SetSkinsFromDefaults(defaultButtonSkin);
+            ButtonSkin = defaultButtonSkin;
+            ButtonHoverSkin = defaultButtonHoverSkin;
+            ButtonPressedSkin = defaultButtonPressedSkin;
             #endregion
 
             #region Event Handlers

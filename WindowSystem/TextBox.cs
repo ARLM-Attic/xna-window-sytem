@@ -62,8 +62,7 @@ namespace WindowSystem
         private static int defaultHMargin = 5;
         private static int defaultVMargin = 2;
         private static string defaultFont = "Content/Fonts/DefaultFont";
-        private static DefaultSingleSkin defaultSkin = new DefaultSingleSkin(
-            new Rectangle(84, 41, 25, 25));
+        private static Rectangle defaultSkin = new Rectangle(84, 41, 25, 25);
 
         /// <summary>
         /// Sets the default control width.
@@ -132,11 +131,11 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default skin.
+        /// Sets the default skin.
         /// </summary>
-        public static DefaultSingleSkin DefaultSkin
+        public static Rectangle DefaultSkin
         {
-            get { return defaultSkin; }
+            set { defaultSkin = value; }
         }
         #endregion
 
@@ -194,22 +193,21 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the skin interface.
+        /// Sets the control skin.
         /// </summary>
-        public ISingleSkin Skin
+        public Rectangle Skin
         {
-            get { return this.box; }
+            set { this.box.SetSkinLocation(0, value); }
         }
 
         /// <summary>
         /// Sets the text font.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public SpriteFont Font
+        /// <value>Must not be a valid path.</value>
+        public string Font
         {
             set
             {
-                Debug.Assert(value != null);
                 this.label.Font = value;
             }
         }
@@ -252,7 +250,7 @@ namespace WindowSystem
             Height = defaultHeight;
             HMargin = defaultHMargin;
             VMargin = defaultVMargin;
-            this.box.SetSkinsFromDefaults(DefaultSkin);
+            Skin = defaultSkin;
             #endregion
         }
         #endregion
@@ -264,7 +262,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
+                Font = defaultFont;
 
             base.LoadGraphicsContent(loadAllContent);
         }

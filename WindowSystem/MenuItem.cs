@@ -75,10 +75,8 @@ namespace WindowSystem
         #region Default Properties
         private static int defaultHMargin = 5;
         private static int defaultVMargin = 2;
-        private static DefaultSingleSkin defaultHighlightSkin = new DefaultSingleSkin(
-            new Rectangle(61, 67, 15, 15)
-            );
-        private static Rectangle defaultArrowIconLocation = new Rectangle(114, 43, 4, 7);
+        private static Rectangle defaultHighlightSkin = new Rectangle(61, 67, 15, 15);
+        private static Rectangle defaultArrowSkin = new Rectangle(114, 43, 4, 7);
 
         /// <summary>
         /// Sets the default horizontal padding.
@@ -107,19 +105,19 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default highlight skin interface.
+        /// Sets the default highlight skin.
         /// </summary>
-        public static ISingleSkin DefaultHighlightSkin
+        public static Rectangle DefaultHighlightSkin
         {
-            get { return defaultHighlightSkin; }
+            set { defaultHighlightSkin = value; }
         }
 
         /// <summary>
         /// Sets the default arrow icon location.
         /// </summary>
-        public static Rectangle DefaultArrowSkinLocation
+        public static Rectangle DefaultArrowSkin
         {
-            set { defaultArrowIconLocation = value; }
+            set { defaultArrowSkin = value; }
         }
         #endregion
 
@@ -187,8 +185,8 @@ namespace WindowSystem
         /// <summary>
         /// Sets the font used for menu text.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public SpriteFont Font
+        /// <value>Must not be a valid path.</value>
+        public string Font
         {
             set
             {
@@ -216,23 +214,23 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the highlight skin interface.
+        /// Sets the highlight skin.
         /// </summary>
-        public ISingleSkin HighlightSkin
+        public Rectangle HighlightSkin
         {
-            get { return this.highlightBox; }
+            set { this.highlightBox.SetSkinLocation(0, value); }
         }
 
         /// <summary>
         /// Sets the arrow icon location.
         /// </summary>
         /// <value>Must be a valid skin location.</value>
-        public Rectangle ArrowIconLocation
+        public Rectangle ArrowSkin
         {
             set
             {
                 Debug.Assert(CheckSkinLocation(value));
-                this.arrow.SkinLocation = value;
+                this.arrow.SetSkinLocation(0, value);
                 this.arrow.ResizeToFit();
             }
         }
@@ -288,8 +286,8 @@ namespace WindowSystem
             #region Set Default Properties
             HMargin = defaultHMargin;
             VMargin = defaultVMargin;
-            this.highlightBox.SetSkinsFromDefaults(defaultHighlightSkin);
-            ArrowIconLocation = defaultArrowIconLocation;
+            HighlightSkin = defaultHighlightSkin;
+            ArrowSkin = defaultArrowSkin;
             #endregion
 
             #region Event Handlers

@@ -73,9 +73,7 @@ namespace WindowSystem
         private static int defaultHMargin = 5;
         private static int defaultVMargin = 2;
         private static string defaultFont = "Content/Fonts/DefaultFont";
-        private static DefaultSingleSkin defaultSkin = new DefaultSingleSkin(
-            new Rectangle(84, 41, 25, 25)
-            );
+        private static Rectangle defaultSkin = new Rectangle(84, 41, 25, 25);
 
         /// <summary>
         /// Sets the default control width.
@@ -144,11 +142,11 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default skin interface.
+        /// Sets the default skin.
         /// </summary>
-        public static ISingleSkin DefaultSkin
+        public static Rectangle DefaultSkin
         {
-            get { return defaultSkin; }
+            set { defaultSkin = value; }
         }
         #endregion
 
@@ -159,6 +157,7 @@ namespace WindowSystem
         private ScrollBar scrollBar;
         private List<Label> entries;
         private SpriteFont font;
+        private string fontFileName;
         private Label selectedLabel;
         private int selectedIndex;
         private int hMargin;
@@ -203,14 +202,14 @@ namespace WindowSystem
         /// <summary>
         /// Sets the font to use for listbox entries.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public SpriteFont Font
+        /// <value>Must not be a valid path.</value>
+        public string Font
         {
             set
             {
-                Debug.Assert(value != null);
-                this.font = value;
-                this.scrollBar.ScrollStep = font.LineSpacing;
+                this.fontFileName = value;
+                this.font = GUIManager.ContentManager.Load<SpriteFont>(value);
+                this.scrollBar.ScrollStep = this. font.LineSpacing;
                 RefreshEntries();
             }
         }
@@ -246,11 +245,11 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the skin interface
+        /// Sets the control skin.
         /// </summary>
-        public ISingleSkin Skin
+        public Rectangle Skin
         {
-            get { return this.box; }
+            set { this.box.SetSkinLocation(0, value); }
         }
         #endregion
 
@@ -295,7 +294,7 @@ namespace WindowSystem
             Height = defaultHeight;
             HMargin = defaultHMargin;
             VMargin = defaultVMargin;
-            this.box.SetSkinsFromDefaults(defaultSkin);
+            Skin = defaultSkin;
             #endregion
 
             #region Event Handlers
@@ -322,7 +321,7 @@ namespace WindowSystem
         protected override void LoadGraphicsContent(bool loadAllContent)
         {
             if (loadAllContent)
-                Font = GUIManager.ContentManager.Load<SpriteFont>(defaultFont);
+                Font = defaultFont;
 
             base.LoadGraphicsContent(loadAllContent);
         }
@@ -351,7 +350,7 @@ namespace WindowSystem
                 label.Y = y;
                 if (this.font != null)
                 {
-                    label.Font = this.font;
+                    label.Font = this.fontFileName;
                     label.Height = this.font.LineSpacing;
                 }
                 else
@@ -577,10 +576,10 @@ namespace WindowSystem
             base.OnResize(sender);
 
             this.box.Width = Width;
-            this.scrollBar.X = Width - this.scrollBar.Width;// -1;
+            this.scrollBar.X = Width - this.scrollBar.Width;
 
             this.box.Height = Height;
-            this.scrollBar.Height = Height;// -2;
+            this.scrollBar.Height = Height;
 
             RefreshMargins();
             RefreshEntries();

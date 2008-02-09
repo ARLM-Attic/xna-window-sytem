@@ -71,24 +71,16 @@ namespace WindowSystem
     {
         #region Default Properties
         private static int defaultButtonSize = 17;
-        private static DefaultSingleSkin defaultBackgroundSkin = new DefaultSingleSkin(
-            new Rectangle(66, 5, 17, 17)
-            );
-        private static DefaultThreeSkins defaultTopButtonSkin = new DefaultThreeSkins(
-            new Rectangle(84, 23, 17, 17),
-            new Rectangle(102, 23, 17, 17),
-            new Rectangle(120, 23, 17, 17)
-            );
-        private static DefaultThreeSkins defaultBottomButtonSkin = new DefaultThreeSkins(
-            new Rectangle(84, 5, 17, 17),
-            new Rectangle(102, 5, 17, 17),
-            new Rectangle(120, 5, 17, 17)
-            );
-        private static DefaultThreeSkins defaultThumbSkin = new DefaultThreeSkins(
-            new Rectangle(66, 23, 17, 10),
-            new Rectangle(66, 34, 17, 10),
-            new Rectangle(66, 45, 17, 10)
-            );
+        private static Rectangle defaultBackgroundSkin = new Rectangle(66, 5, 17, 17);
+        private static Rectangle defaultTopButtonSkin = new Rectangle(84, 23, 17, 17);
+        private static Rectangle defaultTopButtonHoverSkin = new Rectangle(102, 23, 17, 17);
+        private static Rectangle defaultTopButtonPressedSkin = new Rectangle(120, 23, 17, 17);
+        private static Rectangle defaultBottomButtonSkin = new Rectangle(84, 5, 17, 17);
+        private static Rectangle defaultBottomButtonHoverSkin = new Rectangle(102, 5, 17, 17);
+        private static Rectangle defaultBottomButtonPressedSkin = new Rectangle(120, 5, 17, 17);
+        private static Rectangle defaultThumbSkin = new Rectangle(66, 23, 17, 10);
+        private static Rectangle defaultThumbHoverSkin = new Rectangle(66, 34, 17, 10);
+        private static Rectangle defaultThumbPressedSkin = new Rectangle(66, 45, 17, 10);
 
         /// <summary>
         /// Sets the default button width and height.
@@ -101,6 +93,86 @@ namespace WindowSystem
                 Debug.Assert(value > 0);
                 defaultButtonSize = value;
             }
+        }
+
+        /// <summary>
+        /// Sets the background skin.
+        /// </summary>
+        public static Rectangle DefaultBackgroundSkin
+        {
+            set { defaultBackgroundSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the top button skin.
+        /// </summary>
+        public static Rectangle DefaultTopButtonSkin
+        {
+            set { defaultTopButtonSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the top button hover skin.
+        /// </summary>
+        public static Rectangle DefaultTopButtonHoverSkin
+        {
+            set { defaultTopButtonHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the top button pressed skin.
+        /// </summary>
+        public static Rectangle DefaultTopButtonPressedSkin
+        {
+            set { defaultTopButtonPressedSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the bottom button skin.
+        /// </summary>
+        public static Rectangle DefaultBottomButtonSkin
+        {
+            set { defaultBottomButtonSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the bottom button hover skin.
+        /// </summary>
+        public static Rectangle DefaultBottomButtonHoverSkin
+        {
+            set { defaultBottomButtonHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the bottom button pressed skin.
+        /// </summary>
+        public static Rectangle DefaultBottomButtonPressedSkin
+        {
+            set { defaultBottomButtonPressedSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the thumb skin.
+        /// </summary>
+        public static Rectangle DefaultThumbSkin
+        {
+            set { defaultThumbSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the thumb hover skin.
+        /// </summary>
+        public static Rectangle DefaultThumbHoverSkin
+        {
+            set { defaultThumbHoverSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the thumb pressed skin.
+        /// </summary>
+        public static Rectangle DefaultThumbPressedSkin
+        {
+            set { defaultThumbPressedSkin = value; }
         }
         #endregion
 
@@ -127,6 +199,21 @@ namespace WindowSystem
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Sets the button size, and the width of the scrollbar.
+        /// </summary>
+        public int ButtonSize
+        {
+            get { return this.topButton.Width; }
+            set
+            {
+                MinWidth = value;
+                MinHeight = 2 * value;
+                this.thumb.Y = value;
+                Width = value;
+            }
+        }
+
         /// <summary>
         /// Get/Set the amount size of the viewport.
         /// </summary>
@@ -182,27 +269,83 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the thumb skin interface.
+        /// Sets the control background skin.
         /// </summary>
-        public IThreeSkins ThumbSkin
+        public Rectangle BackgroundSkin
         {
-            get { return this.thumb; }
-        }
-        
-        /// <summary>
-        /// Gets the top button skin interface.
-        /// </summary>
-        public IThreeSkins TopButtonSkin
-        {
-            get { return this.topButton; }
+            set { SetSkinLocation(0, value); }
         }
 
         /// <summary>
-        /// Gets the bottom button skin interface.
+        /// Sets the top button skin.
         /// </summary>
-        public IThreeSkins BottomButtonSkin
+        public Rectangle TopButtonSkin
         {
-            get { return this.bottomButton; }
+            set { this.topButton.SetSkinLocation(0, value); }
+        }
+
+        /// <summary>
+        /// Sets the top button hover skin.
+        /// </summary>
+        public Rectangle TopButtonHoverSkin
+        {
+            set { this.topButton.SetSkinLocation(1, value); }
+        }
+
+        /// <summary>
+        /// Sets the top button pressed skin.
+        /// </summary>
+        public Rectangle TopButtonPressedSkin
+        {
+            set { this.topButton.SetSkinLocation(2, value); }
+        }
+
+        /// <summary>
+        /// Sets the bottom button skin.
+        /// </summary>
+        public Rectangle BottomButtonSkin
+        {
+            set { this.bottomButton.SetSkinLocation(0, value); }
+        }
+
+        /// <summary>
+        /// Sets the bottom button hover skin.
+        /// </summary>
+        public Rectangle BottomButtonHoverSkin
+        {
+            set { this.bottomButton.SetSkinLocation(1, value); }
+        }
+
+        /// <summary>
+        /// Sets the bottom button pressed skin.
+        /// </summary>
+        public Rectangle BottomButtonPressedSkin
+        {
+            set { this.bottomButton.SetSkinLocation(2, value); }
+        }
+
+        /// <summary>
+        /// Sets the thumb skin.
+        /// </summary>
+        public Rectangle ThumbSkin
+        {
+            set { this.thumb.SetSkinLocation(0, value); }
+        }
+
+        /// <summary>
+        /// Sets the thumb hover skin.
+        /// </summary>
+        public Rectangle ThumbHoverSkin
+        {
+            set { this.thumb.SetSkinLocation(1, value); }
+        }
+
+        /// <summary>
+        /// Sets the thumb pressed skin.
+        /// </summary>
+        public Rectangle ThumbPressedSkin
+        {
+            set { this.thumb.SetSkinLocation(2, value); }
         }
 
         /// <summary>
@@ -272,10 +415,16 @@ namespace WindowSystem
 
             #region Set Default Properties
             Width = defaultButtonSize;
-            SetSkinsFromDefaults(defaultBackgroundSkin);
-            this.topButton.SetSkinsFromDefaults(defaultTopButtonSkin);
-            this.bottomButton.SetSkinsFromDefaults(defaultBottomButtonSkin);
-            this.thumb.SetSkinsFromDefaults(defaultThumbSkin);
+            BackgroundSkin = defaultBackgroundSkin;
+            TopButtonSkin = defaultTopButtonSkin;
+            TopButtonHoverSkin = defaultTopButtonHoverSkin;
+            TopButtonPressedSkin = defaultTopButtonPressedSkin;
+            BottomButtonSkin = defaultBottomButtonSkin;
+            BottomButtonHoverSkin = defaultBottomButtonHoverSkin;
+            BottomButtonPressedSkin = defaultBottomButtonPressedSkin;
+            ThumbSkin = defaultThumbSkin;
+            ThumbHoverSkin = defaultThumbHoverSkin;
+            ThumbPressedSkin = defaultThumbPressedSkin;
             #endregion
 
             #region Event Handlers

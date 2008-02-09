@@ -119,6 +119,152 @@ namespace WindowSystem
         private Point resizingNESWOffset;
         #endregion
 
+        #region Properties
+        /// <summary>
+        /// Sets the mouse cursor skin location.
+        /// </summary>
+        public Rectangle NormalLocation
+        {
+            set
+            {
+                this.normalLocation = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the mouse cursor skin location.
+        /// </summary>
+        public Rectangle MovingLocation
+        {
+            set
+            {
+                this.movingLocation = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the mouse cursor skin location.
+        /// </summary>
+        public Rectangle ResizingNSLocation
+        {
+            set
+            {
+                this.resizingNSLocation = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the mouse cursor skin location.
+        /// </summary>
+        public Rectangle ResizingWELocation
+        {
+            set
+            {
+                this.resizingWELocation = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the mouse cursor skin location.
+        /// </summary>
+        public Rectangle ResizingNWSELocation
+        {
+            set
+            {
+                this.resizingNWSELocation = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the mouse cursor skin location.
+        /// </summary>
+        public Rectangle ResizingNESWLocation
+        {
+            set
+            {
+                this.resizingNESWLocation = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the offset of the pointer in the skin.
+        /// </summary>
+        public Point NormalOffset
+        {
+            set
+            {
+                this.normalOffset = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the offset of the pointer in the skin.
+        /// </summary>
+        public Point MovingOffset
+        {
+            set
+            {
+                this.movingOffset = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the offset of the pointer in the skin.
+        /// </summary>
+        public Point ResizingNSOffset
+        {
+            set
+            {
+                this.resizingNSOffset = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the offset of the pointer in the skin.
+        /// </summary>
+        public Point ResizingWEOffset
+        {
+            set
+            {
+                this.resizingWEOffset = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the offset of the pointer in the skin.
+        /// </summary>
+        public Point ResizingNWSEOffset
+        {
+            set
+            {
+                this.resizingNWSEOffset = value;
+                SetMouseState(mouseState);
+            }
+        }
+
+        /// <summary>
+        /// Sets the offset of the pointer in the skin.
+        /// </summary>
+        public Point ResizingNESWOffset
+        {
+            set
+            {
+                this.resizingNESWOffset = value;
+                SetMouseState(mouseState);
+            }
+        }
+        #endregion
+
         /// <summary>
         /// Constructor adds game component, and sets up initial cursor.
         /// </summary>
@@ -150,7 +296,7 @@ namespace WindowSystem
         /// Sets the skin location for a particular cursor.
         /// </summary>
         /// <param name="state">Mouse state.</param>
-        public void SetSkinLocation(MouseState state, Rectangle location, Point offset)
+        private void SetSkinLocation(MouseState state, Rectangle location, Point offset)
         {
             if (UIComponent.CheckSkinLocation(location))
             {

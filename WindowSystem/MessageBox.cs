@@ -81,59 +81,106 @@ namespace WindowSystem
     public class MessageBox : Dialog
     {
         #region DefaultProperties
-        private static DefaultSingleSkin defaultInfoSkin = new DefaultSingleSkin(
-            new Rectangle(1, 91, 25, 25)
-            );
-        private static DefaultSingleSkin defaultErrorSkin = new DefaultSingleSkin(
-            new Rectangle(27, 91, 25, 25)
-            );
-        private static DefaultSingleSkin defaultWarningSkin = new DefaultSingleSkin(
-            new Rectangle(53, 91, 25, 25)
-            );
-        private static DefaultSingleSkin defaultQuestionSkin = new DefaultSingleSkin(
-            new Rectangle(79, 91, 25, 25)
-            );
+        private static Rectangle defaultInfoSkin = new Rectangle(1, 91, 25, 25);
+        private static Rectangle defaultErrorSkin = new Rectangle(27, 91, 25, 25);
+        private static Rectangle defaultWarningSkin = new Rectangle(53, 91, 25, 25);
+        private static Rectangle defaultQuestionSkin = new Rectangle(79, 91, 25, 25);
 
         /// <summary>
-        /// Gets the default skin interface.
+        /// Sets the default info image.
         /// </summary>
-        public static ISingleSkin DefaultInfoSkin
+        public static Rectangle DefaultInfoSkin
         {
-            get { return defaultInfoSkin; }
+            set { defaultInfoSkin = value; }
         }
 
         /// <summary>
-        /// Gets the default skin interface.
+        /// Sets the default error image.
         /// </summary>
-        public static ISingleSkin DefaultErrorSkin
+        public static Rectangle DefaultErrorSkin
         {
-            get { return defaultErrorSkin; }
+            set { defaultErrorSkin = value; }
         }
 
         /// <summary>
-        /// Gets the default skin interface.
+        /// Sets the default warning image.
         /// </summary>
-        public static ISingleSkin DefaultWarningSkin
+        public static Rectangle DefaultWarningSkin
         {
-            get { return defaultWarningSkin; }
+            set { defaultWarningSkin = value; }
         }
 
         /// <summary>
-        /// Gets the default skin interface.
+        /// Sets the default question image.
         /// </summary>
-        public static ISingleSkin DefaultQuestionSkin
+        public static Rectangle DefaultQuestionSkin
         {
-            get { return defaultQuestionSkin; }
+            set { defaultQuestionSkin = value; }
         }
         #endregion
 
         #region Fields
         private const int LargeSeperation = 10;
         private const int SmallSeperation = 5;
+        private Rectangle infoSkin;
+        private Rectangle errorSkin;
+        private Rectangle warningSkin;
+        private Rectangle questionSkin;
         private Icon icon;
         private Label message;
         private MessageBoxButtons buttons;
         private List<TextButton> buttonList;
+        private MessageBoxType type;
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Sets the info image.
+        /// </summary>
+        public Rectangle InfoSkin
+        {
+            set
+            {
+                defaultInfoSkin = value;
+                ArrangeWindow(this.type);
+            }
+        }
+
+        /// <summary>
+        /// Sets the error image.
+        /// </summary>
+        public Rectangle ErrorSkin
+        {
+            set
+            {
+                defaultErrorSkin = value;
+                ArrangeWindow(this.type);
+            }
+        }
+
+        /// <summary>
+        /// Sets the warning image.
+        /// </summary>
+        public Rectangle WarningSkin
+        {
+            set
+            {
+                defaultWarningSkin = value;
+                ArrangeWindow(this.type);
+            }
+        }
+
+        /// <summary>
+        /// Sets the question image.
+        /// </summary>
+        public Rectangle QuestionSkin
+        {
+            set
+            {
+                this.questionSkin = value;
+                ArrangeWindow(this.type);
+            }
+        }
         #endregion
 
         #region Constructor
@@ -168,49 +215,16 @@ namespace WindowSystem
             if (this.buttons == MessageBoxButtons.OK || this.buttons == MessageBoxButtons.Yes_No)
                 HasCloseButton = false;
 
-            bool showIcon = true;
-            // Check which icon to display
-            switch (type)
-            {
-                case MessageBoxType.Info:
-                    this.icon.SetSkinsFromDefaults(defaultInfoSkin);
-                    break;
-                case MessageBoxType.Error:
-                    this.icon.SetSkinsFromDefaults(defaultErrorSkin);
-                    break;
-                case MessageBoxType.Warning:
-                    this.icon.SetSkinsFromDefaults(defaultWarningSkin);
-                    break;
-                case MessageBoxType.Question:
-                    this.icon.SetSkinsFromDefaults(defaultQuestionSkin);
-                    break;
-                default:
-                    showIcon = false;
-                    break;
-            }
+            this.infoSkin = defaultInfoSkin;
+            this.errorSkin = defaultErrorSkin;
+            this.warningSkin = defaultWarningSkin;
+            this.questionSkin = defaultQuestionSkin;
 
-            if (showIcon)
-            {
-                Add(this.icon);
-
-                this.icon.X = LargeSeperation;
-                this.icon.Y = LargeSeperation;
-                this.icon.ResizeToFit();
-                this.icon.CanHaveFocus = false;
-                this.message.X = this.icon.X + this.icon.Width + LargeSeperation;
-            }
-            else
-                this.message.X = LargeSeperation;
+            this.type = type;
 
             Add(this.message);
-            this.message.Y = LargeSeperation;
-            this.message.Text = message;
-            this.message.Width = this.message.TextWidth;
-            this.message.Height = this.message.TextHeight;
-
             this.TitleText = title;
-            this.Resizable = false;
-            this.ClientWidth = this.message.X + this.message.Width + LargeSeperation;
+            this.message.Text = message;
 
             int numButtons = 0;
 
@@ -220,8 +234,6 @@ namespace WindowSystem
                 numButtons = 2;
             else if (this.buttons == MessageBoxButtons.Yes_No_Cancel)
                 numButtons = 3;
-
-            int width = 0;
 
             for (int i = 0; i < numButtons; i++)
             {
@@ -246,12 +258,70 @@ namespace WindowSystem
                 else
                     newButton.Text = "Cancel";
 
-                newButton.Y = this.message.Y + this.message.Height + (LargeSeperation * 2);
                 newButton.Click += new ClickHandler(OnClick);
+            }
 
-                width += newButton.Width;
-                if (i != numButtons - 1)
+            ArrangeWindow(type);
+        }
+        #endregion
+
+        private void ArrangeWindow(MessageBoxType type)
+        {
+            bool showIcon = true;
+
+            // Check which icon to display
+            switch (type)
+            {
+                case MessageBoxType.Info:
+                    this.icon.SetSkinLocation(0, this.infoSkin);
+                    break;
+                case MessageBoxType.Error:
+                    this.icon.SetSkinLocation(0, this.errorSkin);
+                    break;
+                case MessageBoxType.Warning:
+                    this.icon.SetSkinLocation(0, this.warningSkin);
+                    break;
+                case MessageBoxType.Question:
+                    this.icon.SetSkinLocation(0, this.questionSkin);
+                    break;
+                default:
+                    showIcon = false;
+                    break;
+            }
+
+            if (showIcon)
+            {
+                Add(this.icon);
+
+                this.icon.X = LargeSeperation;
+                this.icon.Y = LargeSeperation;
+                this.icon.ResizeToFit();
+                this.icon.CanHaveFocus = false;
+                this.message.X = this.icon.X + this.icon.Width + LargeSeperation;
+            }
+            else
+                this.message.X = LargeSeperation;
+
+            
+            this.message.Y = LargeSeperation;
+                        this.message.Width = this.message.TextWidth;
+            this.message.Height = this.message.TextHeight;
+
+            
+            this.Resizable = false;
+            this.ClientWidth = this.message.X + this.message.Width + LargeSeperation;
+
+            int width = 0;
+
+            int i = 0;
+            foreach (TextButton button in this.buttonList)
+            {
+                button.Y = this.message.Y + this.message.Height + (LargeSeperation * 2);
+
+                width += button.Width;
+                if (i != this.buttonList.Count - 1)
                     width += SmallSeperation;
+                i++;
             }
 
             // See if client needs to be enlarged to hold buttons
@@ -273,7 +343,6 @@ namespace WindowSystem
             // Centre message box on the screen
             CenterWindow();
         }
-        #endregion
 
         /// <summary>
         /// Ensure controls that haven't been added are cleaned up.

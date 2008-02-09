@@ -22,6 +22,9 @@ namespace WindowSystemTestbed
         GUIManager gui;
         SpriteFont myFont;
         int windowNumber = 0;
+        Skin skin;
+        
+        int before = 0;
 
         public WindowSystemTestbed()
         {
@@ -145,8 +148,8 @@ namespace WindowSystemTestbed
                 gui.Add(window);
 
                 //DisplaySettingsDialog dialog = new DisplaySettingsDialog(this, gui, graphics);
-                //MessageBox dialog = new MessageBox(this, gui, "Message box asking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
-                //dialog.Show(false);
+                MessageBox dialog = new MessageBox(this, gui, "Message box asking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
+                dialog.Show(false);
 
                 //if (button != null)
                 //{
@@ -165,6 +168,11 @@ namespace WindowSystemTestbed
                 //    control = new DisplaySettingsDialog(this, gui, graphics);
                 //    gui.Add(control);
                 //}
+
+                if (before == 1)
+                    gui.ApplySkin(skin, true, true);
+
+                before++;
             }
             else if (args.Key == Keys.A)
             {
@@ -206,6 +214,8 @@ namespace WindowSystemTestbed
                 //skinTexture = content.Load<Texture2D>("Content/Textures/DefaultStyle");
                 //gui.SkinTexture = skinTexture;
                 myFont = content.Load<SpriteFont>("Content/Fonts/Verdana");
+
+                skin = content.Load<Skin>("Content/DefaultSkin");
 
                 // Set up default gui fonts
                 //WindowSystem.Window.DefaultTitleFont = myFont;

@@ -60,20 +60,6 @@ namespace WindowSystem
     {
         #region Default Properties
         private static string defaultSkinTexture = "Content/Textures/DefaultStyle";
-
-        /// <summary>
-        /// Sets the default gui texture.
-        /// </summary>
-        /// <value>Must be a non-empty string.</value>
-        public static string DefaultSkinTexture
-        {
-            set
-            {
-                Debug.Assert(value != null);
-                Debug.Assert(value.Length > 0);
-                defaultSkinTexture = value;
-            }
-        }
         #endregion
 
         #region Fields
@@ -105,10 +91,30 @@ namespace WindowSystem
         /// <summary>
         /// Gets the texture containing the graphics of all GUI components.
         /// </summary>
-        /// <value>Must not be null.</value>
-        public Texture2D SkinTexture
+        internal Texture2D SkinTexture
         {
             get { return this.skinTexture; }
+        }
+
+        /// <summary>
+        /// Gets the mouse cursor.
+        /// </summary>
+        internal MouseCursor MouseCursor
+        {
+            get { return this.mouseCursor; }
+        }
+
+        /// <summary>
+        /// Sets the current texture file name and loads it.
+        /// </summary>
+        /// <value>Must be a valid path.</value>
+        public string SkinTextureFileName
+        {
+            set
+            {
+                Debug.Assert(value != null && value.Length > 0);
+                this.skinTexture = contentManager.Load<Texture2D>(value);
+            }
         }
         #endregion
 
@@ -152,7 +158,7 @@ namespace WindowSystem
                 if (contentManager == null)
                     contentManager = new ContentManager(Game.Services);
 
-                this.skinTexture = contentManager.Load<Texture2D>(defaultSkinTexture);
+                SkinTextureFileName = defaultSkinTexture;
 
                 this.spriteBatch = new SpriteBatch(GraphicsDevice);
             }
@@ -287,6 +293,58 @@ namespace WindowSystem
             this.modalControl = modalControl;
         }
 
+        /// <summary>
+        /// This applies a skin to this gui. If applyDefaults is true, then the
+        /// defaults for subsequent controls are also changed.
+        /// </summary>
+        /// <param name="skin">The skin to apply.</param>
+        /// <param name="applyDefaults">Should control defaults be modified?</param>
+        /// <param name="applyCurrent">Should existing controls have their properties modified?</param>
+        public void ApplySkin(Skin skin, bool applyCurrent, bool applyDefaults)
+        {
+            // Apply to GUI and possibly control defaults
+            skin.Apply(this, applyDefaults);
+
+            // Apply to every control already part of the GUI
+            if (applyCurrent)
+            {
+                foreach (UIComponent control in this.controls)
+                    control.ApplySkin(skin);
+            }
+        }
+
+        /// <summary>
+        /// This is called when the GUI should draw itself. Tells all controls
+        /// to draw themselves, and then their children. Also draws the mouse
+        /// cursor.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        public override void Draw(GameTime gameTime)
+        {
+            if (this.skinTexture != null)
+            {
+                // At this stage the scissor rectangle is the whole screen
+                Rectangle parentScissor = new Rectangle(
+                    0,
+                    0,
+                    GraphicsDevice.Viewport.Width,
+                    GraphicsDevice.Viewport.Height
+                    );
+
+                this.spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+
+                foreach (UIComponent control in this.controls)
+                    control.Draw(this.spriteBatch, parentScissor);
+
+                // Draw mouse cursor last
+                this.mouseCursor.DrawCursor(gameTime, this.spriteBatch);
+
+                this.spriteBatch.End();
+            }
+
+            base.Draw(gameTime);
+        }
+
         #region Event Handlers
         /// <summary>
         /// Event handler called when requesting focus. Checks if a new control
@@ -367,38 +425,6 @@ namespace WindowSystem
             }
         }
         #endregion
-
-        /// <summary>
-        /// This is called when the GUI should draw itself. Tells all controls
-        /// to draw themselves, and then their children. Also draws the mouse
-        /// cursor.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Draw(GameTime gameTime)
-        {
-            if (this.skinTexture != null)
-            {
-                // At this stage the scissor rectangle is the whole screen
-                Rectangle parentScissor = new Rectangle(
-                    0,
-                    0,
-                    GraphicsDevice.Viewport.Width,
-                    GraphicsDevice.Viewport.Height
-                    );
-
-                this.spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-
-                foreach (UIComponent control in this.controls)
-                    control.Draw(this.spriteBatch, parentScissor);
-
-                // Draw mouse cursor last
-                this.mouseCursor.DrawCursor(gameTime, this.spriteBatch);
-
-                this.spriteBatch.End();
-            }
-
-            base.Draw(gameTime);
-        }
 
         #region Utility Functions
         /// <summary>

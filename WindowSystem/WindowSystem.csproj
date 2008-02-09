@@ -54,6 +54,8 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bar.cs">
@@ -139,6 +141,10 @@
     <Compile Include="ScrollBar.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>
       <Name>ScrollBar</Name>
+    </Compile>
+    <Compile Include="Skin.cs">
+      <XNAUseContentPipeline>false</XNAUseContentPipeline>
+      <Name>Skin</Name>
     </Compile>
     <Compile Include="SkinnedComponent.cs">
       <XNAUseContentPipeline>false</XNAUseContentPipeline>

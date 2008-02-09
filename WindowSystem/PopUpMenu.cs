@@ -57,9 +57,7 @@ namespace WindowSystem
         #region Default Properties
         private static int defaultHMargin = 2;
         private static int defaultVMargin = 2;
-        private static DefaultSingleSkin defaultSkin = new DefaultSingleSkin(
-            new Rectangle(84, 41, 25, 25)
-            );
+        private static Rectangle defaultSkin = new Rectangle(84, 41, 25, 25);
 
         /// <summary>
         /// Sets the default horizontal padding.
@@ -88,11 +86,11 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Gets the default skin interface.
+        /// Sets the default skin.
         /// </summary>
-        public static ISingleSkin DefaultSkin
+        public static Rectangle DefaultSkin
         {
-            get { return defaultSkin; }
+            set { defaultSkin = value; }
         }
         #endregion
 
@@ -132,6 +130,14 @@ namespace WindowSystem
                 this.vMargin = value;
             }
         }
+
+        /// <summary>
+        /// Sets the control skin.
+        /// </summary>
+        public Rectangle Skin
+        {
+            set { SetSkinLocation(0, value); }
+        }
         #endregion
 
         #region Events
@@ -157,7 +163,7 @@ namespace WindowSystem
             #region Set Default Properties
             HMargin = defaultHMargin;
             VMargin = defaultVMargin;
-            SetSkinsFromDefaults(defaultSkin);
+            Skin = defaultSkin;
             #endregion
 
             #region Event Handlers
