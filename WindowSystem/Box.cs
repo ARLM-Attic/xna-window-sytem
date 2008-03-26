@@ -183,17 +183,17 @@ namespace WindowSystem
 
             // Left
             sprites[6] = new GUIRect();
-            sprites[6].Source = new Rectangle(source.X, source.Y + cornerSize, cornerSize, source.Height - (3 * cornerSize));
+            sprites[6].Source = new Rectangle(source.X, source.Y + cornerSize, cornerSize, source.Height - (2 * cornerSize));
             sprites[6].Destination = new Rectangle(dimensions.X, dimensions.Y + cornerSize, cornerSize, dimensions.Height - (2 * cornerSize));
 
             // Right
             sprites[7] = new GUIRect();
-            sprites[7].Source = new Rectangle(source.Right - cornerSize, source.Y + cornerSize, cornerSize, source.Height - (3 * cornerSize));
+            sprites[7].Source = new Rectangle(source.Right - cornerSize, source.Y + cornerSize, cornerSize, source.Height - (2 * cornerSize));
             sprites[7].Destination = new Rectangle(dimensions.Right - cornerSize, dimensions.Y + cornerSize, cornerSize, dimensions.Height - (2 * cornerSize));
 
             // Middle
             sprites[8] = new GUIRect();
-            sprites[8].Source = new Rectangle(source.X + cornerSize + 1, source.Y + cornerSize + 1, source.Width - (2 * (cornerSize + 1)), source.Height - (2 * (cornerSize + 1))); ;
+            sprites[8].Source = new Rectangle(source.X + cornerSize, source.Y + cornerSize, source.Width - (2 * cornerSize), source.Height - (2 * cornerSize));
             sprites[8].Destination = new Rectangle(dimensions.X + cornerSize, dimensions.Y + cornerSize, dimensions.Width - (2 * cornerSize), dimensions.Height - (2 * cornerSize));
 
             // Copy over the results
