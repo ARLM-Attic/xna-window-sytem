@@ -89,6 +89,7 @@ namespace WindowSystem
         private RenderTarget2D renderTarget;
         private Texture2D renderedTexture;
         private bool isRedrawRequired;
+        private Viewport viewPort;
         #endregion
 
         #region Properties
@@ -203,6 +204,8 @@ namespace WindowSystem
             #region Set Default Properties
             Color = defaultColor;
             #endregion
+
+            this.viewPort = new Viewport();
         }
         #endregion
 
@@ -278,156 +281,114 @@ namespace WindowSystem
         {
             if (this.font != null)
             {
-                // Has the control become invalid?
-                if (this.isRedrawRequired)
+                bool draw = true;
+                Rectangle source;
+                Rectangle destination;
+                int dif;
+
+                source = new Rectangle(0, 0, Width, Height);
+                destination = new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
+
+                if (!parentScissor.Contains(destination))
                 {
-                    string text = "";
+                    // Perform culling
+                    if (parentScissor.Intersects(destination))
+                    {
+                        // Perform clipping
 
-                    if (this.text != null)
-                        text += this.text;
+                        if (destination.X < parentScissor.X)
+                        {
+                            dif = parentScissor.X - destination.X;
 
-                    if (this.isCursorShown)
-                        text += this.cursor;
+                            if (destination.Width == source.Width)
+                            {
+                                source.Width -= dif;
+                                source.X += dif;
+                                destination.Width -= dif;
+                                destination.X += dif;
+                            }
+                            else
+                            {
+                                destination.Width -= dif;
+                                destination.X += dif;
+                            }
+                        }
+                        else if (destination.Right > parentScissor.Right)
+                        {
+                            dif = destination.Right - parentScissor.Right;
 
-                    // End the current sprite drawing, so that immediate mode
-                    // isn't affected.
+                            if (destination.Width == source.Width)
+                            {
+                                source.Width -= dif;
+                                destination.Width -= dif;
+                            }
+                            else
+                                destination.Width -= dif;
+                        }
+
+                        if (destination.Y < parentScissor.Y)
+                        {
+                            dif = parentScissor.Y - destination.Y;
+
+                            if (destination.Height == source.Height)
+                            {
+                                source.Height -= dif;
+                                source.Y += dif;
+                                destination.Height -= dif;
+                                destination.Y += dif;
+                            }
+                            else
+                            {
+                                destination.Height -= dif;
+                                destination.Y += dif;
+                            }
+                        }
+                        else if (destination.Bottom > parentScissor.Bottom)
+                        {
+                            dif = destination.Bottom - parentScissor.Bottom;
+
+                            if (destination.Height == source.Height)
+                            {
+                                source.Height -= dif;
+                                destination.Height -= dif;
+                            }
+                            else
+                                destination.Height -= dif;
+                        }
+                    }
+                    else
+                        draw = false;
+                }
+
+                // Only draw if necessary, because scissor rectangles are expensive
+                if (draw)
+                {
                     spriteBatch.End();
-
-                    // Create a new render target
-                    this.renderTarget = new RenderTarget2D(
-                        GraphicsDevice,
-                        Width,
-                        Height,
-                        1,
-                        SurfaceFormat.Color
-                        );
-
-                    GraphicsDevice.SetRenderTarget(0, this.renderTarget);
-
-                    // Clear to transparent (same colour as text to fix alpha
-                    // blending)
-                    Color clearColor = new Color(new Vector4(this.color.R, this.color.G, this.color.B, 0.0f));
-                    GraphicsDevice.Clear(clearColor);
-
                     spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
+                    spriteBatch.GraphicsDevice.RenderState.ScissorTestEnable = true;
+                    spriteBatch.GraphicsDevice.ScissorRectangle = destination;
 
-                    // Custom alpha blending prevents text getting screwed up
-                    spriteBatch.GraphicsDevice.RenderState.SeparateAlphaBlendEnabled = true;
-                    spriteBatch.GraphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-                    spriteBatch.GraphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
-                    spriteBatch.GraphicsDevice.RenderState.AlphaSourceBlend = Blend.One;
-                    spriteBatch.GraphicsDevice.RenderState.AlphaDestinationBlend = Blend.InverseSourceAlpha;
-
-                    spriteBatch.DrawString(this.font, text, new Vector2(0, 0), color);
+                    spriteBatch.DrawString(this.font, this.text, new Vector2(AbsolutePosition.X, AbsolutePosition.Y), this.color);
 
                     spriteBatch.End();
-
-                    // Set the render target back to the screen
-                    GraphicsDevice.SetRenderTarget(0, null);
-
-                    // Save rendered texture
-                    this.renderedTexture = this.renderTarget.GetTexture();
-
-                    this.isRedrawRequired = false;
 
                     // Start the original drawing mode again, so that other
                     // controls are not affected.
                     spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-                }
-
-                if (this.renderedTexture != null)
-                {
-                    bool draw = true;
-                    Rectangle source;
-                    Rectangle destination;
-                    int dif;
-
-                    source = new Rectangle(0, 0, Width, Height);
-                    destination = new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
-
-                    if (!parentScissor.Contains(destination))
-                    {
-                        // Perform culling
-                        if (parentScissor.Intersects(destination))
-                        {
-                            // Perform clipping
-
-                            if (destination.X < parentScissor.X)
-                            {
-                                dif = parentScissor.X - destination.X;
-
-                                if (destination.Width == source.Width)
-                                {
-                                    source.Width -= dif;
-                                    source.X += dif;
-                                    destination.Width -= dif;
-                                    destination.X += dif;
-                                }
-                                else
-                                {
-                                    destination.Width -= dif;
-                                    destination.X += dif;
-                                }
-                            }
-                            else if (destination.Right > parentScissor.Right)
-                            {
-                                dif = destination.Right - parentScissor.Right;
-
-                                if (destination.Width == source.Width)
-                                {
-                                    source.Width -= dif;
-                                    destination.Width -= dif;
-                                }
-                                else
-                                    destination.Width -= dif;
-                            }
-
-                            if (destination.Y < parentScissor.Y)
-                            {
-                                dif = parentScissor.Y - destination.Y;
-
-                                if (destination.Height == source.Height)
-                                {
-                                    source.Height -= dif;
-                                    source.Y += dif;
-                                    destination.Height -= dif;
-                                    destination.Y += dif;
-                                }
-                                else
-                                {
-                                    destination.Height -= dif;
-                                    destination.Y += dif;
-                                }
-                            }
-                            else if (destination.Bottom > parentScissor.Bottom)
-                            {
-                                dif = destination.Bottom - parentScissor.Bottom;
-
-                                if (destination.Height == source.Height)
-                                {
-                                    source.Height -= dif;
-                                    destination.Height -= dif;
-                                }
-                                else
-                                    destination.Height -= dif;
-                            }
-                        }
-                        else
-                            draw = false;
-                    }
-
-                    if (draw)
-                    {
-                        // Actually draw finally!
-                        spriteBatch.Draw(
-                            this.renderedTexture,
-                            destination,
-                            source,
-                            Color.White
-                            );
-                    }
+                    // Reset original viewport
+                    spriteBatch.GraphicsDevice.RenderState.ScissorTestEnable = false;
                 }
             }
+        }
+
+        protected override void OnResize(UIComponent sender)
+        {
+            viewPort.X = X;
+            viewPort.Y = Y;
+            viewPort.Width = Width;
+            viewPort.Height = Height;
+
+            base.OnResize(sender);
         }
     }
 }

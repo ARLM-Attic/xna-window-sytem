@@ -117,7 +117,7 @@
 	<WindowSystem.Window
 		HasCloseButton = "true"
         HasFullWindowMovableArea = "true"
-        TitleBarHeight = "60"
+        TitleBarHeight = "24"
         ButtonSize = "20"
         Margin = "5"
         TitleFont = "Content/Fonts/DefaultHeading"
