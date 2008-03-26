@@ -86,10 +86,6 @@ namespace WindowSystem
         private bool isCursorShown;
         private SpriteFont font;
         private Color color;
-        private RenderTarget2D renderTarget;
-        private Texture2D renderedTexture;
-        private bool isRedrawRequired;
-        private Viewport viewPort;
         #endregion
 
         #region Properties
@@ -106,7 +102,6 @@ namespace WindowSystem
 
                 this.text = value;
                 Redraw();
-                this.isRedrawRequired = true;
             }
         }
 
@@ -122,7 +117,6 @@ namespace WindowSystem
                 {
                     this.isCursorShown = value;
                     Redraw();
-                    this.isRedrawRequired = true;
                 }
             }
         }
@@ -137,7 +131,6 @@ namespace WindowSystem
             {
                 this.font = GUIManager.ContentManager.Load<SpriteFont>(value);
                 Redraw();
-                this.isRedrawRequired = true;
             }
         }
 
@@ -151,7 +144,6 @@ namespace WindowSystem
             {
                 this.color = value;
                 Redraw();
-                this.isRedrawRequired = true;
             }
         }
 
@@ -204,69 +196,17 @@ namespace WindowSystem
             #region Set Default Properties
             Color = defaultColor;
             #endregion
-
-            this.viewPort = new Viewport();
         }
         #endregion
 
         /// <summary>
         /// Load default font.
         /// </summary>
-        /// <param name="loadAllContent">Which type of content to load.</param>
-        protected override void LoadGraphicsContent(bool loadAllContent)
+        protected override void LoadContent()
         {
-            if (loadAllContent)
-                Font = defaultFont;
+            Font = defaultFont;
 
-            base.LoadGraphicsContent(loadAllContent);
-        }
-
-        /// <summary>
-        /// Invalidate the control so that the texture is drawn on the first
-        /// frame.
-        /// </summary>
-        public override void Initialize()
-        {
-            this.isRedrawRequired = true;
-
-            base.Initialize();
-        }
-
-        public override void CleanUp()
-        {
-            if (IsInitialized)
-            {
-                // Tidy render target
-                if (this.renderTarget != null)
-                {
-                    this.renderTarget.Dispose();
-                    this.renderTarget = null;
-                }
-
-                this.renderedTexture = null;
-            }
-
-            base.CleanUp();
-        }
-
-        /// <summary>
-        /// This method is called when the graphics device has been reset, so a
-        /// redraw is required.
-        /// </summary>
-        /// <param name="unloadAllContent">Which type of content to unload.</param>
-        protected override void UnloadGraphicsContent(bool unloadAllContent)
-        {
-            // Make changes to handle the new device
-            if (this.renderTarget != null)
-            {
-                this.renderTarget.Dispose();
-                this.renderTarget = null;
-            }
-
-            // Control must be redrawn after device changes
-            this.isRedrawRequired = true;
-
-            base.UnloadGraphicsContent(unloadAllContent);
+            base.LoadContent();
         }
 
         /// <summary>
@@ -279,7 +219,8 @@ namespace WindowSystem
         /// <param name="parentScissor">The scissor region of the parent control.</param>
         protected override void DrawControl(SpriteBatch spriteBatch, Rectangle parentScissor)
         {
-            if (this.font != null)
+            // Make sure that the text must be drawn
+            if (this.font != null && (this.text.Length > 0 || this.isCursorShown))
             {
                 bool draw = true;
                 Rectangle source;
@@ -368,7 +309,13 @@ namespace WindowSystem
                     spriteBatch.GraphicsDevice.RenderState.ScissorTestEnable = true;
                     spriteBatch.GraphicsDevice.ScissorRectangle = destination;
 
-                    spriteBatch.DrawString(this.font, this.text, new Vector2(AbsolutePosition.X, AbsolutePosition.Y), this.color);
+                    // Should the cursor be added?
+                    string text = this.text;
+
+                    if (this.isCursorShown)
+                        text += this.cursor;
+
+                    spriteBatch.DrawString(this.font, text, new Vector2(AbsolutePosition.X, AbsolutePosition.Y), this.color);
 
                     spriteBatch.End();
 
@@ -379,16 +326,6 @@ namespace WindowSystem
                     spriteBatch.GraphicsDevice.RenderState.ScissorTestEnable = false;
                 }
             }
-        }
-
-        protected override void OnResize(UIComponent sender)
-        {
-            viewPort.X = X;
-            viewPort.Y = Y;
-            viewPort.Width = Width;
-            viewPort.Height = Height;
-
-            base.OnResize(sender);
         }
     }
 }

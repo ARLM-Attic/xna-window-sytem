@@ -72,6 +72,7 @@ namespace WindowSystemTestbed
                 windowNumber++;
 
                 ComboBox comboBox = new ComboBox(this, gui);
+                comboBox.IsEditable = true;
                 comboBox.ZOrder = 1.0f;
                 comboBox.X = 20;
                 comboBox.Y = 54;
@@ -147,6 +148,12 @@ namespace WindowSystemTestbed
 
                 gui.Add(window);
 
+                //TextBox textBox = new TextBox(this, gui);
+                //textBox.X = 0;
+                //textBox.Y = 0;
+                //textBox.ZOrder = 1.0f;
+                //window.Add(textBox);
+
                 //DisplaySettingsDialog dialog = new DisplaySettingsDialog(this, gui, graphics);
                 MessageBox dialog = new MessageBox(this, gui, "Message box asking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
                 dialog.Show(false);
@@ -206,26 +213,12 @@ namespace WindowSystemTestbed
         /// load content from both ResourceManagementMode pools.  Otherwise, just
         /// load ResourceManagementMode.Manual content.
         /// </summary>
-        /// <param name="loadAllContent">Which type of content to load.</param>
-        protected override void LoadGraphicsContent(bool loadAllContent)
+        protected override void LoadContent()
         {
-            if (loadAllContent)
-            {
-                //skinTexture = content.Load<Texture2D>("Content/Textures/DefaultStyle");
-                //gui.SkinTexture = skinTexture;
-                myFont = content.Load<SpriteFont>("Content/Fonts/Verdana");
+            myFont = content.Load<SpriteFont>("Content/Fonts/Verdana");
+            skin = content.Load<Skin>("Content/DefaultSkin");
 
-                skin = content.Load<Skin>("Content/DefaultSkin");
-
-                // Set up default gui fonts
-                //WindowSystem.Window.DefaultTitleFont = myFont;
-                //WindowSystem.TextBox.DefaultFont = myFont;
-                //WindowSystem.Label.DefaultFont = myFont;
-                //WindowSystem.CheckBox.DefaultFont = myFont;
-                //WindowSystem.ListBox.DefaultFont = myFont;
-                //WindowSystem.MenuBar.DefaultFont = myFont;
-                //WindowSystem.TextButton.DefaultFont = myFont;
-            }
+            base.LoadContent();
         }
 
         /// <summary>
@@ -234,11 +227,9 @@ namespace WindowSystemTestbed
         /// unload ResourceManagementMode.Manual content.  Manual content will get
         /// Disposed by the GraphicsDevice during a Reset.
         /// </summary>
-        /// <param name="unloadAllContent">Which type of content to unload.</param>
-        protected override void UnloadGraphicsContent(bool unloadAllContent)
+        protected override void UnloadContent()
         {
-            if (unloadAllContent == true)
-                content.Unload();
+            content.Unload();
         }
 
         float fps = 0.0f;

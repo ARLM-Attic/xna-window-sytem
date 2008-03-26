@@ -250,13 +250,11 @@ namespace WindowSystem
         /// <summary>
         /// Loads the default font.
         /// </summary>
-        /// <param name="loadAllContent">Which type of content to load.</param>
-        protected override void LoadGraphicsContent(bool loadAllContent)
+        protected override void LoadContent()
         {
-            if (loadAllContent)
-                Font = defaultFont;
+            Font = defaultFont;
 
-            base.LoadGraphicsContent(loadAllContent);
+            base.LoadContent();
         }
 
         /// <summary>

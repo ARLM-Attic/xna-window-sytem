@@ -151,19 +151,16 @@ namespace WindowSystem
         /// Create SpriteBatch object and load default graphics.
         /// </summary>
         /// <param name="loadAllContent">Which type of content to load.</param>
-        protected override void LoadGraphicsContent(bool loadAllContent)
+        protected override void LoadContent()
         {
-            if (loadAllContent)
-            {
-                if (contentManager == null)
-                    contentManager = new ContentManager(Game.Services);
+            if (contentManager == null)
+                contentManager = new ContentManager(Game.Services);
 
-                SkinTextureFileName = defaultSkinTexture;
+            SkinTextureFileName = defaultSkinTexture;
 
-                this.spriteBatch = new SpriteBatch(GraphicsDevice);
-            }
+            this.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            base.LoadGraphicsContent(loadAllContent);
+            base.LoadContent();
         }
 
         /// <summary>
@@ -172,11 +169,9 @@ namespace WindowSystem
         /// unload ResourceManagementMode.Manual content.  Manual content will get
         /// Disposed by the GraphicsDevice during a Reset.
         /// </summary>
-        /// <param name="unloadAllContent">Which type of content to unload.</param>
-        protected override void UnloadGraphicsContent(bool unloadAllContent)
+        protected override void UnloadContent()
         {
-            if (unloadAllContent == true)
-                contentManager.Unload();
+            contentManager.Unload();
         }
 
         /// <summary>

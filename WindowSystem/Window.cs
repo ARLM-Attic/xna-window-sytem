@@ -64,7 +64,6 @@ namespace WindowSystem
         private static int defaultTitleBarHeight = 24;
         private static int defaultButtonSize = 20;
         private static int defaultMargin = 5;
-        private static float defaultAnimationTransparency = 0.75f;
         private static string defaultTitleFont = "Content/Fonts/DefaultHeading";
         private static Rectangle defaultSkin = new Rectangle(15, 1, 15, 15);
         private static Rectangle defaultTitleBarSkin = new Rectangle(1, 1, 13, 25);
@@ -556,13 +555,11 @@ namespace WindowSystem
         /// <summary>
         /// Loads default font.
         /// </summary>
-        /// <param name="loadAllContent">Which type of content to load.</param>
-        protected override void LoadGraphicsContent(bool loadAllContent)
+        protected override void LoadContent()
         {
-            if (loadAllContent)
-                TitleFont = defaultTitleFont;
+            TitleFont = defaultTitleFont;
 
-            base.LoadGraphicsContent(loadAllContent);
+            base.LoadContent();
         }
 
         /// <summary>
