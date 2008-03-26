@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Input Event System for XNA")]
-[assembly: AssemblyProduct("Input Event System for XNA")]
+[assembly: AssemblyTitle("InputEventSystem")]
+[assembly: AssemblyProduct("InputEventSystem")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright © 2007 Aaron MacDougall")]
+[assembly: AssemblyCopyright("Copyright © Aaron MacDougall 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("15487d78-8ad2-472d-b03c-3d879928255e")]
+[assembly: Guid("ff3e9d4e-9ce4-4f2f-8a0f-3dafe5ca84a2")]
 
 // Version information for an assembly consists of the following four values:
 //

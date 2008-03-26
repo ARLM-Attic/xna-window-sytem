@@ -322,12 +322,11 @@ namespace WindowSystem
 
                     spriteBatch.End();
 
-                    // Save rendered texture
-                    GraphicsDevice.ResolveRenderTarget(0);
-                    this.renderedTexture = this.renderTarget.GetTexture();
-
                     // Set the render target back to the screen
                     GraphicsDevice.SetRenderTarget(0, null);
+
+                    // Save rendered texture
+                    this.renderedTexture = this.renderTarget.GetTexture();
 
                     this.isRedrawRequired = false;
 

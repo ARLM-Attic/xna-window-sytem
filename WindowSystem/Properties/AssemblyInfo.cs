@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Window System for XNA")]
-[assembly: AssemblyProduct("Window System for XNA")]
+[assembly: AssemblyTitle("WindowSystem")]
+[assembly: AssemblyProduct("WindowSystem")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright © 2007 Aaron MacDougall")]
+[assembly: AssemblyCopyright("Copyright © Aaron MacDougall 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("72ae8af1-8512-4c51-b1b4-0a2d3464953c")]
+[assembly: Guid("8774d24f-0a35-48cc-94b1-7eaab71a4dee")]
 
 // Version information for an assembly consists of the following four values:
 //
