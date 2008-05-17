@@ -329,5 +329,14 @@ namespace WindowSystem
                 }
             }
         }
+
+        /// <summary>
+        /// Automatically resizes the label to fit the text.
+        /// </summary>
+        public void FitToText()
+        {
+            Width = TextWidth;
+            Height = TextHeight;
+        }
     }
 }
