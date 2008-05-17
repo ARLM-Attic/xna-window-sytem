@@ -393,6 +393,22 @@ namespace WindowSystem
         {
             get { return instanceCount; }
         }
+
+        /// <summary>
+        /// Overrides Visible property to take focus away from control when
+        /// it's no longer visible.
+        /// </summary>
+        public new bool Visible
+        {
+            get { return base.Visible; }
+            set
+            {
+                if (!value && this.guiManager.GetFocus() == this)
+                    this.guiManager.SetFocus(null);
+
+                base.Visible = value;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -433,7 +449,6 @@ namespace WindowSystem
             this.KeyUp += new KeyUpHandler(OnKeyUp);
             this.Move += new MoveHandler(OnMove);
             this.Resize += new ResizeHandler(OnResize);
-            this.RequiresRedraw += new RequiresRedrawHandler(OnRequiresRedraw);
             this.GetFocus += new GetFocusHandler(OnGetFocus);
             this.LoseFocus += new LoseFocusHandler(OnLoseFocus);
             #endregion
@@ -665,40 +680,43 @@ namespace WindowSystem
         /// <param name="parentScissor">The scissor region of the parent control.</param>
         internal void Draw(SpriteBatch spriteBatch, Rectangle parentScissor)
         {
-            // Create rectangle with the absolute dimensions of this control
-            Rectangle thisScissor = location;
-            thisScissor.X = absolutePosition.X;
-            thisScissor.Y = absolutePosition.Y;
-
-            // Cull this control if it isn't inside the parent
-            bool result;
-            parentScissor.Intersects(ref thisScissor, out result);
-
-            if (result)
+            if (this.Visible)
             {
-                // Clip this control so it is inside the parent
-                if (thisScissor.X < parentScissor.X)
+                // Create rectangle with the absolute dimensions of this control
+                Rectangle thisScissor = location;
+                thisScissor.X = absolutePosition.X;
+                thisScissor.Y = absolutePosition.Y;
+
+                // Cull this control if it isn't inside the parent
+                bool result;
+                parentScissor.Intersects(ref thisScissor, out result);
+
+                if (result)
                 {
-                    thisScissor.Width -= parentScissor.X - thisScissor.X;
-                    thisScissor.X = parentScissor.X;
+                    // Clip this control so it is inside the parent
+                    if (thisScissor.X < parentScissor.X)
+                    {
+                        thisScissor.Width -= parentScissor.X - thisScissor.X;
+                        thisScissor.X = parentScissor.X;
+                    }
+                    if (thisScissor.Right > parentScissor.Right)
+                        thisScissor.Width -= thisScissor.Right - parentScissor.Right;
+
+                    if (thisScissor.Y < parentScissor.Y)
+                    {
+                        thisScissor.Height -= parentScissor.Y - thisScissor.Y;
+                        thisScissor.Y = parentScissor.Y;
+                    }
+                    if (thisScissor.Bottom > parentScissor.Bottom)
+                        thisScissor.Height -= thisScissor.Bottom - parentScissor.Bottom;
+
+                    // Actually draw the control
+                    DrawControl(spriteBatch, thisScissor);
+
+                    // Draw children
+                    foreach (UIComponent control in this.controls)
+                        control.Draw(spriteBatch, thisScissor);
                 }
-                if (thisScissor.Right > parentScissor.Right)
-                    thisScissor.Width -= thisScissor.Right - parentScissor.Right;
-
-                if (thisScissor.Y < parentScissor.Y)
-                {
-                    thisScissor.Height -= parentScissor.Y - thisScissor.Y;
-                    thisScissor.Y = parentScissor.Y;
-                }
-                if (thisScissor.Bottom > parentScissor.Bottom)
-                    thisScissor.Height -= thisScissor.Bottom - parentScissor.Bottom;
-
-                // Actually draw the control
-                DrawControl(spriteBatch, thisScissor);
-
-                // Draw children
-                foreach (UIComponent control in this.controls)
-                    control.Draw(spriteBatch, thisScissor);
             }
         }
 
@@ -724,7 +742,7 @@ namespace WindowSystem
             UIComponent result = null;
 
             // Check if control is entitled to focus
-            if (!this.isAnimating)
+            if (this.Visible)
             {
                 // Check that the mouse position is inside this control
                 if (CheckCoordinates(x, y))
@@ -767,7 +785,7 @@ namespace WindowSystem
             UIComponent result = null;
 
             // Check if control can receive MouseOver and MouseOut events
-            if (!this.isAnimating)
+            if (this.Visible)
             {
                 // Check if MouseOut event should be invoked
                 bool mouseOver = CheckCoordinates(args.Position.X, args.Position.Y);
@@ -888,8 +906,11 @@ namespace WindowSystem
         /// <param name="args">Key event arguments.</param>
         protected virtual void KeyDownIntercept(KeyEventArgs args)
         {
-            if (this.guiManager.GetFocus() == this)
-                KeyDown.Invoke(args);
+            if (this.Visible)
+            {
+                if (this.guiManager.GetFocus() == this)
+                    KeyDown.Invoke(args);
+            }
         }
 
         /// <summary>
@@ -899,8 +920,11 @@ namespace WindowSystem
         /// <param name="args">Key event arguments.</param>
         protected virtual void KeyUpIntercept(KeyEventArgs args)
         {
-            if (this.guiManager.GetFocus() == this)
-                KeyUp.Invoke(args);
+            if (this.Visible)
+            {
+                if (this.guiManager.GetFocus() == this)
+                    KeyUp.Invoke(args);
+            }
         }
 
         /// <summary>
@@ -910,12 +934,15 @@ namespace WindowSystem
         /// <param name="args">Mouse event arguments.</param>
         protected virtual void MouseDownIntercept(MouseEventArgs args)
         {
-            // Check coordinates as well because modal mode messes up the
-            // MouseDown event.
-            if (this.guiManager.GetFocus() == this &&
-                CheckCoordinates(args.Position.X, args.Position.Y)
-                )
-                MouseDown.Invoke(args);
+            if (this.Visible)
+            {
+                // Check coordinates as well because modal mode messes up the
+                // MouseDown event.
+                if (this.guiManager.GetFocus() == this &&
+                    CheckCoordinates(args.Position.X, args.Position.Y)
+                    )
+                    MouseDown.Invoke(args);
+            }
         }
 
         /// <summary>
@@ -925,8 +952,11 @@ namespace WindowSystem
         /// <param name="args">Mouse event arguments.</param>
         protected virtual void MouseUpIntercept(MouseEventArgs args)
         {
-            if (this.guiManager.GetFocus() == this)
-                MouseUp.Invoke(args);
+            if (this.Visible)
+            {
+                if (this.guiManager.GetFocus() == this)
+                    MouseUp.Invoke(args);
+            }
         }
 
         /// <summary>
@@ -936,8 +966,11 @@ namespace WindowSystem
         /// <param name="args">Mouse event arguments.</param>
         protected virtual void MouseMoveIntercept(MouseEventArgs args)
         {
-            if (this.guiManager.GetFocus() == this)
-                MouseMove.Invoke(args);
+            if (this.Visible)
+            {
+                if (this.guiManager.GetFocus() == this)
+                    MouseMove.Invoke(args);
+            }
         }
 
         /// <summary>
@@ -1045,19 +1078,6 @@ namespace WindowSystem
         /// <param name="sender">Resized control.</param>
         protected virtual void OnParentResized(UIComponent sender)
         {
-        }
-
-        /// <summary>
-        /// Called when control needs to redraw it's texture. Events are used
-        /// to filter redraw message to all parents.
-        /// </summary>
-        /// <param name="sender">Control requiring redraw.</param>
-        protected virtual void OnRequiresRedraw(UIComponent sender)
-        {
-            this.isRedrawRequired = true;
-            // Tell parent it also needs to redraw
-            if (this.parent != null)
-                this.parent.OnRequiresRedraw(sender);
         }
 
         /// <summary>

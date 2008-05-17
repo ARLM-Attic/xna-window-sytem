@@ -240,7 +240,7 @@ namespace WindowSystem
         {
             if (control != this.focusedControl)
             {
-                // Checl that control can have focus
+                // Check that control can have focus
                 if (control != null && !control.CanHaveFocus)
                     return;
 
