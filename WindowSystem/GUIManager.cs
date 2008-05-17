@@ -108,6 +108,7 @@ namespace WindowSystem
         /// Sets the current texture file name and loads it.
         /// </summary>
         /// <value>Must be a valid path.</value>
+        [SkinAttribute]
         public string SkinTextureFileName
         {
             set

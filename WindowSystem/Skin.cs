@@ -146,12 +146,12 @@ namespace WindowSystem
                     property = componentSkin.Properties[i];
                     value = null;
 
-                    if (tryDefaults && !property.Name.Contains("Default"))
-                        property = componentSkin.ComponentType.GetProperty("Default" + property.Name);
-                    else if (componentSkin.ComponentType == typeof(GUIManager))
+                    if (componentSkin.ComponentType == typeof(GUIManager))
                         target = guiManager;
                     else if (componentSkin.ComponentType == typeof(MouseCursor))
                         target = guiManager.MouseCursor;
+                    else if (tryDefaults && !property.Name.Contains("Default"))
+                        property = componentSkin.ComponentType.GetProperty("Default" + property.Name);
                     else
                         property = null;
 
