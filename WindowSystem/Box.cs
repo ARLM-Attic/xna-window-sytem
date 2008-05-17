@@ -193,7 +193,8 @@ namespace WindowSystem
 
             // Middle
             sprites[8] = new GUIRect();
-            sprites[8].Source = new Rectangle(source.X + cornerSize, source.Y + cornerSize, source.Width - (2 * cornerSize), source.Height - (2 * cornerSize));
+            // The middle source must have a 1 pixel buffer to prevent colours blending incorrectly when scaling
+            sprites[8].Source = new Rectangle(source.X + cornerSize + 1, source.Y + cornerSize + 1, source.Width - (2 * cornerSize) - 2, source.Height - (2 * cornerSize) - 2);
             sprites[8].Destination = new Rectangle(dimensions.X + cornerSize, dimensions.Y + cornerSize, dimensions.Width - (2 * cornerSize), dimensions.Height - (2 * cornerSize));
 
             // Copy over the results
