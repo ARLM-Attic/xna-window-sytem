@@ -165,6 +165,7 @@ namespace WindowSystem
         /// Sets the gap between the button and the label.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int HMargin
         {
             get { return hMargin; }
@@ -180,7 +181,8 @@ namespace WindowSystem
         /// <summary>
         /// Sets the label font.
         /// </summary>
-        /// <value>Must not be a valid path.</value>
+        /// <value>Must be a valid path.</value>
+        [SkinAttribute]
         public string Font
         {
             set { label.Font = value; }
@@ -205,6 +207,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle Skin
         {
             set { this.button.SetSkinLocation(0, value); }
@@ -213,6 +216,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the hover skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle HoverSkin
         {
             set { this.button.SetSkinLocation(1, value); }
@@ -221,6 +225,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the pressed skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle PressedSkin
         {
             set { this.button.SetSkinLocation(2, value); }
@@ -229,6 +234,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the checked skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle CheckedSkin
         {
             set { this.button.SetSkinLocation(3, value); }
@@ -237,6 +243,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the checked hover skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle CheckedHoverSkin
         {
             set { this.button.SetSkinLocation(4, value); }
@@ -245,6 +252,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the checked pressed skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle CheckedPressedSkin
         {
             set { this.button.SetSkinLocation(5, value); }

@@ -302,6 +302,9 @@ namespace WindowSystem
                         componentSkin.Properties.Add(property);
                         componentSkin.Values.Add(properties[propertyName]);
                     }
+                    else
+                        Debug.Assert(false, "Property does not have SkinAttribute applied to it: " +
+                            componentSkin.ComponentType.ToString() + "." + propertyName);
                 }
 
                 instance.ComponentSkins.Add(componentSkin);

@@ -107,6 +107,7 @@ namespace WindowSystem
         /// Get/Set the horizontal padding.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int HMargin
         {
             get { return this.hMargin; }
@@ -121,6 +122,7 @@ namespace WindowSystem
         /// Get/Set the vertical padding.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int VMargin
         {
             get { return this.vMargin; }
@@ -134,6 +136,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the control skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle Skin
         {
             set { SetSkinLocation(0, value); }

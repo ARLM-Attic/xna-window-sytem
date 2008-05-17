@@ -85,7 +85,7 @@
         CheckedPressedSkin = "33,75,15,15"
 		   />
 	<WindowSystem.ScrollBar
-		ButtonSize = "50"
+		ButtonSize = "17"
         BackgroundSkin = "66,5,17,17"
         TopButtonSkin = "84,23,17,17"
         TopButtonHoverSkin = "102,23,17,17"

@@ -152,6 +152,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the control skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle Skin
         {
             set { this.buttonBar.SetSkinLocation(0, value); }
@@ -160,6 +161,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the control hover skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle HoverSkin
         {
             set { this.buttonBar.SetSkinLocation(1, value); }
@@ -168,6 +170,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the control pressed skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle PressedSkin
         {
             set { this.buttonBar.SetSkinLocation(2, value); }
@@ -177,6 +180,7 @@ namespace WindowSystem
         /// Get/Set size of left and right parts of the button.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int EdgeSize
         {
             get { return this.buttonBar.EdgeSize; }
@@ -201,6 +205,7 @@ namespace WindowSystem
         /// The font used to draw button text.
         /// </summary>
         /// <value>Must not be a valid path.</value>
+        [SkinAttribute]
         public string Font
         {
             set

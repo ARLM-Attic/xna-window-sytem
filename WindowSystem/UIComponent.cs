@@ -197,6 +197,7 @@ namespace WindowSystem
         /// <summary>
         /// Get/Set the control width.
         /// </summary>
+        [SkinAttribute]
         public int Width
         {
             get { return this.location.Width; }
@@ -215,6 +216,7 @@ namespace WindowSystem
         /// <summary>
         /// Get/Set the control height.
         /// </summary>
+        [SkinAttribute]
         public int Height
         {
             get { return this.location.Height; }
@@ -655,10 +657,11 @@ namespace WindowSystem
 
         public void ApplySkin(Skin skin)
         {
-            skin.Apply(this);
-
+            // Apply to children first so they don't override parent's properties
             foreach (UIComponent control in this.controls)
                 control.ApplySkin(skin);
+
+            skin.Apply(this);
         }
 
         /// <summary>

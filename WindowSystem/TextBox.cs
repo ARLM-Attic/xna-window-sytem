@@ -166,6 +166,7 @@ namespace WindowSystem
         /// Get/Set the horizontal padding between control edge and label.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int HMargin
         {
             get { return this.hMargin; }
@@ -181,6 +182,7 @@ namespace WindowSystem
         /// Get/Set the vertical padding between control edge and label.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int VMargin
         {
             get { return this.vMargin; }
@@ -195,6 +197,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the control skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle Skin
         {
             set { this.box.SetSkinLocation(0, value); }
@@ -204,6 +207,7 @@ namespace WindowSystem
         /// Sets the text font.
         /// </summary>
         /// <value>Must not be a valid path.</value>
+        [SkinAttribute]
         public string Font
         {
             set

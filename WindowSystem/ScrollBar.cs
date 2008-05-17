@@ -202,6 +202,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the button size, and the width of the scrollbar.
         /// </summary>
+        [SkinAttribute]
         public int ButtonSize
         {
             get { return this.topButton.Width; }
@@ -271,6 +272,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the control background skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle BackgroundSkin
         {
             set { SetSkinLocation(0, value); }
@@ -279,6 +281,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the top button skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle TopButtonSkin
         {
             set { this.topButton.SetSkinLocation(0, value); }
@@ -287,6 +290,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the top button hover skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle TopButtonHoverSkin
         {
             set { this.topButton.SetSkinLocation(1, value); }
@@ -295,6 +299,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the top button pressed skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle TopButtonPressedSkin
         {
             set { this.topButton.SetSkinLocation(2, value); }
@@ -303,6 +308,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the bottom button skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle BottomButtonSkin
         {
             set { this.bottomButton.SetSkinLocation(0, value); }
@@ -311,6 +317,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the bottom button hover skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle BottomButtonHoverSkin
         {
             set { this.bottomButton.SetSkinLocation(1, value); }
@@ -319,6 +326,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the bottom button pressed skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle BottomButtonPressedSkin
         {
             set { this.bottomButton.SetSkinLocation(2, value); }
@@ -327,6 +335,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the thumb skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ThumbSkin
         {
             set { this.thumb.SetSkinLocation(0, value); }
@@ -335,6 +344,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the thumb hover skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ThumbHoverSkin
         {
             set { this.thumb.SetSkinLocation(1, value); }
@@ -343,6 +353,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the thumb pressed skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ThumbPressedSkin
         {
             set { this.thumb.SetSkinLocation(2, value); }

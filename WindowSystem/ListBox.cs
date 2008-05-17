@@ -203,13 +203,18 @@ namespace WindowSystem
         /// Sets the font to use for listbox entries.
         /// </summary>
         /// <value>Must not be a valid path.</value>
+        [SkinAttribute]
         public string Font
         {
             set
             {
                 this.fontFileName = value;
                 this.font = GUIManager.ContentManager.Load<SpriteFont>(value);
-                this.scrollBar.ScrollStep = this. font.LineSpacing;
+
+                foreach (Label label in this.entries)
+                    label.Font = value;
+
+                this.scrollBar.ScrollStep = this.font.LineSpacing;
                 RefreshEntries();
             }
         }
@@ -218,6 +223,7 @@ namespace WindowSystem
         /// Sets the horizontal padding.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int HMargin
         {
             get { return this.hMargin; }
@@ -233,6 +239,7 @@ namespace WindowSystem
         /// The vertical padding in the listbox.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int VMargin
         {
             get { return this.vMargin; }
@@ -247,6 +254,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the control skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle Skin
         {
             set { this.box.SetSkinLocation(0, value); }
@@ -295,6 +303,7 @@ namespace WindowSystem
             HMargin = defaultHMargin;
             VMargin = defaultVMargin;
             Skin = defaultSkin;
+            Font = defaultFont;
             #endregion
 
             #region Event Handlers
@@ -345,6 +354,7 @@ namespace WindowSystem
             int y = 0;
             foreach (Label label in this.entries)
             {
+
                 label.Y = y;
                 if (this.font != null)
                 {
@@ -383,6 +393,8 @@ namespace WindowSystem
             // Create a new label
             Label newEntry = new Label(Game, GUIManager);
             newEntry.Text = text;
+
+            newEntry.Font = this.fontFileName;
             
             // Add new entry
             this.entries.Add(newEntry);

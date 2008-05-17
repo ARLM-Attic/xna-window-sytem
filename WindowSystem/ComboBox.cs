@@ -64,6 +64,7 @@ namespace WindowSystem
         #region Default Properties
         private static int defaultWidth = 200;
         private static int defaultHeight = 20;
+        private static string defaultFont = "Content/Fonts/DefaultFont";
         private static Rectangle defaultButtonSkin = new Rectangle(138, 5, 20, 20);
         private static Rectangle defaultButtonHoverSkin = new Rectangle(159, 5, 20, 20);
         private static Rectangle defaultButtonPressedSkin = new Rectangle(180, 5, 20, 20);
@@ -91,6 +92,19 @@ namespace WindowSystem
             {
                 Debug.Assert(value > 0);
                 defaultHeight = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets the default font.
+        /// </summary>
+        /// <value>Must not be null.</value>
+        public static string DefaultFont
+        {
+            set
+            {
+                Debug.Assert(value != null);
+                defaultFont = value;
             }
         }
 
@@ -159,8 +173,23 @@ namespace WindowSystem
         }
 
         /// <summary>
+        /// Sets the font.
+        /// </summary>
+        /// <value>Must be a valid path.</value>
+        [SkinAttribute]
+        public string Font
+        {
+            set
+            {
+                this.textBox.Font = value;
+                this.listBox.Font = value;
+            }
+        }
+
+        /// <summary>
         /// Sets the skin of the ComboBox skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ButtonSkin
         {
             set { this.button.SetSkinLocation(0, value); }
@@ -169,6 +198,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the hover skin of the ComboBox skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ButtonHoverSkin
         {
             set { this.button.SetSkinLocation(1, value); }
@@ -177,6 +207,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the pressed skin of the ComboBox skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ButtonPressedSkin
         {
             set { this.button.SetSkinLocation(2, value); }
@@ -216,6 +247,7 @@ namespace WindowSystem
             #region Set Default Properties
             this.Width = defaultWidth;
             this.Height = defaultHeight;
+            this.Font = defaultFont;
             ButtonSkin = defaultButtonSkin;
             ButtonHoverSkin = defaultButtonHoverSkin;
             ButtonPressedSkin = defaultButtonPressedSkin;

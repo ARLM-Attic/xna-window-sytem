@@ -123,6 +123,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the mouse cursor skin location.
         /// </summary>
+        [SkinAttribute]
         public Rectangle NormalLocation
         {
             set
@@ -135,6 +136,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the mouse cursor skin location.
         /// </summary>
+        [SkinAttribute]
         public Rectangle MovingLocation
         {
             set
@@ -147,6 +149,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the mouse cursor skin location.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ResizingNSLocation
         {
             set
@@ -159,6 +162,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the mouse cursor skin location.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ResizingWELocation
         {
             set
@@ -171,6 +175,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the mouse cursor skin location.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ResizingNWSELocation
         {
             set
@@ -183,6 +188,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the mouse cursor skin location.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ResizingNESWLocation
         {
             set
@@ -195,6 +201,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the offset of the pointer in the skin.
         /// </summary>
+        [SkinAttribute]
         public Point NormalOffset
         {
             set
@@ -207,6 +214,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the offset of the pointer in the skin.
         /// </summary>
+        [SkinAttribute]
         public Point MovingOffset
         {
             set
@@ -219,6 +227,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the offset of the pointer in the skin.
         /// </summary>
+        [SkinAttribute]
         public Point ResizingNSOffset
         {
             set
@@ -231,6 +240,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the offset of the pointer in the skin.
         /// </summary>
+        [SkinAttribute]
         public Point ResizingWEOffset
         {
             set
@@ -243,6 +253,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the offset of the pointer in the skin.
         /// </summary>
+        [SkinAttribute]
         public Point ResizingNWSEOffset
         {
             set
@@ -255,6 +266,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the offset of the pointer in the skin.
         /// </summary>
+        [SkinAttribute]
         public Point ResizingNESWOffset
         {
             set

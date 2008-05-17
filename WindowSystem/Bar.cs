@@ -99,6 +99,7 @@ namespace WindowSystem
         /// Get/Set the size of the edge of the bar skin.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int EdgeSize
         {
             get { return edgeSize; }

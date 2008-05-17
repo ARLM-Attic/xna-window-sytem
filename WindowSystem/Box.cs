@@ -85,6 +85,7 @@ namespace WindowSystem
         /// Get/Set the width and height of corner sprites.
         /// </summary>
         /// <value>Must be greater than 0.</value>
+        [SkinAttribute]
         public int CornerSize
         {
             get { return cornerSize; }

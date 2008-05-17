@@ -137,6 +137,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the info image.
         /// </summary>
+        [SkinAttribute]
         public Rectangle InfoSkin
         {
             set
@@ -149,6 +150,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the error image.
         /// </summary>
+        [SkinAttribute]
         public Rectangle ErrorSkin
         {
             set
@@ -161,6 +163,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the warning image.
         /// </summary>
+        [SkinAttribute]
         public Rectangle WarningSkin
         {
             set
@@ -173,6 +176,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the question image.
         /// </summary>
+        [SkinAttribute]
         public Rectangle QuestionSkin
         {
             set

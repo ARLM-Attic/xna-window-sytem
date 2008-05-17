@@ -141,6 +141,7 @@ namespace WindowSystem
         /// Get/Set the horizontal padding.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int HMargin
         {
             get { return this.hMargin; }
@@ -156,6 +157,7 @@ namespace WindowSystem
         /// Get/Set the vertical padding.
         /// </summary>
         /// <value>Must be at least 0.</value>
+        [SkinAttribute]
         public int VMargin
         {
             get { return this.vMargin; }
@@ -216,6 +218,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the highlight skin.
         /// </summary>
+        [SkinAttribute]
         public Rectangle HighlightSkin
         {
             set { this.highlightBox.SetSkinLocation(0, value); }
@@ -225,6 +228,7 @@ namespace WindowSystem
         /// Sets the arrow icon location.
         /// </summary>
         /// <value>Must be a valid skin location.</value>
+        [SkinAttribute]
         public Rectangle ArrowSkin
         {
             set

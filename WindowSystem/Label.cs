@@ -125,6 +125,7 @@ namespace WindowSystem
         /// Sets the text font.
         /// </summary>
         /// <value>Must not be a valid path.</value>
+        [SkinAttribute]
         public string Font
         {
             set
@@ -137,6 +138,7 @@ namespace WindowSystem
         /// <summary>
         /// Get/Set the text colour.
         /// </summary>
+        [SkinAttribute]
         public Color Color
         {
             get { return this.color; }
