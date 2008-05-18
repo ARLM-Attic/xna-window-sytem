@@ -100,7 +100,6 @@ namespace WindowSystem
         public void Reset()
         {
             CurrentSkin = -1;
-            Redraw();
         }
     }
 }

@@ -132,8 +132,6 @@ namespace WindowSystem
                     this.cornerSize
                 );
             }
-
-            Redraw();
         }
 
         /// <summary>

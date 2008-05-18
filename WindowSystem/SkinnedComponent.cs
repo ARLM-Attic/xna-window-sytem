@@ -250,10 +250,7 @@ namespace WindowSystem
                     skin = GetSkin(index);
 
                 if (skin != null || index == -1)
-                {
                     this.currentSkin = index;
-                    Redraw();
-                }
             }
         }
 
@@ -271,7 +268,7 @@ namespace WindowSystem
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw with.</param>
         /// <param name="parentScissor">The scissor region of the parent control.</param>
-        protected override void DrawControl(SpriteBatch spriteBatch, Rectangle parentScissor)
+        protected override void DrawControl(SpriteBatch spriteBatch, Rectangle scissor)
         {
             ComponentSkin skin = GetSkin(this.currentSkin);
 
@@ -285,15 +282,11 @@ namespace WindowSystem
                 else
                     texture = GUIManager.SkinTexture;
 
-                bool draw;
                 Rectangle source;
                 Rectangle destination;
-                int dif;
 
                 foreach (GUIRect rect in skin.Rects)
                 {
-                    draw = true;
-
                     source = rect.Source;
 
                     // Convert to absolute position
@@ -301,80 +294,9 @@ namespace WindowSystem
                     destination.X += AbsolutePosition.X;
                     destination.Y += AbsolutePosition.Y;
 
-                    if (!parentScissor.Contains(destination))
+                    if (GUIManager.PerformClipping(ref scissor, ref source, ref destination))
                     {
-                        // Perform culling
-                        if (parentScissor.Intersects(destination))
-                        {
-                            // Perform clipping
-
-                            if (destination.X < parentScissor.X)
-                            {
-                                dif = parentScissor.X - destination.X;
-
-                                if (destination.Width == source.Width)
-                                {
-                                    source.Width -= dif;
-                                    source.X += dif;
-                                    destination.Width -= dif;
-                                    destination.X += dif;
-                                }
-                                else
-                                {
-                                    destination.Width -= dif;
-                                    destination.X += dif;
-                                }
-                            }
-                            else if (destination.Right > parentScissor.Right)
-                            {
-                                dif = destination.Right - parentScissor.Right;
-
-                                if (destination.Width == source.Width)
-                                {
-                                    source.Width -= dif;
-                                    destination.Width -= dif;
-                                }
-                                else
-                                    destination.Width -= dif;
-                            }
-
-                            if (destination.Y < parentScissor.Y)
-                            {
-                                dif = parentScissor.Y - destination.Y;
-
-                                if (destination.Height == source.Height)
-                                {
-                                    source.Height -= dif;
-                                    source.Y += dif;
-                                    destination.Height -= dif;
-                                    destination.Y += dif;
-                                }
-                                else
-                                {
-                                    destination.Height -= dif;
-                                    destination.Y += dif;
-                                }
-                            }
-                            else if (destination.Bottom > parentScissor.Bottom)
-                            {
-                                dif = destination.Bottom - parentScissor.Bottom;
-
-                                if (destination.Height == source.Height)
-                                {
-                                    source.Height -= dif;
-                                    destination.Height -= dif;
-                                }
-                                else
-                                    destination.Height -= dif;
-                            }
-                        }
-                        else
-                            draw = false;
-                    }
-
-                    if (draw)
-                    {
-                        // Actually draw finally!
+                        // Actually draw!
                         spriteBatch.Draw(
                             texture,
                             destination,

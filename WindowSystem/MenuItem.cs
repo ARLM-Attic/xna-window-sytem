@@ -381,8 +381,6 @@ namespace WindowSystem
                 if (base.Remove(this.arrow))
                     base.Add(this.arrow);
                 this.isHighlightShown = true;
-
-                Redraw();
             }
         }
 
@@ -393,7 +391,6 @@ namespace WindowSystem
         {
             this.isHighlightShown = false;
             base.Remove(this.highlightBox);
-            Redraw();
         }
 
         /// <summary>

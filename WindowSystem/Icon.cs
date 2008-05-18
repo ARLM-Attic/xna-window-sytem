@@ -129,8 +129,6 @@ namespace WindowSystem
                 skin.Value.Rects.Clear();
                 skin.Value.Rects.Add(rect);
             }
-
-            Redraw();
         }
     }
 }

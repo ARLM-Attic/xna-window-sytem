@@ -84,7 +84,7 @@ namespace WindowSystem
         private string text;
         private char cursor;
         private bool isCursorShown;
-        private SpriteFont font;
+        private Font font;
         private Color color;
         #endregion
 
@@ -101,7 +101,6 @@ namespace WindowSystem
                 Debug.Assert(value != null);
 
                 this.text = value;
-                Redraw();
             }
         }
 
@@ -114,10 +113,7 @@ namespace WindowSystem
             set
             {
                 if (value != this.isCursorShown)
-                {
                     this.isCursorShown = value;
-                    Redraw();
-                }
             }
         }
 
@@ -128,11 +124,7 @@ namespace WindowSystem
         [SkinAttribute]
         public string Font
         {
-            set
-            {
-                this.font = GUIManager.ContentManager.Load<SpriteFont>(value);
-                Redraw();
-            }
+            set { this.font = new Font(value, GUIManager.ContentManager); }
         }
 
         /// <summary>
@@ -142,11 +134,7 @@ namespace WindowSystem
         public Color Color
         {
             get { return this.color; }
-            set
-            {
-                this.color = value;
-                Redraw();
-            }
+            set { this.color = value; }
         }
 
         /// <summary>
@@ -219,114 +207,18 @@ namespace WindowSystem
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw with.</param>
         /// <param name="parentScissor">The scissor region of the parent control.</param>
-        protected override void DrawControl(SpriteBatch spriteBatch, Rectangle parentScissor)
+        protected override void DrawControl(SpriteBatch spriteBatch, Rectangle scissor)
         {
             // Make sure that the text must be drawn
             if (this.font != null && (this.text.Length > 0 || this.isCursorShown))
             {
-                bool draw = true;
-                Rectangle source;
-                Rectangle destination;
-                int dif;
+                // Should the cursor be added?
+                string text = this.text;
 
-                source = new Rectangle(0, 0, Width, Height);
-                destination = new Rectangle(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
+                if (this.isCursorShown)
+                    text += this.cursor;
 
-                if (!parentScissor.Contains(destination))
-                {
-                    // Perform culling
-                    if (parentScissor.Intersects(destination))
-                    {
-                        // Perform clipping
-
-                        if (destination.X < parentScissor.X)
-                        {
-                            dif = parentScissor.X - destination.X;
-
-                            if (destination.Width == source.Width)
-                            {
-                                source.Width -= dif;
-                                source.X += dif;
-                                destination.Width -= dif;
-                                destination.X += dif;
-                            }
-                            else
-                            {
-                                destination.Width -= dif;
-                                destination.X += dif;
-                            }
-                        }
-                        else if (destination.Right > parentScissor.Right)
-                        {
-                            dif = destination.Right - parentScissor.Right;
-
-                            if (destination.Width == source.Width)
-                            {
-                                source.Width -= dif;
-                                destination.Width -= dif;
-                            }
-                            else
-                                destination.Width -= dif;
-                        }
-
-                        if (destination.Y < parentScissor.Y)
-                        {
-                            dif = parentScissor.Y - destination.Y;
-
-                            if (destination.Height == source.Height)
-                            {
-                                source.Height -= dif;
-                                source.Y += dif;
-                                destination.Height -= dif;
-                                destination.Y += dif;
-                            }
-                            else
-                            {
-                                destination.Height -= dif;
-                                destination.Y += dif;
-                            }
-                        }
-                        else if (destination.Bottom > parentScissor.Bottom)
-                        {
-                            dif = destination.Bottom - parentScissor.Bottom;
-
-                            if (destination.Height == source.Height)
-                            {
-                                source.Height -= dif;
-                                destination.Height -= dif;
-                            }
-                            else
-                                destination.Height -= dif;
-                        }
-                    }
-                    else
-                        draw = false;
-                }
-
-                // Only draw if necessary, because scissor rectangles are expensive
-                if (draw)
-                {
-                    spriteBatch.End();
-                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-                    spriteBatch.GraphicsDevice.RenderState.ScissorTestEnable = true;
-                    spriteBatch.GraphicsDevice.ScissorRectangle = destination;
-
-                    // Should the cursor be added?
-                    string text = this.text;
-
-                    if (this.isCursorShown)
-                        text += this.cursor;
-
-                    spriteBatch.DrawString(this.font, text, new Vector2(AbsolutePosition.X, AbsolutePosition.Y), this.color);
-
-                    spriteBatch.End();
-
-                    // Start the original drawing mode again, so that other
-                    // controls are not affected.
-                    spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-                    // Reset original viewport
-                    spriteBatch.GraphicsDevice.RenderState.ScissorTestEnable = false;
-                }
+                this.font.Draw(text, spriteBatch, new Vector2(AbsolutePosition.X, AbsolutePosition.Y), this.color, scissor);
             }
         }
 

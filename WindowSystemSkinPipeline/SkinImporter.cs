@@ -81,7 +81,7 @@ namespace WindowSystemSkinPipeline
     /// Imports the XML skin definition, and converts it to a format that can
     /// be used by the Window System.
     /// </summary>
-    [ContentImporter(".skin", DefaultProcessor = "SkinProcessor")]
+    [ContentImporter(".skin")]
     class SkinImporter : ContentImporter<SkinInfo>
     {
         public override SkinInfo Import(string filename, ContentImporterContext context)

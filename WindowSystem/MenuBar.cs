@@ -289,8 +289,6 @@ namespace WindowSystem
 
             if ((maxHeight + (2 * this.vMargin)) != Height)
                 Height = maxHeight + (2 * this.vMargin);
-
-            Redraw();
         }
 
         /// <summary>

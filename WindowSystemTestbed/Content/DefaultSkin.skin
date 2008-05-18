@@ -115,7 +115,7 @@
         PressedSkin = "52,142,25,25"
 		   />
 	<WindowSystem.Window
-		HasCloseButton = "true"
+		HasCloseButton = "false"
         HasFullWindowMovableArea = "true"
         TitleBarHeight = "24"
         ButtonSize = "20"

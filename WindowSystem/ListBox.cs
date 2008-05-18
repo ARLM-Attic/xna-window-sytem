@@ -380,8 +380,6 @@ namespace WindowSystem
                 Add(this.scrollBar);
             else
                 Remove(this.scrollBar);
-
-            this.surface.Redraw();
         }
 
         /// <summary>
@@ -468,13 +466,11 @@ namespace WindowSystem
                     this.surface.Y = (this.viewPort.Height -
                         (this.selectedLabel.Y + this.selectedLabel.Height));
                     this.scrollBar.Value = -this.surface.Y;
-                    viewPort.Redraw();
                 }
                 else if (-this.selectedLabel.Y > this.surface.Y) // Scroll up
                 {
                     this.surface.Y = -this.selectedLabel.Y;
                     this.scrollBar.Value = -this.surface.Y;
-                    this.viewPort.Redraw();
                 }
             }
         }
@@ -525,7 +521,6 @@ namespace WindowSystem
         protected void OnScroll(int position)
         {
             this.surface.Y = -position;
-            this.viewPort.Redraw();
         }
 
         /// <summary>

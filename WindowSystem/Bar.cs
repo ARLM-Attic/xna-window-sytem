@@ -148,8 +148,6 @@ namespace WindowSystem
                     this.isVertical
                 );
             }
-
-            Redraw();
         }
 
         /// <summary>

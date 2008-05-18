@@ -541,6 +541,96 @@ namespace WindowSystem
                     return "";
             }
         }
+
+        /// <summary>
+        /// Clips a source and destination texture rectangle against a scissor
+        /// region.
+        /// </summary>
+        /// <param name="scissor">Scissor region to clip against.</param>
+        /// <param name="source">Texture source area.</param>
+        /// <param name="destination">Screen destination area.</param>
+        /// <returns>
+        /// true if control should be drawn, otherwise false.
+        /// </returns>
+        public static bool PerformClipping(ref Rectangle scissor, ref Rectangle source, ref Rectangle destination)
+        {
+            bool result = true;
+
+            // Check if control is within scissor region
+            if (!scissor.Contains(destination))
+            {
+                // Perform clipping
+                if (scissor.Intersects(destination))
+                {
+                    int dif;
+
+                    // Perform clipping
+                    if (destination.X < scissor.X)
+                    {
+                        dif = scissor.X - destination.X;
+
+                        if (destination.Width == source.Width)
+                        {
+                            source.Width -= dif;
+                            source.X += dif;
+                            destination.Width -= dif;
+                            destination.X += dif;
+                        }
+                        else
+                        {
+                            destination.Width -= dif;
+                            destination.X += dif;
+                        }
+                    }
+                    else if (destination.Right > scissor.Right)
+                    {
+                        dif = destination.Right - scissor.Right;
+
+                        if (destination.Width == source.Width)
+                        {
+                            source.Width -= dif;
+                            destination.Width -= dif;
+                        }
+                        else
+                            destination.Width -= dif;
+                    }
+
+                    if (destination.Y < scissor.Y)
+                    {
+                        dif = scissor.Y - destination.Y;
+
+                        if (destination.Height == source.Height)
+                        {
+                            source.Height -= dif;
+                            source.Y += dif;
+                            destination.Height -= dif;
+                            destination.Y += dif;
+                        }
+                        else
+                        {
+                            destination.Height -= dif;
+                            destination.Y += dif;
+                        }
+                    }
+                    else if (destination.Bottom > scissor.Bottom)
+                    {
+                        dif = destination.Bottom - scissor.Bottom;
+
+                        if (destination.Height == source.Height)
+                        {
+                            source.Height -= dif;
+                            destination.Height -= dif;
+                        }
+                        else
+                            destination.Height -= dif;
+                    }
+                }
+                else
+                    result = false;
+            }
+
+            return result;
+        }
         #endregion
     }
 }

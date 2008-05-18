@@ -50,6 +50,8 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bar.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="ComboBox.cs" />
     <Compile Include="Dialog.cs" />
     <Compile Include="DisplaySettingsDialog.cs" />
+    <Compile Include="Font.cs" />
     <Compile Include="GUIManager.cs" />
     <Compile Include="Icon.cs" />
     <Compile Include="Image.cs" />

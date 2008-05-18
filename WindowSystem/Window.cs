@@ -531,6 +531,8 @@ namespace WindowSystem
             this.backgroundMovableArea.StartMoving += new StartMovingHandler(OnStartAnimating);
             this.backgroundMovableArea.EndMoving += new EndMovingHandler(OnEndAnimating);
             #endregion
+
+            Refresh();
         }
         #endregion
 
@@ -732,8 +734,13 @@ namespace WindowSystem
             this.titleBar.Width = Width;
             this.movableArea.Width = Width;
             this.closeButton.X = Width - this.closeButton.Width - this.closeButton.Y;
+
             // Resize label
-            this.label.Width = Width - this.closeButton.Width - this.closeButton.Y - (this.margin * 2);
+            if (this.hasCloseButton)
+                this.label.Width = Width - this.closeButton.Width - this.closeButton.Y - (this.margin * 2);
+            else
+                this.label.Width = Width - (this.margin * 2);
+
             this.viewPort.Width = Width - (this.margin * 2);
             this.backgroundMovableArea.Width = this.viewPort.Width;
 

@@ -515,9 +515,6 @@ namespace WindowSystem
                 this.thumb.Height = 10;
             else if (this.thumb.Height > ShaftHeight)
                 this.thumb.Height = (int)ShaftHeight;
-
-            if (this.thumb.Height != heightBefore)
-                Redraw();
         }
 
         /// <summary>
@@ -548,8 +545,6 @@ namespace WindowSystem
 
             if (Scroll != null)
                 Scroll.Invoke(value);
-
-            Redraw();
         }
 
         /// <summary>

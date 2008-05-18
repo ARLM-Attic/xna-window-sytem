@@ -67,7 +67,7 @@ namespace WindowSystemTestbed
                 //window.Height = 300;
                 window.Close += new CloseHandler(WindowCloseFunction);
 
-                string text = "Test Window " + windowNumber;
+                string text = "Test Windowhgfhgfhgfhgfjghjkghkgjkjhkhjkhjljklioutydjuh " + windowNumber;
                 window.TitleText = text;
                 windowNumber++;
 

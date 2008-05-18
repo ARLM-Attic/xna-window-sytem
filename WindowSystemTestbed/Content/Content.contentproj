@@ -33,6 +33,8 @@
   <ItemGroup>
     <Compile Include="DefaultSkin.skin">
       <Name>DefaultSkin</Name>
+      <Importer>SkinImporter</Importer>
+      <Processor>PassThroughProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>

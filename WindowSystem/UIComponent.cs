@@ -116,7 +116,6 @@ namespace WindowSystem
         private int minHeight;
         private float zOrder;
         private bool canHaveFocus;
-        private bool isRedrawRequired;
         private bool isInitialized;
         private bool isAnimating;
         private bool isMouseOver;
@@ -134,7 +133,6 @@ namespace WindowSystem
         public event ResizeHandler Resize;
         public event MouseOverHandler MouseOver;
         public event MouseOutHandler MouseOut;
-        public event RequiresRedrawHandler RequiresRedraw;
         public event GetFocusHandler GetFocus;
         public event LoseFocusHandler LoseFocus;
         #endregion
@@ -346,15 +344,6 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Get/Set whether control needs to be redrawn.
-        /// </summary>
-        protected bool IsRedrawRequired
-        {
-            set { this.isRedrawRequired = value; }
-            get { return this.isRedrawRequired; }
-        }
-
-        /// <summary>
         /// Get/Set whether this control has been initialised.
         /// </summary>
         internal protected bool IsInitialized
@@ -435,7 +424,6 @@ namespace WindowSystem
 
             this.zOrder = 0.0f;
             this.canHaveFocus = true;
-            this.isRedrawRequired = true;
             this.isInitialized = false;
             this.isAnimating = false;
             this.isMouseOver = false;
@@ -626,15 +614,6 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Invokes RequiresRedraw event.
-        /// </summary>
-        public void Redraw()
-        {
-            if (RequiresRedraw != null)
-                RequiresRedraw.Invoke(this);
-        }
-
-        /// <summary>
         /// Refreshes control's position, as well as all children.
         /// </summary>
         protected void Refresh()
@@ -691,10 +670,7 @@ namespace WindowSystem
                 thisScissor.Y = absolutePosition.Y;
 
                 // Cull this control if it isn't inside the parent
-                bool result;
-                parentScissor.Intersects(ref thisScissor, out result);
-
-                if (result)
+                if (parentScissor.Intersects(thisScissor))
                 {
                     // Clip this control so it is inside the parent
                     if (thisScissor.X < parentScissor.X)
@@ -728,7 +704,7 @@ namespace WindowSystem
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw with.</param>
         /// <param name="parentScissor">The scissor region of the parent control.</param>
-        protected virtual void DrawControl(SpriteBatch spriteBatch, Rectangle parentScissor)
+        protected virtual void DrawControl(SpriteBatch spriteBatch, Rectangle scissor)
         {
         }
 

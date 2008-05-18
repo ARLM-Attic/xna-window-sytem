@@ -41,7 +41,6 @@
 
 #region Using Statements
 using System;
-using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -256,7 +255,7 @@ namespace WindowSystem
     /// Takes the skin input, and converts it to a format that can be used to
     /// set the default skins at runtime.
     /// </summary>
-    class SkinReader : ContentTypeReader<Skin>
+    internal class SkinReader : ContentTypeReader<Skin>
     {
         /// <summary>
         /// Takes the skin input, and converts it to a format that can be used to
