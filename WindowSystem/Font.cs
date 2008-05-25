@@ -137,32 +137,49 @@ namespace WindowSystem
             {
                 // Work out current character
                 char character = text[i];
-                int characterIndex = this.GetCharacterIndex(character);
 
-                Vector3 charKerning = this.kerning[characterIndex];
+                switch (character)
+                {
+                    case '\n':
+                        {
+                            newLine = true;
+                            overallPosition.X = 0.0f;
+                            overallPosition.Y += LineSpacing;
 
-                if (newLine)
-                    charKerning.X = Math.Max(charKerning.X, 0f);
-                else
-                    overallPosition.X += this.spacing;
+                            break;
+                        }
+                    default:
+                        {
+                            int characterIndex = this.GetCharacterIndex(character);
 
-                overallPosition.X += charKerning.X;
+                            Vector3 charKerning = this.kerning[characterIndex];
 
-                source = this.glyphData[characterIndex];
+                            if (newLine)
+                                charKerning.X = Math.Max(charKerning.X, 0f);
+                            else
+                                overallPosition.X += this.spacing;
 
-                charPosition = overallPosition;
-                charPosition.X += this.croppingData[characterIndex].X;
-                charPosition.Y += this.croppingData[characterIndex].Y;
+                            overallPosition.X += charKerning.X;
 
-                charPosition += position;
+                            source = this.glyphData[characterIndex];
 
-                destination = new Rectangle((int)charPosition.X, (int)charPosition.Y, source.Width, source.Height);
+                            charPosition = overallPosition;
+                            charPosition.X += this.croppingData[characterIndex].X;
+                            charPosition.Y += this.croppingData[characterIndex].Y;
 
-                if (GUIManager.PerformClipping(ref scissor, ref source, ref destination))
-                    spriteBatch.Draw(this.textureValue, destination, source, Color.Black);
-                
-                newLine = false;
-                overallPosition.X += charKerning.Y + charKerning.Z;
+                            charPosition += position;
+
+                            destination = new Rectangle((int)charPosition.X, (int)charPosition.Y, source.Width, source.Height);
+
+                            if (GUIManager.PerformClipping(ref scissor, ref source, ref destination))
+                                spriteBatch.Draw(this.textureValue, destination, source, Color.Black);
+
+                            newLine = false;
+                            overallPosition.X += charKerning.Y + charKerning.Z;
+
+                            break;
+                        }
+                }
             }
         }
 
