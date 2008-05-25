@@ -67,7 +67,7 @@ namespace WindowSystemTestbed
                 //window.Height = 300;
                 window.Close += new CloseHandler(WindowCloseFunction);
 
-                string text = "Test Windowhgfhgfhgfhgfjghjkghkgjkjhkhjkhjljklioutydjuh " + windowNumber;
+                string text = "Test Windowhgfhgfhgfhgfjgh\njkghkgjkjhkhjkhjljklioutydjuh " + windowNumber;
                 window.TitleText = text;
                 windowNumber++;
 
@@ -155,7 +155,7 @@ namespace WindowSystemTestbed
                 //window.Add(textBox);
 
                 //DisplaySettingsDialog dialog = new DisplaySettingsDialog(this, gui, graphics);
-                MessageBox dialog = new MessageBox(this, gui, "Message box asking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
+                MessageBox dialog = new MessageBox(this, gui, "Message box as\nking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
                 dialog.Show(false);
 
                 //if (button != null)

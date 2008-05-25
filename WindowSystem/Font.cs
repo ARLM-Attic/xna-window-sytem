@@ -172,7 +172,7 @@ namespace WindowSystem
                             destination = new Rectangle((int)charPosition.X, (int)charPosition.Y, source.Width, source.Height);
 
                             if (GUIManager.PerformClipping(ref scissor, ref source, ref destination))
-                                spriteBatch.Draw(this.textureValue, destination, source, Color.Black);
+                                spriteBatch.Draw(this.textureValue, destination, source, color);
 
                             newLine = false;
                             overallPosition.X += charKerning.Y + charKerning.Z;

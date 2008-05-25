@@ -146,7 +146,7 @@ namespace WindowSystem
             {
                 int result = 0;
                 if (this.font != null)
-                    result = this.font.LineSpacing;
+                    result = (int)(this.font.MeasureString(Text).Y + 0.5f);
                 return result;
             }
         }
@@ -160,7 +160,7 @@ namespace WindowSystem
             {
                 int result = 0;
                 if (this.font != null)
-                    result = (int)(this.font.MeasureString(Text).X + 1.0f);
+                    result = (int)(this.font.MeasureString(Text).X + 0.5f);
                 return result;
             }
         }

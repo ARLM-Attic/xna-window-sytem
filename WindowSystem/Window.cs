@@ -474,8 +474,8 @@ namespace WindowSystem
             #region Add Child Controls
             base.Add(this.box);
             base.Add(this.viewPort);
+            this.titleBar.Add(this.label);
             base.Add(this.titleBar);
-            base.Add(this.label);
             base.Add(this.movableArea);
             #endregion
 
