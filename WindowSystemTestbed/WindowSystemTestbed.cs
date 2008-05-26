@@ -23,7 +23,8 @@ namespace WindowSystemTestbed
         SpriteFont myFont;
         int windowNumber = 0;
         Skin skin;
-        
+        Texture2D imagesTexture;
+
         int before = 0;
 
         public WindowSystemTestbed()
@@ -64,10 +65,11 @@ namespace WindowSystemTestbed
             if (args.Key == Keys.Enter)
             {
                 Window window = new Window(this, gui);
-                //window.Height = 300;
+                window.Width = 320;
+                window.Height = 380;
                 window.Close += new CloseHandler(WindowCloseFunction);
 
-                string text = "Test Windowhgfhgfhgfhgfjgh\njkghkgjkjhkhjkhjljklioutydjuh " + windowNumber;
+                string text = "Test Window " + windowNumber;
                 window.TitleText = text;
                 windowNumber++;
 
@@ -120,28 +122,38 @@ namespace WindowSystemTestbed
                 window.Add(listBox);
 
                 MenuBar menuBar = new MenuBar(this, gui);
-                MenuItem item1 = new MenuItem(this, gui);
+                MenuButton item1 = new MenuButton(this, gui);
                 item1.Text = "File";
                 menuBar.Add(item1);
-                MenuItem item2 = new MenuItem(this, gui);
+                MenuButton item2 = new MenuButton(this, gui);
                 item2.Text = "Edit";
                 item2.IsEnabled = false;
                 item2.IsEnabled = true;
                 menuBar.Add(item2);
-                MenuItem item3 = new MenuItem(this, gui);
-                item3.Text = "Close";
-                item1.Add(item3);
-                MenuItem item4 = new MenuItem(this, gui);
+
+                MenuButton fileItem1 = new MenuButton(this, gui);
+                fileItem1.Text = "New";
+                fileItem1.Image.Texture = imagesTexture;
+                fileItem1.Image.SourceBounds = new Rectangle(985, 1159, 16, 16);
+                item1.Add(fileItem1);
+                MenuButton fileItem2 = new MenuButton(this, gui);
+                fileItem2.Text = "Close";
+                fileItem2.Image.Texture = imagesTexture;
+                fileItem2.Image.SourceBounds = new Rectangle(425, 904, 16, 16);
+                item1.Add(fileItem2);
+
+                MenuButton item4 = new MenuButton(this, gui);
                 item4.Text = "Community";
                 item4.IsEnabled = false;
                 item2.Add(item4);
-                MenuItem item5 = new MenuItem(this, gui);
+                MenuButton item5 = new MenuButton(this, gui);
                 item5.Text = "Next Test";
                 item4.Add(item5);
-                MenuItem item6 = new MenuItem(this, gui);
+                MenuButton item6 = new MenuButton(this, gui);
                 item6.Text = "The Next Level!";
+                item6.PopupMenu.ShowImageMargin = false;
                 item2.Add(item6);
-                MenuItem item7 = new MenuItem(this, gui);
+                MenuButton item7 = new MenuButton(this, gui);
                 item7.Text = "Booyeah ;-)";
                 item6.Add(item7);
                 window.Add(menuBar);
@@ -155,7 +167,7 @@ namespace WindowSystemTestbed
                 //window.Add(textBox);
 
                 //DisplaySettingsDialog dialog = new DisplaySettingsDialog(this, gui, graphics);
-                MessageBox dialog = new MessageBox(this, gui, "Message box as\nking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
+                MessageBox dialog = new MessageBox(this, gui, "Message box asking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
                 dialog.Show(false);
 
                 //if (button != null)
@@ -217,6 +229,7 @@ namespace WindowSystemTestbed
         {
             myFont = content.Load<SpriteFont>("Content/Fonts/Verdana");
             skin = content.Load<Skin>("Content/DefaultSkin");
+            imagesTexture = content.Load<Texture2D>("Content/Images");
 
             base.LoadContent();
         }

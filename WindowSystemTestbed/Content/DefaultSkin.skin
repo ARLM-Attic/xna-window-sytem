@@ -62,8 +62,10 @@
 	<WindowSystem.MenuItem
 		HMargin = "5"
         VMargin = "2"
-        HighlightSkin = "61,67,15,15"
-        ArrowSkin = "114,43,4,7"
+			/>
+	<WindowSystem.MenuButton
+		HighlightSkin = "61,67,15,15"
+		ArrowSkin = "114,43,4,7"
 			/>
 	<WindowSystem.MessageBox
 		InfoSkin = "1,91,25,25"
@@ -75,6 +77,7 @@
 		HMargin = "2"
         VMargin = "2"
         Skin = "84,41,25,25"
+		ImageMarginSkin = "84,124,20,16"
 		   />
 	<WindowSystem.RadioButton
 		Skin = "1,59,15,15"

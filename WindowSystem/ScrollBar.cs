@@ -542,9 +542,8 @@ namespace WindowSystem
             {
                 this.thumb.Y = this.topButton.Y + this.topButton.Height;
             }
-
-            if (Scroll != null)
-                Scroll.Invoke(value);
+            
+            if (Scroll != null) Scroll(value);
         }
 
         /// <summary>

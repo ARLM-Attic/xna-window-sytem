@@ -98,9 +98,9 @@ namespace WindowSystem
         #region Fields
         private int hMargin;
         private int vMargin;
-        private List<MenuItem> menuItems;
+        private List<MenuButton> menuItems;
         private bool isPopUpShown;
-        private MenuItem selectedMenuItem;
+        private MenuButton selectedMenuItem;
         #endregion
 
         #region Properties
@@ -173,7 +173,7 @@ namespace WindowSystem
         public MenuBar(Game game, GUIManager guiManager)
             : base(game, guiManager)
         {
-            this.menuItems = new List<MenuItem>();
+            this.menuItems = new List<MenuButton>();
             this.isPopUpShown = false;
 
             #region Set Properties
@@ -229,7 +229,7 @@ namespace WindowSystem
         /// Overloaded to prevent any control except MenuItem from being added.
         /// </summary>
         /// <param name="control">MenuItem to add.</param>
-        public void Add(MenuItem control)
+        public void Add(MenuButton control)
         {
             // Add event handlers
             control.PopUpOpen += new PopUpOpenHandler(OnPopUpOpened);
@@ -257,7 +257,7 @@ namespace WindowSystem
 
             if (base.Remove(control))
             {
-                this.menuItems.Remove((MenuItem)control);
+                this.menuItems.Remove((MenuButton)control);
                 RefreshMenuItems();
                 result = true;
             }
@@ -275,7 +275,7 @@ namespace WindowSystem
             int yPosition = this.vMargin;
             int maxHeight = 0;
 
-            foreach (MenuItem menuItem in this.menuItems)
+            foreach (MenuButton menuItem in this.menuItems)
             {
                 menuItem.X = xPosition;
                 menuItem.Y = yPosition;
@@ -302,7 +302,7 @@ namespace WindowSystem
             {
                 bool onMenu = false;
 
-                foreach (MenuItem item in this.menuItems)
+                foreach (MenuButton item in this.menuItems)
                 {
                     if (item.CheckMenuCoordinates(args.Position.X, args.Position.Y))
                     {
@@ -331,17 +331,17 @@ namespace WindowSystem
         /// <summary>
         /// Popup menu is opened.
         /// </summary>
-        /// <param name="sender">Menu item closing it's popup.</param>
+        /// <param name="sender">Menu item closing its popup.</param>
         protected void OnPopUpOpened(object sender)
         {
             this.isPopUpShown = true;
-            this.selectedMenuItem = (MenuItem)sender;
+            this.selectedMenuItem = (MenuButton)sender;
         }
 
         /// <summary>
         /// Popup menu is closed.
         /// </summary>
-        /// <param name="sender">Menu item closing it's popup.</param>
+        /// <param name="sender">Menu item closing its popup.</param>
         protected void OnPopUpClosed(object sender)
         {
             this.isPopUpShown = false;
@@ -374,7 +374,7 @@ namespace WindowSystem
         {
             if (this.isPopUpShown && CheckCoordinates(args.Position.X, args.Position.Y))
             {
-                foreach (MenuItem item in this.menuItems)
+                foreach (MenuButton item in this.menuItems)
                 {
                     if (item.CheckCoordinates(args.Position.X, args.Position.Y))
                     {
@@ -416,9 +416,9 @@ namespace WindowSystem
         /// When the parent control is resized, fill the entire width.
         /// </summary>
         /// <param name="sender">Resized control.</param>
-        protected override void OnParentResized(UIComponent sender)
+        protected override void parent_Resized(UIComponent sender)
         {
-            base.OnParentResized(sender);
+            base.parent_Resized(sender);
             Width = sender.Width;
         }
         #endregion

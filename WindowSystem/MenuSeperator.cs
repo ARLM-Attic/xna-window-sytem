@@ -1,6 +1,6 @@
 #region File Description
 //-----------------------------------------------------------------------------
-// File:      RadioGroup.cs
+// File:      MenuItem.cs
 // Namespace: WindowSystem
 // Author:    Aaron MacDougall
 //-----------------------------------------------------------------------------
@@ -43,19 +43,70 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using InputEventSystem;
 #endregion
 
 namespace WindowSystem
 {
     /// <summary>
-    /// Contains multiple RadioButton controls, and handles the exclusively
-    /// checked behavior. A radio button on its own is simply a checkbox with
-    /// a different default appearence.
+    /// A graphical menu item, that can be clicked, or contain child menu
+    /// items that are shown as a popup menu.
     /// </summary>
-    public class RadioGroup : UIComponent
+    public class MenuSeperator : MenuItem
     {
+        #region Default Properties
+        #endregion
+
         #region Fields
-        private bool firstButtonClicked;
+        private Image image;
+        private int numMenuItems;
+        private int numClicks;
+        private bool showImageMargin;
+        private bool isPopUpShown;
+        private bool isHighlightShown;
+        private bool isEnabled;
+        private bool canClose;
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Get the image to display beside the menu item text.
+        /// </summary>
+        /// <value></value>
+        public Image Image
+        {
+            get { return this.image; }
+        }
+
+        /// <summary>
+        /// Get/Set whether the manu item is enabled.
+        /// </summary>
+        public bool IsEnabled
+        {
+            get { return this.isEnabled; }
+            set
+            {
+                this.isEnabled = value;
+
+                // Change colour to grey if menu item is disabled
+                if (this.isEnabled)
+                {
+                    this.image.Tint = Color.White;
+                }
+                else
+                {
+                    this.image.Tint = new Color(255, 255, 255, 128);
+                }
+            }
+        }
+        #endregion
+
+        #region Events
+        new public event ClickHandler Click;
+        internal event PopUpOpenHandler PopUpOpen;
+        internal event PopUpClosedHandler PopUpClose;
+        internal event CloseAllHandler CloseAll;
         #endregion
 
         #region Constructors
@@ -64,17 +115,31 @@ namespace WindowSystem
         /// </summary>
         /// <param name="game">The currently running Game object.</param>
         /// <param name="guiManager">GUIManager that this control is part of.</param>
-        public RadioGroup(Game game, GUIManager guiManager)
+        public MenuSeperator(Game game, GUIManager guiManager)
             : base(game, guiManager)
         {
-            this.firstButtonClicked = false;
-            CanHaveFocus = false;
+            this.numMenuItems = 0;
+            this.numClicks = 0;
+            this.showImageMargin = true;
+            this.isPopUpShown = false;
+            this.isHighlightShown = false;
+            this.isEnabled = true;
+            this.canClose = true;
+
+            #region Set Default Properties
+            #endregion
         }
         #endregion
 
+        public override void Initialize()
+        {
+            this.showImageMargin = !(this.Parent is MenuBar);
+
+            base.Initialize();
+        }
+
         /// <summary>
-        /// Overridden to prevent any control except RadioButton from being
-        /// added.
+        /// Overridden to prevent any control except MenuItem from being added.
         /// </summary>
         /// <param name="control">Control to add.</param>
         public override void Add(UIComponent control)
@@ -82,40 +147,18 @@ namespace WindowSystem
             Debug.Assert(false);
         }
 
-        /// <summary>
-        /// Overloaded to prevent any control except RadioButton from being
-        /// added.
-        /// </summary>
-        /// <param name="control">RadioButton to add.</param>
-        public void Add(RadioButton control)
-        {
-            // Set event handler and add control
-            control.Click += new ClickHandler(OnClick);
-            base.Add(control);
-        }
-
         #region Event Handlers
         /// <summary>
-        /// When a child is checked, uncheck all other children.
+        /// Update highlight size.
         /// </summary>
-        /// <param name="sender">Clicked RadioButton</param>
-        protected void OnClick(UIComponent sender)
+        /// <param name="sender">Resized control</param>
+        protected override void OnResize(UIComponent sender)
         {
-            RadioButton checkBox = (RadioButton)sender;
+            base.OnResize(sender);
 
-            // Uncheck every other checkbox
-            foreach (RadioButton control in Controls)
-            {
-                if (control != sender)
-                    control.IsChecked = false;
-            }
-
-            // Ensure that only one checkbox is checked at any one time.
-            // Also ensure first click gets throught!
-            if (this.firstButtonClicked && !checkBox.IsChecked)
-                checkBox.IsChecked = true;
-            else
-                this.firstButtonClicked = true;
+            //
+            this.image.X = 0;
+            this.image.Width = this.Width;
         }
         #endregion
     }

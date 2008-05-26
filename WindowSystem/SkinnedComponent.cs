@@ -114,6 +114,7 @@ namespace WindowSystem
         private Dictionary<int, Rectangle> locations;
         private Dictionary<int, ComponentSkin> skins;
         private int currentSkin;
+        private Color tint;
         #endregion
 
         #region Properties
@@ -149,6 +150,16 @@ namespace WindowSystem
             get { return (SkinState)this.currentSkin; }
             set { SetActiveSkin((int)value); }
         }
+
+        /// <summary>
+        /// Get/Set the tint (modulation color) for drawing the control.
+        /// </summary>
+        /// <value>Default is White (no tint).</value>
+        public Color Tint
+        {
+            get { return this.tint; }
+            set { this.tint = value; }
+        }
         #endregion
 
         #region Constructors
@@ -163,6 +174,7 @@ namespace WindowSystem
             this.locations = new Dictionary<int, Rectangle>();
             this.skins = new Dictionary<int, ComponentSkin>();
             this.currentSkin = -1;
+            this.tint = Color.White;
         }
         #endregion
 
@@ -301,7 +313,7 @@ namespace WindowSystem
                             texture,
                             destination,
                             source,
-                            Color.White
+                            tint
                             );
                     }
                 }

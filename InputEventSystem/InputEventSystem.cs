@@ -193,7 +193,7 @@ namespace InputEventSystem
         }
 
         /// <summary>
-        /// Goes through each key checking it's state compared to the last
+        /// Goes through each key checking its state compared to the last
         /// frame, triggering events if necessary. Updates the current mouse
         /// state and triggers events if necessary.
         /// </summary>
@@ -237,8 +237,7 @@ namespace InputEventSystem
                     key.Pressed = true;
                     keyEvent.Key = key.Key;
 
-                    if (KeyDown != null)
-                        KeyDown.Invoke(keyEvent);
+                    if (KeyDown != null) KeyDown(keyEvent);
                 }
                 else if ((!pressed) && (key.Pressed)) // If it isn't pressed, but was before...
                 {
@@ -248,8 +247,7 @@ namespace InputEventSystem
                     keyEvent.Key = key.Key;
 
                     // Invoke the Key Up event
-                    if (KeyUp != null)
-                        KeyUp.Invoke(keyEvent);
+                    if (KeyUp != null) KeyUp(keyEvent);
                 }
 
                 // If the Key's Countdown has zeroed out, reset it, and make
@@ -257,9 +255,7 @@ namespace InputEventSystem
                 if (key.Countdown < 0)
                 {
                     keyEvent.Key = key.Key;
-
-                    if (KeyDown != null)
-                        KeyDown.Invoke(keyEvent);
+                    if (KeyDown != null) KeyDown(keyEvent);
 
                     key.Countdown = RepeatRate;
                 }
@@ -292,8 +288,7 @@ namespace InputEventSystem
                     if (mouseEvent.Position.Y > bounds.Height)
                         mouseEvent.Position.Y = bounds.Height;
 
-
-                    MouseMove.Invoke(mouseEvent);
+                    MouseMove(mouseEvent);
                 }
             }
 
@@ -308,8 +303,7 @@ namespace InputEventSystem
 
                     if (mouseState.LeftButton == ButtonState.Released)
                     {
-                        if (MouseUp != null)
-                            MouseUp.Invoke(mouseEvent);
+                        if (MouseUp != null) MouseUp(mouseEvent);
                     }
                     else
                     {
@@ -317,10 +311,9 @@ namespace InputEventSystem
                         {
                             // Must request focus first, to prevent mousedown
                             // event from being swallowed up
-                            if (RequestingFocus != null)
-                                RequestingFocus.Invoke(mouseEvent);
+                            if (RequestingFocus != null) RequestingFocus(mouseEvent);
 
-                            MouseDown.Invoke(mouseEvent);
+                            MouseDown(mouseEvent);
                         }
                     }
                 }
@@ -328,23 +321,18 @@ namespace InputEventSystem
 
             if (mouseState.RightButton != currentMouseState.RightButton)
             {
-                if ((MouseUp != null) || (MouseDown != null))
-                {
-                    MouseEventArgs mouseEvent = new MouseEventArgs();
-                    mouseEvent.State = mouseState;
-                    mouseEvent.Position = new Point(mouseState.X, mouseState.Y);
-                    mouseEvent.Button = MouseButtons.Right;
+                MouseEventArgs mouseEvent = new MouseEventArgs();
+                mouseEvent.State = mouseState;
+                mouseEvent.Position = new Point(mouseState.X, mouseState.Y);
+                mouseEvent.Button = MouseButtons.Right;
 
-                    if (mouseState.RightButton == ButtonState.Released)
-                    {
-                        if (MouseUp != null)
-                            MouseUp.Invoke(mouseEvent);
-                    }
-                    else
-                    {
-                        if (MouseDown != null)
-                            MouseDown.Invoke(mouseEvent);
-                    }
+                if (mouseState.RightButton == ButtonState.Released)
+                {
+                    if (MouseUp != null) MouseUp(mouseEvent);
+                }
+                else
+                {
+                    if (MouseDown != null) MouseDown(mouseEvent);
                 }
             }
 

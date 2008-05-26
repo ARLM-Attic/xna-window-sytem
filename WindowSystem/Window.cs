@@ -616,8 +616,7 @@ namespace WindowSystem
             else
                 GUIManager.Remove(this);
 
-            if (Close != null)
-                Close.Invoke(this);
+            OnClose(this);
         }
 
         /// <summary>

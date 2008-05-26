@@ -279,7 +279,7 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Sets the modal control. Modal only allows modal control or it's
+        /// Sets the modal control. Modal only allows modal control or its
         /// children to receive focus. If null is passed, GUI is no longer in
         /// modal mode.
         /// </summary>
@@ -329,6 +329,14 @@ namespace WindowSystem
 
                 this.spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
 
+                // Set sampler state for magnification/minification.
+                SamplerState samplerState = this.GraphicsDevice.SamplerStates[0];
+
+                samplerState.MipFilter = TextureFilter.None;
+                samplerState.MagFilter = TextureFilter.None; // Normally TextureFilter.Point
+                samplerState.MinFilter = TextureFilter.None; // Normally TextureFilter.Point
+
+                // Draw each child control.
                 foreach (UIComponent control in this.controls)
                     control.Draw(this.spriteBatch, parentScissor);
 
@@ -344,7 +352,7 @@ namespace WindowSystem
         #region Event Handlers
         /// <summary>
         /// Event handler called when requesting focus. Checks if a new control
-        /// should receive focus. If so it brings it's top-level window to the
+        /// should receive focus. If so it brings its top-level window to the
         /// top and calls SetFocus() with the focused control.
         /// </summary>
         /// <param name="args">Mouse event arguments.</param>
@@ -353,7 +361,7 @@ namespace WindowSystem
             UIComponent result = null;
             UIComponent parentControl = null;
 
-            // Asks each top-level control if it or it's children should
+            // Asks each top-level control if it or its children should
             // receive focus.
             foreach (UIComponent control in this.controls)
             {
@@ -367,7 +375,7 @@ namespace WindowSystem
                 }
             }
 
-            // When modal, only allow modal control, it's children, and null through
+            // When modal, only allow modal control, its children, and null through
             if (this.modalControl != null && result != null)
             {
                 if (!this.modalControl.IsChild(result))
@@ -385,7 +393,7 @@ namespace WindowSystem
 
         /// <summary>
         /// Event handler called when the mouse is moved. Asks each control to
-        /// check it's mouse status (whether the mouse is over or not). Control
+        /// check its mouse status (whether the mouse is over or not). Control
         /// invokes the MouseOut event, while this method invokes the MouseOver
         /// event.
         /// </summary>
@@ -394,7 +402,7 @@ namespace WindowSystem
         {
             UIComponent result = null;
 
-            // Ask each control to checks it's mouse status
+            // Ask each control to checks its mouse status
             foreach (UIComponent control in this.controls)
             {
                 // Early out if any control is animating (moving or resizing)
@@ -402,7 +410,7 @@ namespace WindowSystem
                     return;
 
                 UIComponent temp = control.CheckMouseStatus(args);
-                // When modal, only allow modal control, it's children, and null through
+                // When modal, only allow modal control, its children, and null through
                 if (temp != null && (this.modalControl == null || this.modalControl.IsChild(temp)))
                 {
                     // MouseOut last result

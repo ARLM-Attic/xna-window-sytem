@@ -58,6 +58,7 @@ namespace WindowSystem
         private static int defaultHMargin = 2;
         private static int defaultVMargin = 2;
         private static Rectangle defaultSkin = new Rectangle(84, 41, 25, 25);
+        private static Rectangle defaultImageMarginSkin = new Rectangle(84, 124, 20, 16);
 
         /// <summary>
         /// Sets the default horizontal padding.
@@ -92,14 +93,23 @@ namespace WindowSystem
         {
             set { defaultSkin = value; }
         }
+
+        /// <summary>
+        /// Sets the default image margin skin.
+        /// </summary>
+        public static Rectangle DefaultImageMarginSkin
+        {
+            set { defaultImageMarginSkin = value; }
+        }
         #endregion
 
         #region Fields
         private int hMargin;
         private int vMargin;
-        private List<MenuItem> menuItems;
+        private Image imageMargin;
+        private List<MenuButton> menuItems;
         private bool isPopUpShown;
-        private MenuItem selectedMenuItem;
+        private MenuButton selectedMenuItem;
         #endregion
 
         #region Properties
@@ -141,6 +151,38 @@ namespace WindowSystem
         {
             set { SetSkinLocation(0, value); }
         }
+
+        /// <summary>
+        /// Sets the image margin skin.
+        /// </summary>
+        [SkinAttribute]
+        public Rectangle ImageMarginSkin
+        {
+            set
+            {
+                this.imageMargin.SetSkinLocation(0, value);
+                this.imageMargin.ResizeToFit();
+            }
+        }
+
+        /// <summary>
+        /// Get/Set whether to show the image margin.
+        /// </summary>
+        /// <value></value>
+        public bool ShowImageMargin
+        {
+            get { return this.imageMargin.Visible; }
+            set { this.imageMargin.Visible = value; }
+        }
+
+        /// <summary>
+        /// Get/Set the width of the image margin, if visible.
+        /// </summary>
+        protected internal int ImageMarginWidth
+        {
+            get { return imageMargin.Width; }
+            set { imageMargin.Width = value; }
+        }
         #endregion
 
         #region Events
@@ -156,8 +198,16 @@ namespace WindowSystem
         public PopUpMenu(Game game, GUIManager guiManager)
             : base(game, guiManager)
         {
-            this.menuItems = new List<MenuItem>();
+            this.menuItems = new List<MenuButton>();
             this.isPopUpShown = false;
+
+            #region Create Child Controls
+            this.imageMargin = new Image(game, guiManager);
+            #endregion
+
+            #region Add Child Controls
+            base.Add(this.imageMargin);
+            #endregion
 
             #region Set Properties
             CanHaveFocus = true;
@@ -167,6 +217,7 @@ namespace WindowSystem
             HMargin = defaultHMargin;
             VMargin = defaultVMargin;
             Skin = defaultSkin;
+            ImageMarginSkin = defaultImageMarginSkin;
             #endregion
 
             #region Event Handlers
@@ -188,7 +239,7 @@ namespace WindowSystem
         /// Overloaded to prevent any control except MenuItem from being added.
         /// </summary>
         /// <param name="control">MenuItem to add.</param>
-        public void Add(MenuItem control)
+        public void Add(MenuButton control)
         {
             // Add event handlers
             control.PopUpOpen += new PopUpOpenHandler(OnPopUpOpened);
@@ -211,7 +262,7 @@ namespace WindowSystem
                 int width = 0;
                 int height = this.vMargin;
 
-                foreach (MenuItem item in this.menuItems)
+                foreach (MenuButton item in this.menuItems)
                 {
                     // Ensure highlight status is reset
                     item.RemoveHighlight();
@@ -226,7 +277,7 @@ namespace WindowSystem
                 }
 
                 // Fix widths to maximum
-                foreach (MenuItem item in this.menuItems)
+                foreach (MenuButton item in this.menuItems)
                     item.Width = width;
 
                 width += this.hMargin * 2;
@@ -239,22 +290,29 @@ namespace WindowSystem
             }
         }
 
+        public override void Initialize()
+        {
+            // Set bounds of image margin.
+            this.imageMargin.Scale = true;
+
+            base.Initialize();
+        }
+
         /// <summary>
         /// Closes this popup menu, and child menu.
         /// </summary>
         internal void ClosePopUp()
         {
-            Close.Invoke(this);
-
             if (this.selectedMenuItem != null)
                 this.selectedMenuItem.ClosePopUp();
 
             this.isPopUpShown = false;
+            OnClose(this);
         }
 
         /// <summary>
         /// Checks if the supplied location is within the menu structure (this
-        /// control or it's children).
+        /// control or its children).
         /// </summary>
         /// <param name="x">X-position.</param>
         /// <param name="y">Y-position.</param>
@@ -268,7 +326,7 @@ namespace WindowSystem
             else
             {
                 // Child menu items
-                foreach (MenuItem item in this.menuItems)
+                foreach (MenuButton item in this.menuItems)
                 {
                     if (item.CheckMenuCoordinates(x, y))
                     {
@@ -281,33 +339,6 @@ namespace WindowSystem
             return result;
         }
 
-        #region Event Handlers
-        /// <summary>
-        /// Close when all menus are being closed.
-        /// </summary>
-        protected void OnCloseAll()
-        {
-            ClosePopUp();
-        }
-
-        /// <summary>
-        /// Child menu item has opened it's popup.
-        /// </summary>
-        /// <param name="sender">Menu item opening it's popup.</param>
-        protected void OnPopUpOpened(object sender)
-        {
-            this.selectedMenuItem = (MenuItem)sender;
-        }
-
-        /// <summary>
-        /// Child menu item has closed it's popup.
-        /// </summary>
-        /// <param name="sender">Menu item closing it's popup.</param>
-        protected void OnPopUpClosed(object sender)
-        {
-            this.selectedMenuItem = null;
-        }
-
         /// <summary>
         /// Check if mouse button was released on top of a menu item.
         /// </summary>
@@ -317,7 +348,7 @@ namespace WindowSystem
             if (this.isPopUpShown && CheckCoordinates(args.Position.X, args.Position.Y))
             {
                 // Check if a child menu item should be clicked
-                foreach (MenuItem item in this.menuItems)
+                foreach (MenuButton item in this.menuItems)
                 {
                     if (item.CheckCoordinates(args.Position.X, args.Position.Y))
                     {
@@ -337,7 +368,7 @@ namespace WindowSystem
         {
             if (this.isPopUpShown && CheckCoordinates(args.Position.X, args.Position.Y))
             {
-                foreach (MenuItem item in menuItems)
+                foreach (MenuButton item in menuItems)
                 {
                     if (item.CheckCoordinates(args.Position.X, args.Position.Y))
                     {
@@ -354,6 +385,33 @@ namespace WindowSystem
             }
         }
 
+        #region Event Handlers
+        /// <summary>
+        /// Close when all menus are being closed.
+        /// </summary>
+        protected void OnCloseAll()
+        {
+            ClosePopUp();
+        }
+
+        /// <summary>
+        /// Child menu item has opened its popup.
+        /// </summary>
+        /// <param name="sender">Menu item opening its popup.</param>
+        protected void OnPopUpOpened(object sender)
+        {
+            this.selectedMenuItem = (MenuButton)sender;
+        }
+
+        /// <summary>
+        /// Child menu item has closed its popup.
+        /// </summary>
+        /// <param name="sender">Menu item closing its popup.</param>
+        protected void OnPopUpClosed(object sender)
+        {
+            this.selectedMenuItem = null;
+        }
+
         /// <summary>
         /// When popup is closed, remove it from the GUIManager.
         /// </summary>
@@ -361,6 +419,20 @@ namespace WindowSystem
         protected void OnClose(object sender)
         {
             GUIManager.Remove(this);
+        }
+
+        /// <summary>
+        /// Resize image margin.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        protected override void OnResize(UIComponent sender)
+        {
+            // Update bounds of image margin.
+            this.imageMargin.X = this.hMargin;
+            this.imageMargin.Y = this.vMargin;
+            this.imageMargin.Height = Height - this.vMargin * 2;
+
+            base.OnResize(sender);
         }
         #endregion
     }

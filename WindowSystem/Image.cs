@@ -54,13 +54,24 @@ namespace WindowSystem
     /// </summary>
     public class Image : Icon
     {
+        #region Events
+        public event EventHandler SourceBoundsChanged;
+        #endregion
+
         #region Properties
         /// <summary>
-        /// Sets the texture image to use.
+        /// Gets/Sets the texture image to use.
         /// </summary>
         /// <value>Must not be null.</value>
         public Texture2D Texture
         {
+            get
+            {
+                ComponentSkin skin = GetSkin(0);
+
+                if (skin == null) return null;
+                return skin.Skin;
+            }
             set
             {
                 Debug.Assert(value != null);
@@ -73,11 +84,25 @@ namespace WindowSystem
 
                 skin = GetSkin(0);
                 Debug.Assert(skin != null);
-                
+
                 skin.UseCustomSkin = true;
                 skin.Skin = value;
 
                 RefreshSkins();
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets the bounds of the area within the texture image to display.
+        /// </summary>
+        public Rectangle SourceBounds
+        {
+            get { return GetSkinLocation(0); }
+            set
+            {
+                SetSkinLocation(0, value);
+
+                if (SourceBoundsChanged != null) SourceBoundsChanged(this, new EventArgs());
             }
         }
         #endregion

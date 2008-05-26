@@ -61,7 +61,7 @@ namespace WindowSystem
     #endregion
 
     /// <summary>
-    /// A non-graphical control that moves it's parent control when dragged
+    /// A non-graphical control that moves its parent control when dragged
     /// with the mouse.
     /// </summary>
     public class MovableArea : UIComponent
@@ -101,9 +101,8 @@ namespace WindowSystem
             {
                 this.isDragging = true;
                 this.lastLocation = args.Position;
-
-                if (StartMoving != null)
-                    StartMoving.Invoke(this);
+                
+                if (StartMoving != null) StartMoving(this);
             }
         }
 
@@ -116,9 +115,8 @@ namespace WindowSystem
             if (args.Button == MouseButtons.Left)
             {
                 this.isDragging = false;
-
-                if (EndMoving != null)
-                    EndMoving.Invoke(this);
+                
+                if (EndMoving != null) EndMoving(this);
             }
         }
 

@@ -56,7 +56,7 @@ namespace WindowSystem
     /// <remarks>
     /// Contains a textbox and a listbox, as well as an Icon object, faking an
     /// ImageButton. The reason is that they share most of the same code, and
-    /// without any mouse event handling, it's easier to predict state changes
+    /// without any mouse event handling, its easier to predict state changes
     /// for when list box is open (has focus).
     /// </remarks>
     public class ComboBox : UIComponent
@@ -338,8 +338,7 @@ namespace WindowSystem
 
             CloseListBox();
 
-            if (SelectionChanged != null)
-                SelectionChanged.Invoke(this);
+            OnSelectionChanged(this);
         }
 
         protected void OnButtonMouseOver(MouseEventArgs args)

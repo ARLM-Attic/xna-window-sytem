@@ -17,13 +17,13 @@ namespace WindowSystemTestbed
         private InputEvents input;
         private GUIManager gui;
         private MenuBar menuBar;
-        private MenuItem newMenuItem;
-        private MenuItem openMenuItem;
-        private MenuItem saveMenuItem;
-        private MenuItem saveAsMenuItem;
-        private MenuItem exitMenuItem;
-        private MenuItem undoMenuItem;
-        private MenuItem redoMenuItem;
+        private MenuButton newMenuItem;
+        private MenuButton openMenuItem;
+        private MenuButton saveMenuItem;
+        private MenuButton saveAsMenuItem;
+        private MenuButton exitMenuItem;
+        private MenuButton undoMenuItem;
+        private MenuButton redoMenuItem;
         #endregion
 
         #region Constructors
@@ -49,32 +49,32 @@ namespace WindowSystemTestbed
             this.gui.Initialize();
 
             this.menuBar = new MenuBar(this, gui);
-            MenuItem fileMenu = new MenuItem(this, gui);
+            MenuButton fileMenu = new MenuButton(this, gui);
             fileMenu.Text = "File";
-            this.newMenuItem = new MenuItem(this, gui);
+            this.newMenuItem = new MenuButton(this, gui);
             this.newMenuItem.Text = "New...";
             fileMenu.Add(this.newMenuItem);
-            this.openMenuItem = new MenuItem(this, gui);
+            this.openMenuItem = new MenuButton(this, gui);
             this.openMenuItem.Text = "Open...";
             fileMenu.Add(this.openMenuItem);
-            this.saveMenuItem = new MenuItem(this, gui);
+            this.saveMenuItem = new MenuButton(this, gui);
             this.saveMenuItem.Text = "Save";
             this.saveMenuItem.IsEnabled = false;
             fileMenu.Add(this.saveMenuItem);
-            this.saveAsMenuItem = new MenuItem(this, gui);
+            this.saveAsMenuItem = new MenuButton(this, gui);
             this.saveAsMenuItem.Text = "Save As...";
             this.saveAsMenuItem.IsEnabled = false;
             fileMenu.Add(this.saveAsMenuItem);
-            this.exitMenuItem = new MenuItem(this, gui);
+            this.exitMenuItem = new MenuButton(this, gui);
             this.exitMenuItem.Text = "Exit";
             fileMenu.Add(this.exitMenuItem);
             menuBar.Add(fileMenu);
-            MenuItem editMenu = new MenuItem(this, gui);
+            MenuButton editMenu = new MenuButton(this, gui);
             editMenu.Text = "Edit";
-            this.undoMenuItem = new MenuItem(this, gui);
+            this.undoMenuItem = new MenuButton(this, gui);
             this.undoMenuItem.Text = "Undo";
             editMenu.Add(this.undoMenuItem);
-            this.redoMenuItem = new MenuItem(this, gui);
+            this.redoMenuItem = new MenuButton(this, gui);
             this.redoMenuItem.Text = "Redo";
             editMenu.Add(this.redoMenuItem);
             this.menuBar.Add(editMenu);

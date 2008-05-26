@@ -172,8 +172,7 @@ namespace WindowSystem
             {
                 this.location.X = value;
 
-                if (Move != null)
-                    Move.Invoke(this);
+                if (Move != null) Move(this);
             }
         }
 
@@ -187,8 +186,7 @@ namespace WindowSystem
             {
                 this.location.Y = value;
 
-                if (Move != null)
-                    Move.Invoke(this);
+                if (Move != null) Move(this);
             }
         }
 
@@ -206,8 +204,7 @@ namespace WindowSystem
 
                 this.location.Width = value;
 
-                if (Resize != null)
-                    Resize.Invoke(this);
+                if (Resize != null) Resize(this);
             }
         }
 
@@ -225,8 +222,7 @@ namespace WindowSystem
 
                 this.location.Height = value;
 
-                if (Resize != null)
-                    Resize.Invoke(this);
+                if (Resize != null) Resize(this);
             }
         }
 
@@ -257,8 +253,8 @@ namespace WindowSystem
                 // Remove old event handlers
                 if (this.parent != null)
                 {
-                    this.parent.Move -= OnParentMoved;
-                    this.parent.Resize -= OnParentResized;
+                    this.parent.Move -= parent_Moved;
+                    this.parent.Resize -= parent_Resized;
                 }
 
                 this.parent = value;
@@ -266,8 +262,8 @@ namespace WindowSystem
                 // Add new event handlers
                 if (this.parent != null)
                 {
-                    this.parent.Move += new MoveHandler(OnParentMoved);
-                    this.parent.Resize += new ResizeHandler(OnParentResized);
+                    this.parent.Move += new MoveHandler(parent_Moved);
+                    this.parent.Resize += new ResizeHandler(parent_Resized);
                 }
 
                 // Update absolute position
@@ -384,22 +380,6 @@ namespace WindowSystem
         {
             get { return instanceCount; }
         }
-
-        /// <summary>
-        /// Overrides Visible property to take focus away from control when
-        /// it's no longer visible.
-        /// </summary>
-        public new bool Visible
-        {
-            get { return base.Visible; }
-            set
-            {
-                if (!value && this.guiManager.GetFocus() == this)
-                    this.guiManager.SetFocus(null);
-
-                base.Visible = value;
-            }
-        }
         #endregion
 
         #region Constructors
@@ -428,20 +408,6 @@ namespace WindowSystem
             this.isAnimating = false;
             this.isMouseOver = false;
             this.isPressed = false;
-
-            #region Event Handlers
-            this.MouseDown += new MouseDownHandler(OnMouseDown);
-            this.MouseUp += new MouseUpHandler(OnMouseUp);
-            this.MouseMove += new MouseMoveHandler(OnMouseMove);
-            this.MouseOver += new MouseOverHandler(OnMouseOver);
-            this.MouseOut += new MouseOutHandler(OnMouseOut);
-            this.KeyDown += new KeyDownHandler(OnKeyDown);
-            this.KeyUp += new KeyUpHandler(OnKeyUp);
-            this.Move += new MoveHandler(OnMove);
-            this.Resize += new ResizeHandler(OnResize);
-            this.GetFocus += new GetFocusHandler(OnGetFocus);
-            this.LoseFocus += new LoseFocusHandler(OnLoseFocus);
-            #endregion
 
             instanceCount++;
         }
@@ -480,7 +446,7 @@ namespace WindowSystem
 
                 // Refreshing here allows controls to sort themselves out
                 Refresh();
-                
+
                 base.Initialize();
                 this.isInitialized = true;
             }
@@ -770,18 +736,14 @@ namespace WindowSystem
                 bool mouseOver = CheckCoordinates(args.Position.X, args.Position.Y);
                 if (this.isMouseOver)
                 {
-                    if (!mouseOver)
-                    {
-                        this.isMouseOver = false;
-                        MouseOut.Invoke(args);
-                    }
+                    if (!mouseOver) InvokeMouseOut(args);
                 }
 
                 if (mouseOver)
                 {
                     float zTemp = 0.0f;
 
-                    // Ask each child to check it's mouse status
+                    // Ask each child to check its mouse status
                     foreach (UIComponent control in this.controls)
                     {
                         // Keep track of highest z-order
@@ -825,7 +787,7 @@ namespace WindowSystem
         internal void InvokeMouseOver(MouseEventArgs args)
         {
             this.isMouseOver = true;
-            MouseOver.Invoke(args);
+            OnMouseOver(args);
         }
 
         /// <summary>
@@ -835,7 +797,7 @@ namespace WindowSystem
         internal void InvokeMouseOut(MouseEventArgs args)
         {
             this.isMouseOver = false;
-            MouseOut.Invoke(args);
+            OnMouseOut(args);
         }
 
         /// <summary>
@@ -843,8 +805,7 @@ namespace WindowSystem
         /// </summary>
         internal void GiveFocus()
         {
-            if (GetFocus != null)
-                GetFocus.Invoke();
+            OnGetFocus();
         }
 
         /// <summary>
@@ -852,8 +813,7 @@ namespace WindowSystem
         /// </summary>
         internal void TakeFocus()
         {
-            if (LoseFocus != null)
-                LoseFocus.Invoke();
+            OnLoseFocus();
         }
 
         /// <summary>
@@ -877,6 +837,23 @@ namespace WindowSystem
         }
         #endregion
 
+        /// <summary>
+        /// Called when a parent control is moved. Invokes Move event.
+        /// </summary>
+        /// <param name="sender">Moved control.</param>
+        protected virtual void parent_Moved(UIComponent sender)
+        {
+            if (Move != null) Move(this);
+        }
+
+        /// <summary>
+        /// Called when a parent controls is resized.
+        /// </summary>
+        /// <param name="sender">Resized control.</param>
+        protected virtual void parent_Resized(UIComponent sender)
+        {
+        }
+
         #region Event Handlers
         /// <summary>
         /// Receives all KeyDown events, and checks if control is focused and
@@ -887,8 +864,7 @@ namespace WindowSystem
         {
             if (this.Visible)
             {
-                if (this.guiManager.GetFocus() == this)
-                    KeyDown.Invoke(args);
+                if (this.guiManager.GetFocus() == this) OnKeyDown(args);
             }
         }
 
@@ -901,8 +877,7 @@ namespace WindowSystem
         {
             if (this.Visible)
             {
-                if (this.guiManager.GetFocus() == this)
-                    KeyUp.Invoke(args);
+                if (this.guiManager.GetFocus() == this) OnKeyUp(args);
             }
         }
 
@@ -918,9 +893,8 @@ namespace WindowSystem
                 // Check coordinates as well because modal mode messes up the
                 // MouseDown event.
                 if (this.guiManager.GetFocus() == this &&
-                    CheckCoordinates(args.Position.X, args.Position.Y)
-                    )
-                    MouseDown.Invoke(args);
+                    CheckCoordinates(args.Position.X, args.Position.Y))
+                    OnMouseDown(args);
             }
         }
 
@@ -934,7 +908,7 @@ namespace WindowSystem
             if (this.Visible)
             {
                 if (this.guiManager.GetFocus() == this)
-                    MouseUp.Invoke(args);
+                    OnMouseUp(args);
             }
         }
 
@@ -948,7 +922,7 @@ namespace WindowSystem
             if (this.Visible)
             {
                 if (this.guiManager.GetFocus() == this)
-                    MouseMove.Invoke(args);
+                    OnMouseMove(args);
             }
         }
 
@@ -958,6 +932,7 @@ namespace WindowSystem
         /// <param name="args">Key event arguments.</param>
         protected virtual void OnKeyDown(KeyEventArgs args)
         {
+            if (KeyDown != null) KeyDown(args);
         }
 
         /// <summary>
@@ -966,6 +941,7 @@ namespace WindowSystem
         /// <param name="args">Key event arguments.</param>
         protected virtual void OnKeyUp(KeyEventArgs args)
         {
+            if (KeyUp != null) KeyUp(args);
         }
 
         /// <summary>
@@ -976,6 +952,8 @@ namespace WindowSystem
         {
             if (args.Button == MouseButtons.Left)
                 this.isPressed = true;
+
+            if (MouseDown != null) MouseDown(args);
         }
 
         /// <summary>
@@ -993,11 +971,12 @@ namespace WindowSystem
                     // Check if button was clicked
                     if (CheckCoordinates(args.Position.X, args.Position.Y))
                     {
-                        if (Click != null)
-                            Click.Invoke(this);
+                        if (Click != null) Click(this);
                     }
                 }
             }
+
+            if (MouseUp != null) MouseUp(args);
         }
 
         /// <summary>
@@ -1006,6 +985,7 @@ namespace WindowSystem
         /// <param name="args">Mouse event arguments.</param>
         protected virtual void OnMouseMove(MouseEventArgs args)
         {
+            if (MouseMove != null) MouseMove(args);
         }
 
         /// <summary>
@@ -1014,6 +994,7 @@ namespace WindowSystem
         /// <param name="args">Mouse event arguments.</param>
         protected virtual void OnMouseOver(MouseEventArgs args)
         {
+            if (MouseOver != null) MouseOver(args);
         }
 
         /// <summary>
@@ -1022,6 +1003,7 @@ namespace WindowSystem
         /// <param name="args">Mouse event arguments.</param>
         protected virtual void OnMouseOut(MouseEventArgs args)
         {
+            if (MouseOut != null) MouseOut(args);
         }
 
         /// <summary>
@@ -1031,6 +1013,8 @@ namespace WindowSystem
         protected virtual void OnMove(UIComponent sender)
         {
             Refresh();
+
+            if (Move != null) Move(sender);
         }
 
         /// <summary>
@@ -1040,23 +1024,8 @@ namespace WindowSystem
         protected virtual void OnResize(UIComponent sender)
         {
             Refresh();
-        }
 
-        /// <summary>
-        /// Called when a parent control is moved. Invokes Move event.
-        /// </summary>
-        /// <param name="sender">Moved control.</param>
-        protected virtual void OnParentMoved(UIComponent sender)
-        {
-            Move.Invoke(this);
-        }
-
-        /// <summary>
-        /// Called when a parent controls is resized.
-        /// </summary>
-        /// <param name="sender">Resized control.</param>
-        protected virtual void OnParentResized(UIComponent sender)
-        {
+            if (Resize != null) Resize(sender);
         }
 
         /// <summary>
@@ -1065,6 +1034,7 @@ namespace WindowSystem
         /// <param name="args">Event arguments.</param>
         protected virtual void OnGetFocus()
         {
+            if (GetFocus != null) GetFocus();
         }
 
         /// <summary>
@@ -1073,6 +1043,18 @@ namespace WindowSystem
         /// <param name="args">Event arguments.</param>
         protected virtual void OnLoseFocus()
         {
+            if (LoseFocus != null) LoseFocus();
+        }
+
+        /// <summary>
+        /// Removes focus from control when it hidden.
+        /// </summary>
+        protected override void OnVisibleChanged(object sender, EventArgs args)
+        {
+            if (!this.Visible && this.guiManager.GetFocus() == this)
+                this.guiManager.SetFocus(null);
+
+            base.OnVisibleChanged(sender, args);
         }
         #endregion
     }

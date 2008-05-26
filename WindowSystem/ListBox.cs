@@ -455,8 +455,7 @@ namespace WindowSystem
                     this.selectedIndex = index;
                 }
 
-                if (SelectedChanged != null)
-                    SelectedChanged.Invoke(this);
+                if (SelectedChanged != null) SelectedChanged(this);
 
                 // Automatically scroll to selected item
                 if (-(this.selectedLabel.Y + this.selectedLabel.Height) <

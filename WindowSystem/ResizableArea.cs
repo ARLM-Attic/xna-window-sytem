@@ -76,7 +76,7 @@ namespace WindowSystem
     #endregion
 
     /// <summary>
-    /// A non-graphical control that resizes it's parent control when dragged
+    /// A non-graphical control that resizes its parent control when dragged
     /// with the mouse.
     /// </summary>
     public class ResizableArea : UIComponent
@@ -179,9 +179,8 @@ namespace WindowSystem
             {
                 this.dragging = true;
                 this.lastLocation = args.Position;
-
-                if (StartResizing != null)
-                    StartResizing.Invoke(this);
+                
+                if (StartResizing != null) StartResizing(this);
             }
         }
 
@@ -195,8 +194,7 @@ namespace WindowSystem
             {
                 this.dragging = false;
 
-                if (EndResizing != null)
-                    EndResizing.Invoke(this);
+                if (EndResizing != null) EndResizing(this);
             }
         }
 

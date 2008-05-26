@@ -367,8 +367,7 @@ namespace WindowSystem
         /// <param name="sender">Clicked control.</param>
         public void OnClick(UIComponent sender)
         {
-            if (Click != null)
-                Click.Invoke(this);
+            if (Click != null) Click(this);
         }
         #endregion
     }

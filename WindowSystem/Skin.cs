@@ -90,7 +90,7 @@ namespace WindowSystem
             object target = control;
             object value;
 
-            // Go through each control skin, and apply it's settings
+            // Go through each control skin, and apply its settings
             foreach (UIComponentSkin componentSkin in this.ComponentSkins)
             {
                 // Check if skin is for this control
@@ -136,7 +136,7 @@ namespace WindowSystem
             PropertyInfo property;
             object value;
 
-            // Go through each control skin, and apply it's default settings
+            // Go through each control skin, and apply its default settings
             foreach (UIComponentSkin componentSkin in this.ComponentSkins)
             {
                 for (int i = 0; i < componentSkin.Properties.Count; i++)
@@ -297,7 +297,7 @@ namespace WindowSystem
 
                     if (attributes.Length > 0)
                     {
-                        // Add the property name, and the string representation on it's value
+                        // Add the property name, and the string representation on its value
                         componentSkin.Properties.Add(property);
                         componentSkin.Values.Add(properties[propertyName]);
                     }
