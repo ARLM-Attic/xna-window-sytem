@@ -168,6 +168,7 @@ namespace WindowSystem
         private SpriteFont font;
         private string fontFileName;
         private Label selectedLabel;
+        private Image selectedItemBg;
         private int selectedIndex;
         private int hMargin;
         private int vMargin;
@@ -268,6 +269,15 @@ namespace WindowSystem
         {
             set { this.box.SetSkinLocation(0, value); }
         }
+
+        /// <summary>
+        /// Sets the skin for the selected item.
+        /// </summary>
+        [SkinAttribute]
+        public Rectangle SelectedItemSkin
+        {
+            set { this.selectedItemBg.SetSkinLocation(0, value); }
+        }
         #endregion
 
         #region Events
@@ -292,12 +302,14 @@ namespace WindowSystem
             this.surface = new UIComponent(game, guiManager);
             this.viewPort = new UIComponent(game, guiManager);
             this.scrollBar = new ScrollBar(game, guiManager);
+            this.selectedItemBg = new Image(game, guiManager);
             #endregion
 
             #region Add Child Controls
             Add(this.box);
             this.viewPort.Add(this.surface);
             Add(this.viewPort);
+            this.surface.Add(this.selectedItemBg);
             #endregion
 
             #region Set Properties
@@ -312,6 +324,7 @@ namespace WindowSystem
             HMargin = defaultHMargin;
             VMargin = defaultVMargin;
             Skin = defaultSkin;
+            SelectedItemSkin = defaultSelectedItemSkin;
             Font = defaultFont;
             #endregion
 
@@ -322,6 +335,14 @@ namespace WindowSystem
             #endregion
         }
         #endregion
+
+        public override void Initialize()
+        {
+            this.selectedItemBg.Scale = true;
+            this.selectedItemBg.Visible = false;
+
+            base.Initialize();
+        }
 
         /// <summary>
         /// Clean up scrollbar in case it hasn't been added.
@@ -461,6 +482,13 @@ namespace WindowSystem
                     // Select new item
                     this.selectedLabel = label;
                     this.selectedLabel.Color = Color.Blue;
+                    
+                    this.selectedItemBg.X = this.selectedLabel.X;
+                    this.selectedItemBg.Y = this.selectedLabel.Y;
+                    this.selectedItemBg.Width = this.selectedLabel.Width;
+                    this.selectedItemBg.Height = this.selectedLabel.Height;
+                    this.selectedItemBg.Visible = true;
+
                     this.selectedIndex = index;
                 }
 
@@ -597,6 +625,14 @@ namespace WindowSystem
 
             RefreshMargins();
             RefreshEntries();
+        }
+
+        protected override void OnLoseFocus()
+        {
+            // Hide background of selecte item.
+            this.selectedItemBg.Visible = false;
+
+            base.OnLoseFocus();
         }
         #endregion
     }

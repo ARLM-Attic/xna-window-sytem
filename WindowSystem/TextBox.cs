@@ -223,8 +223,19 @@ namespace WindowSystem
         public string Text
         {
             get { return this.label.Text; }
-            set { this.label.Text = value; }
+            set
+            {
+                bool hasChanged = (this.label.Text != value);
+                this.label.Text = value;
+
+                if (hasChanged)
+                    if (TextChanged != null) TextChanged(this, new EventArgs());
+            }
         }
+        #endregion
+
+        #region Events
+        public event EventHandler TextChanged;
         #endregion
 
         #region Constructors
@@ -309,7 +320,7 @@ namespace WindowSystem
             this.label.Width = Width - (this.hMargin * 2);
 
             this.label.Y = this.vMargin;
-            this.label.Height = Height - (this.vMargin * 2);   
+            this.label.Height = Height - (this.vMargin * 2);
         }
 
         #region Event Handlers
@@ -326,13 +337,10 @@ namespace WindowSystem
             if (args.Key == Keys.Back)
             {
                 if (this.label.Text.Length > 0)
-                    this.label.Text = this.label.Text.Substring(
-                    0,
-                    this.label.Text.Length - 1
-                    );
+                    Text = this.label.Text.Substring(0, this.label.Text.Length - 1);
             }
             else if (!args.Alt && !args.Control)
-                this.label.Text += GUIManager.KeyToString(args);
+                Text += GUIManager.KeyToString(args);
         }
 
         /// <summary>

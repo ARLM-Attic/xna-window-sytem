@@ -254,6 +254,7 @@ namespace WindowSystem
             #endregion
 
             #region Event Handlers
+            this.textBox.TextChanged += new EventHandler(OnTextBoxTextChanged);
             this.button.MouseOver += new MouseOverHandler(OnButtonMouseOver);
             this.button.MouseOut += new MouseOutHandler(OnButtonMouseOut);
             this.button.MouseDown += new MouseDownHandler(OnButtonMouseDown);
@@ -334,12 +335,22 @@ namespace WindowSystem
             // Update text
             string text = this.listBox.GetSelectedText();
             if (text != null)
+            {
+                this.textBox.TextChanged -= new EventHandler(OnTextBoxTextChanged);
                 this.textBox.Text = text;
+                this.textBox.TextChanged += new EventHandler(OnTextBoxTextChanged);
+            }
 
             CloseListBox();
 
             if (SelectionChanged != null)
                 SelectionChanged.Invoke(this);
+        }
+
+        protected void OnTextBoxTextChanged(object sender, EventArgs e)
+        {
+            // Deselect item.
+            this.listBox.SelectedIndex = -1;
         }
 
         protected void OnButtonMouseOver(MouseEventArgs args)
