@@ -107,7 +107,7 @@ namespace WindowSystem
         private int hMargin;
         private int vMargin;
         private Image imageMargin;
-        private List<MenuButton> menuItems;
+        private List<MenuItem> menuItems;
         private bool isPopUpShown;
         private MenuButton selectedMenuItem;
         #endregion
@@ -198,7 +198,7 @@ namespace WindowSystem
         public PopUpMenu(Game game, GUIManager guiManager)
             : base(game, guiManager)
         {
-            this.menuItems = new List<MenuButton>();
+            this.menuItems = new List<MenuItem>();
             this.isPopUpShown = false;
 
             #region Create Child Controls
@@ -227,28 +227,33 @@ namespace WindowSystem
         #endregion
 
         /// <summary>
+        /// Overloaded to prevent any control except MenuItem from being added.
+        /// </summary>
+        /// <param name="control">MenuItem to add.</param>
+        public void Add(MenuItem control)
+        {
+            MenuButton button = control as MenuButton;
+
+            if (button != null)
+            {
+                // Add event handlers
+                button.PopUpOpen += new PopUpOpenHandler(OnPopUpOpened);
+                button.PopUpClose += new PopUpClosedHandler(OnPopUpClosed);
+                button.CloseAll += new CloseAllHandler(OnCloseAll);
+            }
+
+            // Add Control
+            this.menuItems.Add(control);
+            base.Add(control);
+        }
+
+        /// <summary>
         /// Overridden to prevent any control except MenuItem from being added.
         /// </summary>
         /// <param name="control">Control to add.</param>
         public override void Add(UIComponent control)
         {
             Debug.Assert(false);
-        }
-
-        /// <summary>
-        /// Overloaded to prevent any control except MenuItem from being added.
-        /// </summary>
-        /// <param name="control">MenuItem to add.</param>
-        public void Add(MenuButton control)
-        {
-            // Add event handlers
-            control.PopUpOpen += new PopUpOpenHandler(OnPopUpOpened);
-            control.PopUpClose += new PopUpClosedHandler(OnPopUpClosed);
-            control.CloseAll += new CloseAllHandler(OnCloseAll);
-
-            // Add Control
-            this.menuItems.Add(control);
-            base.Add(control);
         }
 
         /// <summary>
@@ -262,11 +267,16 @@ namespace WindowSystem
                 int width = 0;
                 int height = this.vMargin;
 
-                foreach (MenuButton item in this.menuItems)
+                foreach (MenuItem item in this.menuItems)
                 {
-                    // Ensure highlight status is reset
-                    item.RemoveHighlight();
-                    item.CanClose = false;
+                    MenuButton button = item as MenuButton;
+
+                    if (button != null)
+                    {
+                        // Ensure highlight status is reset
+                        button.RemoveHighlight();
+                        button.CanClose = false;
+                    }
 
                     item.X = this.hMargin;
                     item.Y = height;
@@ -277,7 +287,7 @@ namespace WindowSystem
                 }
 
                 // Fix widths to maximum
-                foreach (MenuButton item in this.menuItems)
+                foreach (MenuItem item in this.menuItems)
                     item.Width = width;
 
                 width += this.hMargin * 2;
@@ -292,7 +302,6 @@ namespace WindowSystem
 
         public override void Initialize()
         {
-            // Set bounds of image margin.
             this.imageMargin.Scale = true;
 
             base.Initialize();
@@ -303,11 +312,12 @@ namespace WindowSystem
         /// </summary>
         internal void ClosePopUp()
         {
+            Close.Invoke(this);
+
             if (this.selectedMenuItem != null)
                 this.selectedMenuItem.ClosePopUp();
 
             this.isPopUpShown = false;
-            OnClose(this);
         }
 
         /// <summary>
@@ -326,9 +336,12 @@ namespace WindowSystem
             else
             {
                 // Child menu items
-                foreach (MenuButton item in this.menuItems)
+                foreach (MenuItem item in this.menuItems)
                 {
-                    if (item.CheckMenuCoordinates(x, y))
+                    MenuButton button = item as MenuButton;
+                    if (button == null) continue;
+
+                    if (button.CheckMenuCoordinates(x, y))
                     {
                         result = true;
                         break;
@@ -348,11 +361,14 @@ namespace WindowSystem
             if (this.isPopUpShown && CheckCoordinates(args.Position.X, args.Position.Y))
             {
                 // Check if a child menu item should be clicked
-                foreach (MenuButton item in this.menuItems)
+                foreach (MenuItem item in this.menuItems)
                 {
-                    if (item.CheckCoordinates(args.Position.X, args.Position.Y))
+                    MenuButton button = item as MenuButton;
+                    if (button == null) continue;
+
+                    if (button.CheckCoordinates(args.Position.X, args.Position.Y))
                     {
-                        item.InvokeClick();
+                        button.InvokeClick();
                         break;
                     }
                 }
@@ -368,16 +384,19 @@ namespace WindowSystem
         {
             if (this.isPopUpShown && CheckCoordinates(args.Position.X, args.Position.Y))
             {
-                foreach (MenuButton item in menuItems)
+                foreach (MenuItem item in menuItems)
                 {
-                    if (item.CheckCoordinates(args.Position.X, args.Position.Y))
+                    MenuButton button = item as MenuButton;
+                    if (button == null) continue;
+
+                    if (button.CheckCoordinates(args.Position.X, args.Position.Y))
                     {
-                        if (item != this.selectedMenuItem)
+                        if (button != this.selectedMenuItem)
                         {
                             if (this.selectedMenuItem != null)
                                 this.selectedMenuItem.ClosePopUp();
 
-                            item.SelectByMove();
+                            button.SelectByMove();
                         }
                         break;
                     }

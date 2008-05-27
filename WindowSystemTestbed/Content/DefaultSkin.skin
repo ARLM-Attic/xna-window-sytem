@@ -53,6 +53,7 @@
         VMargin = "2"
         Font = "Content/Fonts/DefaultFont"
         Skin = "84,41,25,25"
+		SelectedItemSkin = "61,67,1,1"
 			/>
 	<WindowSystem.MenuBar
 		HMargin = "5"
@@ -66,6 +67,9 @@
 	<WindowSystem.MenuButton
 		HighlightSkin = "61,67,15,15"
 		ArrowSkin = "114,43,4,7"
+			/>
+	<WindowSystem.MenuSeperator
+		SeperatorSkin = "110,124,16,2"
 			/>
 	<WindowSystem.MessageBox
 		InfoSkin = "1,91,25,25"

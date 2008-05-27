@@ -136,11 +136,13 @@ namespace WindowSystemTestbed
                 fileItem1.Image.Texture = imagesTexture;
                 fileItem1.Image.SourceBounds = new Rectangle(985, 1159, 16, 16);
                 item1.Add(fileItem1);
-                MenuButton fileItem2 = new MenuButton(this, gui);
-                fileItem2.Text = "Close";
-                fileItem2.Image.Texture = imagesTexture;
-                fileItem2.Image.SourceBounds = new Rectangle(425, 904, 16, 16);
+                MenuSeperator fileItem2 = new MenuSeperator(this, gui);
                 item1.Add(fileItem2);
+                MenuButton fileItem3 = new MenuButton(this, gui);
+                fileItem3.Text = "Close";
+                fileItem3.Image.Texture = imagesTexture;
+                fileItem3.Image.SourceBounds = new Rectangle(425, 904, 16, 16);
+                item1.Add(fileItem3);
 
                 MenuButton item4 = new MenuButton(this, gui);
                 item4.Text = "Community";

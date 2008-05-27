@@ -338,7 +338,8 @@ namespace WindowSystem
 
             CloseListBox();
 
-            OnSelectionChanged(this);
+            if (SelectionChanged != null)
+                SelectionChanged.Invoke(this);
         }
 
         protected void OnButtonMouseOver(MouseEventArgs args)

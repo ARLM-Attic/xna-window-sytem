@@ -146,7 +146,7 @@ namespace WindowSystem
 
         #region Event Handlers
         /// <summary>
-        /// 
+        /// Raises an event when the either margin has changed.
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnMarginsChanged(EventArgs e)

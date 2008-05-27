@@ -101,8 +101,9 @@ namespace WindowSystem
             {
                 this.isDragging = true;
                 this.lastLocation = args.Position;
-                
-                if (StartMoving != null) StartMoving(this);
+
+                if (StartMoving != null)
+                    StartMoving.Invoke(this);
             }
         }
 
@@ -115,8 +116,9 @@ namespace WindowSystem
             if (args.Button == MouseButtons.Left)
             {
                 this.isDragging = false;
-                
-                if (EndMoving != null) EndMoving(this);
+
+                if (EndMoving != null)
+                    EndMoving.Invoke(this);
             }
         }
 

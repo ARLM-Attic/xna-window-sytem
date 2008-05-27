@@ -416,9 +416,9 @@ namespace WindowSystem
         /// When the parent control is resized, fill the entire width.
         /// </summary>
         /// <param name="sender">Resized control.</param>
-        protected override void parent_Resized(UIComponent sender)
+        protected override void OnParentResized(UIComponent sender)
         {
-            base.parent_Resized(sender);
+            base.OnParentResized(sender);
             Width = sender.Width;
         }
         #endregion

@@ -74,6 +74,7 @@ namespace WindowSystem
         private static int defaultVMargin = 2;
         private static string defaultFont = "Content/Fonts/DefaultFont";
         private static Rectangle defaultSkin = new Rectangle(84, 41, 25, 25);
+        private static Rectangle defaultSelectedItemSkin = new Rectangle(61, 67, 1, 1);
 
         /// <summary>
         /// Sets the default control width.
@@ -147,6 +148,14 @@ namespace WindowSystem
         public static Rectangle DefaultSkin
         {
             set { defaultSkin = value; }
+        }
+
+        /// <summary>
+        /// Sets the default skin for the selected item.
+        /// </summary>
+        public static Rectangle DefaultSelectedItemSkin
+        {
+            set { defaultSelectedItemSkin = value; }
         }
         #endregion
 
@@ -393,7 +402,7 @@ namespace WindowSystem
             newEntry.Text = text;
 
             newEntry.Font = this.fontFileName;
-            
+
             // Add new entry
             this.entries.Add(newEntry);
             this.surface.Add(newEntry);
@@ -455,7 +464,8 @@ namespace WindowSystem
                     this.selectedIndex = index;
                 }
 
-                if (SelectedChanged != null) SelectedChanged(this);
+                if (SelectedChanged != null)
+                    SelectedChanged.Invoke(this);
 
                 // Automatically scroll to selected item
                 if (-(this.selectedLabel.Y + this.selectedLabel.Height) <

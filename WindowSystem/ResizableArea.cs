@@ -179,8 +179,9 @@ namespace WindowSystem
             {
                 this.dragging = true;
                 this.lastLocation = args.Position;
-                
-                if (StartResizing != null) StartResizing(this);
+
+                if (StartResizing != null)
+                    StartResizing.Invoke(this);
             }
         }
 
@@ -194,7 +195,8 @@ namespace WindowSystem
             {
                 this.dragging = false;
 
-                if (EndResizing != null) EndResizing(this);
+                if (EndResizing != null)
+                    EndResizing.Invoke(this);
             }
         }
 
