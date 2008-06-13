@@ -58,7 +58,7 @@
     <Compile Include="Box.cs" />
     <Compile Include="CheckBox.cs" />
     <Compile Include="ComboBox.cs" />
-    <Compile Include="MenuSeperator.cs" />
+    <Compile Include="MenuSeparator.cs" />
     <Compile Include="MenuButton.cs" />
     <Compile Include="Dialog.cs" />
     <Compile Include="DisplaySettingsDialog.cs" />

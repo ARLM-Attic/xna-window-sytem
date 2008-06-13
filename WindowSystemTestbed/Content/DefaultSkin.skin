@@ -68,8 +68,8 @@
 		HighlightSkin = "61,67,15,15"
 		ArrowSkin = "114,43,4,7"
 			/>
-	<WindowSystem.MenuSeperator
-		SeperatorSkin = "110,124,16,2"
+	<WindowSystem.MenuSeparator
+		SeparatorSkin = "111, 124, 14, 2"
 			/>
 	<WindowSystem.MessageBox
 		InfoSkin = "1,91,25,25"
@@ -78,10 +78,10 @@
         QuestionSkin = "79,91,25,25"
 			/>
 	<WindowSystem.PopUpMenu
-		HMargin = "2"
-        VMargin = "2"
+		ButtonMargin = "2"
+        ImageMargin = "1"
         Skin = "84,41,25,25"
-		ImageMarginSkin = "84,124,20,16"
+		MarginImageSkin = "84,125,20,14"
 		   />
 	<WindowSystem.RadioButton
 		Skin = "1,59,15,15"

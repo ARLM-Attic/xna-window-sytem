@@ -615,8 +615,6 @@ namespace WindowSystem
                 GUIManager.Remove(this);
             else
                 GUIManager.Remove(this);
-
-            OnClose(this);
         }
 
         /// <summary>
@@ -718,6 +716,9 @@ namespace WindowSystem
         protected void OnClose(UIComponent sender)
         {
             CloseWindow();
+
+            if (Close != null)
+                Close(sender);
         }
 
         /// <summary>

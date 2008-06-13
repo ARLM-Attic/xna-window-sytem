@@ -289,9 +289,6 @@ namespace WindowSystem
             // Get input event system
             this.inputEvents = (IInputEventsService)Game.Services.GetService(typeof(IInputEventsService));
 
-            // Ensure mouse is ALWAYS drawn on top
-            DrawOrder = int.MaxValue;
-
             #region Set Default Cursors
             SetSkinLocation(MouseState.Normal, defaultNormalLocation, defaultNormalOffset);
             SetSkinLocation(MouseState.Moving, defaultMovingLocation, defaultMovingOffset);

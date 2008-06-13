@@ -50,7 +50,7 @@ using InputEventSystem;
 namespace WindowSystem
 {
     /// <summary>
-    /// A graphical menu item.
+    /// The base class for menu items such as separaters and buttons.
     /// </summary>
     public abstract class MenuItem : UIComponent
     {
@@ -90,10 +90,6 @@ namespace WindowSystem
         protected int vMargin;
         #endregion
 
-        #region Events
-        public event EventHandler MarginsChanged;
-        #endregion
-
         #region Properties
         /// <summary>
         /// Get/Set the horizontal padding.
@@ -107,7 +103,7 @@ namespace WindowSystem
             {
                 Debug.Assert(value >= 0);
                 this.hMargin = value;
-                OnMarginsChanged(new EventArgs());
+                OnMarginsChanged();
             }
         }
 
@@ -123,7 +119,7 @@ namespace WindowSystem
             {
                 Debug.Assert(value >= 0);
                 this.vMargin = value;
-                OnMarginsChanged(new EventArgs());
+                OnMarginsChanged();
             }
         }
         #endregion
@@ -149,9 +145,8 @@ namespace WindowSystem
         /// Raises an event when the either margin has changed.
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnMarginsChanged(EventArgs e)
+        protected virtual void OnMarginsChanged()
         {
-            if (MarginsChanged != null) MarginsChanged(this, e);
         }
         #endregion
     }

@@ -1,6 +1,6 @@
 #region File Description
 //-----------------------------------------------------------------------------
-// File:      MenuItem.cs
+// File:      MenuButton.cs
 // Namespace: WindowSystem
 // Author:    Aaron MacDougall
 //-----------------------------------------------------------------------------
@@ -95,35 +95,40 @@ namespace WindowSystem
 
         #region Fields
         private Label label;
-        private Image image;
+        private Icon icon;
         private Box highlightBox;
         private Icon arrow;
         private PopUpMenu popUpMenu;
         private int numMenuItems;
         private int numClicks;
         private bool showImageMargin;
+        private bool isEnabled;
         private bool isPopUpShown;
         private bool isHighlightShown;
-        private bool isEnabled;
         private bool canClose;
         #endregion
 
         #region Properties
         /// <summary>
-        /// Get the popup menu, which contains child menu items.
+        /// Get/Set whether to show the image margin in pop-up menus.
         /// </summary>
-        public PopUpMenu PopupMenu
+        public bool ShowMarginImage
         {
-            get { return this.popUpMenu; }
+            get { return this.popUpMenu.ShowMarginImage; }
+            set { this.popUpMenu.ShowMarginImage = value; }
         }
 
         /// <summary>
-        /// Get the image to display beside the menu item text.
+        /// Sets the source of the menu icon.
         /// </summary>
-        /// <value></value>
-        public Image Image
+        public Rectangle IconSource
         {
-            get { return this.image; }
+            set
+            {
+                this.icon.Source = value;
+                this.icon.ResizeToFit();
+                RefreshMargins();
+            }
         }
 
         /// <summary>
@@ -144,7 +149,7 @@ namespace WindowSystem
         /// <summary>
         /// Sets the font used for menu text.
         /// </summary>
-        /// <value>Must not be a valid path.</value>
+        /// <value>Must be a valid path.</value>
         public string Font
         {
             set
@@ -169,13 +174,13 @@ namespace WindowSystem
                 if (this.isEnabled)
                 {
                     this.label.Color = Color.Black;
-                    this.image.Tint = Color.White;
+                    this.icon.Tint = Color.White;
                     this.arrow.Tint = Color.White;
                 }
                 else
                 {
                     this.label.Color = Color.Gray;
-                    this.image.Tint = new Color(255, 255, 255, 128);
+                    this.icon.Tint = new Color(255, 255, 255, 128);
                     this.arrow.Tint = new Color(255, 255, 255, 128);
                 }
             }
@@ -245,7 +250,7 @@ namespace WindowSystem
 
             #region Create Child Controls
             this.label = new Label(game, guiManager);
-            this.image = new Image(game, guiManager);
+            this.icon = new Image(game, guiManager);
             this.highlightBox = new Box(game, guiManager);
             this.popUpMenu = new PopUpMenu(game, guiManager);
             this.arrow = new Icon(game, guiManager);
@@ -253,7 +258,7 @@ namespace WindowSystem
 
             #region Add Child Controls
             base.Add(this.label);
-            base.Add(this.image);
+            base.Add(this.icon);
             #endregion
 
             #region Set Default Properties
@@ -262,8 +267,7 @@ namespace WindowSystem
             #endregion
 
             #region Event Handlers
-            this.image.SourceBoundsChanged += new EventHandler(image_SourceBoundsChanged);
-            this.popUpMenu.Close += new CloseHandler(popUpMenu_Closed);
+            this.popUpMenu.Close += new CloseHandler(OnPopUpClosed);
             #endregion
 
             RefreshMargins();
@@ -272,9 +276,9 @@ namespace WindowSystem
 
         public override void Initialize()
         {
-            this.showImageMargin = !(this.Parent is MenuBar);
-
             base.Initialize();
+
+            this.showImageMargin = !(this.Parent is MenuBar);
         }
 
         /// <summary>
@@ -298,7 +302,21 @@ namespace WindowSystem
         /// <param name="control">Control to add.</param>
         public override void Add(UIComponent control)
         {
-            Debug.Assert(false);
+            Debug.Assert(false, "Only MenuButton controls can be added to this component.");
+        }
+
+        /// <summary>
+        /// Overloaded to prevent any control except MenuItem from being added.
+        /// </summary>
+        /// <param name="control">MenuItem to add.</param>
+        public void Add(MenuItem control)
+        {
+            // Add new menu item
+            this.popUpMenu.Add(control);
+            this.numMenuItems++;
+
+            // Refreshes arrow settings
+            CanClose = CanClose;
         }
 
         /// <summary>
@@ -325,12 +343,10 @@ namespace WindowSystem
         {
             int imageMarginWidth = 0;
             PopUpMenu parentPopUpMenu = this.Parent as PopUpMenu;
-            bool imageMarginVisible = parentPopUpMenu != null && parentPopUpMenu.ShowImageMargin;
+            bool imageMarginVisible = parentPopUpMenu != null && parentPopUpMenu.ShowMarginImage;
 
             if (imageMarginVisible) // Image margin displayed
-            {
-                imageMarginWidth = parentPopUpMenu.ImageMarginWidth;
-            }
+                imageMarginWidth = parentPopUpMenu.MarginWidth;
 
             if (!this.canClose && this.numMenuItems > 0) // Arrow displayed
             {
@@ -353,14 +369,12 @@ namespace WindowSystem
 
             if (imageMarginVisible)
             {
-                this.image.Visible = true;
-                this.image.X = (imageMarginWidth - this.image.Width) / 2;
-                this.image.Y = (this.Height - this.image.Height) / 2;
+                this.icon.Visible = true;
+                this.icon.X = (imageMarginWidth - this.icon.Width) / 2;
+                this.icon.Y = (this.Height - this.icon.Height) / 2;
             }
             else
-            {
-                this.image.Visible = false;
-            }
+                this.icon.Visible = false;
         }
 
         /// <summary>
@@ -373,10 +387,10 @@ namespace WindowSystem
                 // Remove label and add it again after adding the highlight, to
                 // ensure text is placed on top of the background.
                 Remove(this.label);
-                Remove(this.image);
+                Remove(this.icon);
                 base.Add(this.highlightBox);
                 base.Add(this.label);
-                base.Add(this.image);
+                base.Add(this.icon);
                 if (base.Remove(this.arrow))
                     base.Add(this.arrow);
                 this.isHighlightShown = true;
@@ -514,31 +528,11 @@ namespace WindowSystem
 
         #region Event Handlers
         /// <summary>
-        /// Resize image to fit its new source bounds.
-        /// </summary>
-        protected void image_SourceBoundsChanged(object sender, EventArgs e)
-        {
-            image.ResizeToFit();
-        }
-
-        /// <summary>
-        /// Child menu item has closed its popup.
-        /// </summary>
-        /// <param name="sender">Menu item closing its popup.</param>
-        protected void popUpMenu_Closed(object sender)
-        {
-            this.isPopUpShown = false;
-            RemoveHighlight();
-            
-            if (PopUpClose != null) PopUpClose(this);
-        }
-
-        /// <summary>
         /// Refresh margins when they have changed.
         /// </summary>
-        protected override void OnMarginsChanged(EventArgs e)
+        protected override void OnMarginsChanged()
         {
-            base.OnMarginsChanged(e);
+            base.OnMarginsChanged();
 
             RefreshMargins();
         }
@@ -548,8 +542,23 @@ namespace WindowSystem
         /// </summary>
         protected void OnCloseAll()
         {
-            if (CloseAll != null) CloseAll();
+            if (CloseAll != null)
+                CloseAll();
         }
+
+        /// <summary>
+        /// Child menu item has closed it's popup.
+        /// </summary>
+        /// <param name="sender">Menu item closing it's popup.</param>
+        protected void OnPopUpClosed(object sender)
+        {
+            this.isPopUpShown = false;
+            RemoveHighlight();
+
+            if (PopUpClose != null)
+                PopUpClose.Invoke(this);
+        }
+
 
         /// <summary>
         /// Open popup menu if there is one.
@@ -582,7 +591,8 @@ namespace WindowSystem
         {
             base.OnMouseOut(args);
 
-            if (!this.isPopUpShown) RemoveHighlight();
+            if (!this.isPopUpShown)
+                RemoveHighlight();
         }
 
         /// <summary>

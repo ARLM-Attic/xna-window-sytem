@@ -55,34 +55,34 @@ namespace WindowSystem
     public class PopUpMenu : Box
     {
         #region Default Properties
-        private static int defaultHMargin = 2;
-        private static int defaultVMargin = 2;
+        private static int defaultButtonMargin = 2;
+        private static int defaultImageMargin = 1;
         private static Rectangle defaultSkin = new Rectangle(84, 41, 25, 25);
-        private static Rectangle defaultImageMarginSkin = new Rectangle(84, 124, 20, 16);
+        private static Rectangle defaultMarginImageSkin = new Rectangle(84, 125, 20, 14);
 
         /// <summary>
-        /// Sets the default horizontal padding.
+        /// Sets the default padding for MenuButton controls.
         /// </summary>
         /// <value>Must be at least 0.</value>
-        public static int DefaultHMargin
+        public static int DefaultButtonMargin
         {
             set
             {
                 Debug.Assert(value >= 0);
-                defaultHMargin = value;
+                defaultButtonMargin = value;
             }
         }
 
         /// <summary>
-        /// Sets the default vertical padding.
+        /// Sets the default padding for the margin image.
         /// </summary>
         /// <value>Must be at least 0.</value>
-        public static int DefaultVMargin
+        public static int DefaultImageMargin
         {
             set
             {
                 Debug.Assert(value >= 0);
-                defaultVMargin = value;
+                defaultImageMargin = value;
             }
         }
 
@@ -97,16 +97,16 @@ namespace WindowSystem
         /// <summary>
         /// Sets the default image margin skin.
         /// </summary>
-        public static Rectangle DefaultImageMarginSkin
+        public static Rectangle DefaultMarginImageSkin
         {
-            set { defaultImageMarginSkin = value; }
+            set { defaultMarginImageSkin = value; }
         }
         #endregion
 
         #region Fields
-        private int hMargin;
-        private int vMargin;
-        private Image imageMargin;
+        private int buttonMargin;
+        private int imageMargin;
+        private Image marginImage;
         private List<MenuItem> menuItems;
         private bool isPopUpShown;
         private MenuButton selectedMenuItem;
@@ -114,32 +114,32 @@ namespace WindowSystem
 
         #region Properties
         /// <summary>
-        /// Get/Set the horizontal padding.
+        /// Get/Set the padding for MenuButton controls.
         /// </summary>
         /// <value>Must be at least 0.</value>
         [SkinAttribute]
-        public int HMargin
+        public int ButtonMargin
         {
-            get { return this.hMargin; }
+            get { return this.buttonMargin; }
             set
             {
                 Debug.Assert(value >= 0);
-                this.hMargin = value;
+                this.buttonMargin = value;
             }
         }
 
         /// <summary>
-        /// Get/Set the vertical padding.
+        /// Get/Set the padding for the margin image.
         /// </summary>
         /// <value>Must be at least 0.</value>
         [SkinAttribute]
-        public int VMargin
+        public int ImageMargin
         {
-            get { return this.vMargin; }
+            get { return this.imageMargin; }
             set
             {
                 Debug.Assert(value >= 0);
-                this.vMargin = value;
+                this.imageMargin = value;
             }
         }
 
@@ -156,12 +156,12 @@ namespace WindowSystem
         /// Sets the image margin skin.
         /// </summary>
         [SkinAttribute]
-        public Rectangle ImageMarginSkin
+        public Rectangle MarginImageSkin
         {
             set
             {
-                this.imageMargin.SetSkinLocation(0, value);
-                this.imageMargin.ResizeToFit();
+                this.marginImage.Source = value;
+                this.marginImage.ResizeToFit();
             }
         }
 
@@ -169,19 +169,19 @@ namespace WindowSystem
         /// Get/Set whether to show the image margin.
         /// </summary>
         /// <value></value>
-        public bool ShowImageMargin
+        public bool ShowMarginImage
         {
-            get { return this.imageMargin.Visible; }
-            set { this.imageMargin.Visible = value; }
+            get { return this.marginImage.Visible; }
+            set { this.marginImage.Visible = value; }
         }
 
         /// <summary>
         /// Get/Set the width of the image margin, if visible.
         /// </summary>
-        protected internal int ImageMarginWidth
+        protected internal int MarginWidth
         {
-            get { return imageMargin.Width; }
-            set { imageMargin.Width = value; }
+            // Must subtract buttonMargin because margin is drawn farther left
+            get { return this.marginImage.Width - this.buttonMargin; }
         }
         #endregion
 
@@ -202,11 +202,11 @@ namespace WindowSystem
             this.isPopUpShown = false;
 
             #region Create Child Controls
-            this.imageMargin = new Image(game, guiManager);
+            this.marginImage = new Image(game, guiManager);
             #endregion
 
             #region Add Child Controls
-            base.Add(this.imageMargin);
+            base.Add(this.marginImage);
             #endregion
 
             #region Set Properties
@@ -214,10 +214,10 @@ namespace WindowSystem
             #endregion
 
             #region Set Default Properties
-            HMargin = defaultHMargin;
-            VMargin = defaultVMargin;
+            ButtonMargin = defaultButtonMargin;
+            ImageMargin = defaultImageMargin;
             Skin = defaultSkin;
-            ImageMarginSkin = defaultImageMarginSkin;
+            MarginImageSkin = defaultMarginImageSkin;
             #endregion
 
             #region Event Handlers
@@ -265,7 +265,7 @@ namespace WindowSystem
             {
                 // Resize control
                 int width = 0;
-                int height = this.vMargin;
+                int height = this.buttonMargin;
 
                 foreach (MenuItem item in this.menuItems)
                 {
@@ -278,7 +278,7 @@ namespace WindowSystem
                         button.CanClose = false;
                     }
 
-                    item.X = this.hMargin;
+                    item.X = this.buttonMargin;
                     item.Y = height;
 
                     if (item.Width > width)
@@ -290,8 +290,8 @@ namespace WindowSystem
                 foreach (MenuItem item in this.menuItems)
                     item.Width = width;
 
-                width += this.hMargin * 2;
-                height += this.vMargin;
+                width += this.buttonMargin * 2;
+                height += this.buttonMargin;
 
                 Width = width;
                 Height = height;
@@ -302,7 +302,7 @@ namespace WindowSystem
 
         public override void Initialize()
         {
-            this.imageMargin.Scale = true;
+            this.marginImage.Scale = true;
 
             base.Initialize();
         }
@@ -447,9 +447,9 @@ namespace WindowSystem
         protected override void OnResize(UIComponent sender)
         {
             // Update bounds of image margin.
-            this.imageMargin.X = this.hMargin;
-            this.imageMargin.Y = this.vMargin;
-            this.imageMargin.Height = Height - this.vMargin * 2;
+            this.marginImage.X = this.imageMargin;
+            this.marginImage.Y = this.imageMargin;
+            this.marginImage.Height = Height -(this.imageMargin * 2);
 
             base.OnResize(sender);
         }

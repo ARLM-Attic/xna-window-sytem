@@ -54,10 +54,6 @@ namespace WindowSystem
     /// </summary>
     public class Image : Icon
     {
-        #region Events
-        public event EventHandler SourceBoundsChanged;
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets/Sets the texture image to use.
@@ -89,20 +85,6 @@ namespace WindowSystem
                 skin.Skin = value;
 
                 RefreshSkins();
-            }
-        }
-
-        /// <summary>
-        /// Gets/Sets the bounds of the area within the texture image to display.
-        /// </summary>
-        public Rectangle SourceBounds
-        {
-            get { return GetSkinLocation(0); }
-            set
-            {
-                SetSkinLocation(0, value);
-
-                if (SourceBoundsChanged != null) SourceBoundsChanged(this, new EventArgs());
             }
         }
         #endregion

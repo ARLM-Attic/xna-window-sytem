@@ -11,6 +11,7 @@ namespace WindowSystemTestbed
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+
     public class WindowSystemTestbed : Game
     {
         GraphicsDeviceManager graphics;
@@ -23,7 +24,6 @@ namespace WindowSystemTestbed
         SpriteFont myFont;
         int windowNumber = 0;
         Skin skin;
-        Texture2D imagesTexture;
 
         int before = 0;
 
@@ -46,18 +46,6 @@ namespace WindowSystemTestbed
             input.KeyDown += new KeyDownHandler(KeyDownFunction);
 
             this.IsFixedTimeStep = false;
-
-            //this.Window.AllowUserResizing = true;
-            //graphics.ToggleFullScreen();
-
-            //menubar = new MenuBar(this, gui);
-            //MenuItem menuItem = new MenuItem(this, gui);
-            //menuItem.Text = "Menu Test";
-            //menubar.Add(menuItem);
-            //MenuItem item3 = new MenuItem(this, gui);
-            //item3.Text = "Close";
-            //menuItem.Add(item3);
-            //gui.Add(menubar);
         }
 
         void KeyDownFunction(KeyEventArgs args)
@@ -133,27 +121,28 @@ namespace WindowSystemTestbed
 
                 MenuButton fileItem1 = new MenuButton(this, gui);
                 fileItem1.Text = "New";
-                fileItem1.Image.Texture = imagesTexture;
-                fileItem1.Image.SourceBounds = new Rectangle(985, 1159, 16, 16);
+                fileItem1.IconSource = new Rectangle(1, 189, 14, 14);
+                fileItem1.IsEnabled = false;
                 item1.Add(fileItem1);
-                MenuSeperator fileItem2 = new MenuSeperator(this, gui);
+                MenuSeparator fileItem2 = new MenuSeparator(this, gui);
                 item1.Add(fileItem2);
                 MenuButton fileItem3 = new MenuButton(this, gui);
                 fileItem3.Text = "Close";
-                fileItem3.Image.Texture = imagesTexture;
-                fileItem3.Image.SourceBounds = new Rectangle(425, 904, 16, 16);
+                fileItem3.IconSource = new Rectangle(16, 189, 15, 13);
                 item1.Add(fileItem3);
 
                 MenuButton item4 = new MenuButton(this, gui);
                 item4.Text = "Community";
-                item4.IsEnabled = false;
+                item4.IsEnabled = true;
                 item2.Add(item4);
+                MenuSeparator sep2 = new MenuSeparator(this, gui);
+                item2.Add(sep2);
                 MenuButton item5 = new MenuButton(this, gui);
                 item5.Text = "Next Test";
                 item4.Add(item5);
                 MenuButton item6 = new MenuButton(this, gui);
                 item6.Text = "The Next Level!";
-                item6.PopupMenu.ShowImageMargin = false;
+                item6.ShowMarginImage = false;
                 item2.Add(item6);
                 MenuButton item7 = new MenuButton(this, gui);
                 item7.Text = "Booyeah ;-)";
@@ -162,33 +151,8 @@ namespace WindowSystemTestbed
 
                 gui.Add(window);
 
-                //TextBox textBox = new TextBox(this, gui);
-                //textBox.X = 0;
-                //textBox.Y = 0;
-                //textBox.ZOrder = 1.0f;
-                //window.Add(textBox);
-
-                //DisplaySettingsDialog dialog = new DisplaySettingsDialog(this, gui, graphics);
                 MessageBox dialog = new MessageBox(this, gui, "Message box asking user a question.", "Message Box", MessageBoxButtons.Yes_No_Cancel, MessageBoxType.Question);
                 dialog.Show(false);
-
-                //if (button != null)
-                //{
-                //    gui.Remove(button);
-                //    button = null;
-                //}
-
-                //button = new Label(this, gui);
-                //button.Text = "TEST";
-                //button.X = 100;
-                //button.Y = 100;
-                //gui.Add(button);
-
-                //if (control == null)
-                //{
-                //    control = new DisplaySettingsDialog(this, gui, graphics);
-                //    gui.Add(control);
-                //}
 
                 if (before == 1)
                     gui.ApplySkin(skin, true, true);
@@ -214,6 +178,7 @@ namespace WindowSystemTestbed
         protected override void Initialize()
         {
             //this.IsMouseVisible = true;
+
             this.Window.Title = "Window System Testbed";
 
             this.spriteBatch = new SpriteBatch(this.graphics.GraphicsDevice);
@@ -231,7 +196,6 @@ namespace WindowSystemTestbed
         {
             myFont = content.Load<SpriteFont>("Content/Fonts/Verdana");
             skin = content.Load<Skin>("Content/DefaultSkin");
-            imagesTexture = content.Load<Texture2D>("Content/Images");
 
             base.LoadContent();
         }

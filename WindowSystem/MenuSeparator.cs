@@ -1,6 +1,6 @@
 #region File Description
 //-----------------------------------------------------------------------------
-// File:      Icon.cs
+// File:      MenuSeparator.cs
 // Namespace: WindowSystem
 // Author:    Aaron MacDougall
 //-----------------------------------------------------------------------------
@@ -41,43 +41,39 @@
 
 #region Using Statements
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using InputEventSystem;
 #endregion
 
 namespace WindowSystem
 {
     /// <summary>
-    /// A static image from the GUI texture. Can be scaled to fit the control
-    /// size.
+    /// A menu divider.
     /// </summary>
-    public class Icon : SkinnedComponent
+    sealed public class MenuSeparator : MenuItem
     {
+        #region Default Properties
+        private static Rectangle defaultSeparatorSkin = new Rectangle(111, 124, 14, 2);
+        #endregion
+
         #region Fields
-        private bool scale;
+        private Image image;
         #endregion
 
         #region Properties
         /// <summary>
-        /// Get/Set the source of the icon.
+        /// Sets the skin to use for the menu divider.
         /// </summary>
-        public Rectangle Source
+        [SkinAttribute]
+        public Rectangle SeparatorSkin
         {
-            get { return GetSkinLocation(0); }
-            set { SetSkinLocation(0, value); }
-        }
-
-        /// <summary>
-        /// Get/Set whether the image be scaled to control size.
-        /// </summary>
-        public bool Scale
-        {
-            get { return this.scale; }
             set
             {
-                this.scale = value;
-                RefreshSkins();
+                // Set image source area and refresh
+                this.image.Source = value;
+                SetSize();
             }
         }
         #endregion
@@ -88,56 +84,64 @@ namespace WindowSystem
         /// </summary>
         /// <param name="game">The currently running Game object.</param>
         /// <param name="guiManager">GUIManager that this control is part of.</param>
-        public Icon(Game game, GUIManager guiManager)
+        public MenuSeparator(Game game, GUIManager guiManager)
             : base(game, guiManager)
         {
-            this.scale = false;
+            #region Create Child Controls
+            this.image = new Image(game, guiManager);
+            #endregion
+
+            #region Add Child Controls
+            base.Add(this.image);
+            #endregion
+
+            #region Set Default Properties
+            SeparatorSkin = defaultSeparatorSkin;
+            #endregion
         }
         #endregion
 
         /// <summary>
-        /// Resizes control to fit icon skin, as long as icon isn't scaling.
+        /// Overridden to prevent controls from being added.
         /// </summary>
-        public void ResizeToFit()
+        /// <param name="control">Control to add.</param>
+        public override void Add(UIComponent control)
         {
-            if (!this.scale)
-            {
-                int currentSkin = CurrentSkin;
-
-                if (currentSkin != -1)
-                {
-                    Rectangle source = GetSkinLocation(currentSkin);
-
-                    if (source.Width > 0 && source.Height > 0)
-                    {
-                        Width = source.Width;
-                        Height = source.Height;
-                    }
-                }
-            }
+            Debug.Assert(false, "No controls can be added to this component.");
         }
 
         /// <summary>
-        /// Update skin sizes.
+        /// Resizes height to match divider image.
         /// </summary>
-        protected override void RefreshSkins()
+        private void SetSize()
         {
-            // Get the current list of skins
-            Dictionary<int, ComponentSkin> skins = Skins;
-
-            foreach (KeyValuePair<int, ComponentSkin> skin in skins)
-            {
-                GUIRect rect = new GUIRect();
-                rect.Source = GetSkinLocation(skin.Key);
-
-                if (this.scale)
-                    rect.Destination = new Rectangle(0, 0, Width, Height);
-                else
-                    rect.Destination = new Rectangle(0, 0, rect.Source.Width, rect.Source.Height);
-
-                skin.Value.Rects.Clear();
-                skin.Value.Rects.Add(rect);
-            }
+            this.image.ResizeToFit();
+            this.image.Y = vMargin;
+            this.Height = this.image.Height + (base.vMargin * 2);
         }
+
+        #region EventHandlers
+        /// <summary>
+        /// Keep divider height the same, but resize to width of parent.
+        /// </summary>
+        /// <param name="sender">Resizing control.</param>
+        protected override void OnResize(UIComponent sender)
+        {
+            base.OnResize(sender);
+
+            this.image.Width = this.Width;
+            this.image.Scale = true;
+        }
+
+        /// <summary>
+        /// Refresh margins when they have changed.
+        /// </summary>
+        protected override void OnMarginsChanged()
+        {
+            base.OnMarginsChanged();
+
+            SetSize();
+        }
+        #endregion
     }
 }

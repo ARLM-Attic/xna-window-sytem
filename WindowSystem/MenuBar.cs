@@ -217,7 +217,7 @@ namespace WindowSystem
         }
 
         /// <summary>
-        /// Overridden to prevent any control except MenuItem from being added.
+        /// Overridden to prevent any control except MenuButton from being added.
         /// </summary>
         /// <param name="control">Control to add.</param>
         public override void Add(UIComponent control)
