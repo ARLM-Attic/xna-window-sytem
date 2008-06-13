@@ -131,9 +131,6 @@ namespace WindowSystem
             this.focusedControl = null;
             this.modalControl = null;
 
-            // Ensure this and mouse are always drawn on top, mouse is MaxValue
-            this.DrawOrder = int.MaxValue - 1;
-
             // Get input event system, and register event handlers
             this.inputEvents = (IInputEventsService)this.Game.Services.GetService(typeof(IInputEventsService));
             if (this.inputEvents != null)
@@ -328,13 +325,6 @@ namespace WindowSystem
                     );
 
                 this.spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None);
-
-                // Set sampler state for magnification/minification.
-                SamplerState samplerState = this.GraphicsDevice.SamplerStates[0];
-
-                samplerState.MipFilter = TextureFilter.None;
-                samplerState.MagFilter = TextureFilter.None; // Normally TextureFilter.Point
-                samplerState.MinFilter = TextureFilter.None; // Normally TextureFilter.Point
 
                 // Draw each child control.
                 foreach (UIComponent control in this.controls)

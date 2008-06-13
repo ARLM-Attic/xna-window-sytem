@@ -210,10 +210,7 @@ namespace WindowSystem
         [SkinAttribute]
         public string Font
         {
-            set
-            {
-                this.label.Font = value;
-            }
+            set { this.label.Font = value; }
         }
 
         /// <summary>
@@ -229,7 +226,10 @@ namespace WindowSystem
                 this.label.Text = value;
 
                 if (hasChanged)
-                    if (TextChanged != null) TextChanged(this, new EventArgs());
+                {
+                    if (TextChanged != null)
+                        TextChanged(this, new EventArgs());
+                }
             }
         }
         #endregion
